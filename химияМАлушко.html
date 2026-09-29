@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ХимРешетка</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f4f6fb;--card:#fff;--dark:#1e293b;--text:#1e293b;--muted:#64748b;--primary:#4f46e5;--primary-light:#eef2ff;--accent:#06b6d4;--accent-light:#ecfeff;--success:#10b981;--danger:#ef4444;--border:#e2e8f0;--shadow:0 4px 20px rgba(30,41,59,.08);--radius:16px}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;line-height:1.65;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:8px;height:62px;overflow-x:auto}
+.logo{font-weight:800;font-size:20px;color:var(--primary);white-space:nowrap;margin-right:8px}
+.nav-btn{padding:8px 16px;border:none;background:transparent;color:var(--muted);font-size:14.5px;font-weight:600;cursor:pointer;border-radius:10px;white-space:nowrap;transition:.2s;font-family:inherit}
+.nav-btn:hover{background:var(--primary-light);color:var(--primary)}
+.nav-btn.active{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.35)}
+.page{display:none;animation:fadeUp .35s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 20px 60px}
+.page-head{text-align:center;margin-bottom:32px}
+.page-head h1{font-size:clamp(26px,4vw,38px);font-weight:800;color:var(--dark);letter-spacing:-.5px}
+.page-head p{color:var(--muted);font-size:16px;margin-top:8px;max-width:640px;margin-left:auto;margin-right:auto}
+.accent-line{width:70px;height:4px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px;margin:16px auto 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);margin-bottom:24px}
+.card-title{font-size:19px;font-weight:700;color:var(--dark);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.card-title .num{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 8px;background:var(--primary-light);color:var(--primary);border-radius:8px;font-size:14px;font-weight:700;flex-shrink:0}
+.mode-switch{display:flex;gap:6px;background:#f1f5f9;padding:5px;border-radius:12px;width:fit-content;margin:0 auto 20px}
+.mode-btn{padding:10px 22px;background:transparent;color:var(--muted);border:none;border-radius:9px;cursor:pointer;font-size:15px;font-weight:600;font-family:inherit;transition:.2s}
+.mode-btn.active{background:#fff;color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.input-group{display:flex;gap:10px;flex-wrap:wrap}
+.input-group input{flex:1;min-width:220px;padding:14px 18px;font-size:16px;border:2px solid var(--border);border-radius:12px;background:#fff;color:var(--text);outline:none;font-family:inherit;transition:.2s}
+.input-group input:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+.go-btn{padding:14px 32px;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--primary),#6366f1);color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:inherit;transition:.2s;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.go-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(79,70,229,.4)}
+.hint{text-align:center;color:var(--muted);font-size:14px;margin-top:12px}
+#result{display:none;margin-top:22px}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.result-item{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.result-item .lbl{font-size:12.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.result-item .val{font-size:17px;font-weight:700;color:var(--primary);margin-top:4px}
+.result-item .val.neutral{color:var(--dark)}
+.composition{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.atom-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center;transition:.25s}
+.atom-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:var(--shadow)}
+.atom-symbol{font-size:24px;font-weight:800;color:var(--primary)}
+.atom-name{font-size:11.5px;color:var(--muted);margin:4px 0}
+.atom-count{font-size:15px;color:var(--accent);font-weight:700}
+.atom-count span{color:var(--muted);font-size:11px;font-weight:500}
+.final-formula{background:var(--primary-light);border:1.5px dashed var(--primary);border-radius:12px;padding:16px;margin-top:18px;text-align:center;font-size:22px;color:var(--primary);font-weight:800;letter-spacing:2px}
+.note{font-size:14px;color:var(--muted);margin-top:14px;background:var(--accent-light);border-left:4px solid var(--accent);padding:12px 16px;border-radius:0 10px 10px 0}
+.not-found{text-align:center;padding:20px;color:var(--danger);font-size:16px;font-weight:600}
+.viewer-container{display:grid;grid-template-columns:1fr;gap:18px;margin-top:20px}
+@media(min-width:760px){.viewer-container{grid-template-columns:1.3fr 1fr}}
+#threeCanvas{width:100%;height:480px;border-radius:14px;background:radial-gradient(circle at 50% 40%,#f8fafc,#dbe4f5);border:1px solid var(--border);display:block;cursor:grab;touch-action:none}
+#threeCanvas:active{cursor:grabbing}
+.viewer-info h4{font-size:16px;margin-bottom:8px;color:var(--dark)}
+.viewer-info p{font-size:14px;color:var(--muted);margin-bottom:8px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+.legend-dot{width:16px;height:16px;border-radius:50%;box-shadow:inset -2px -2px 4px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:600px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--border);font-size:14.5px}
+th{background:#f8fafc;color:var(--dark);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafbff}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge-ion{background:#fee2e2;color:#b91c1c}
+.badge-cov{background:#dcfce7;color:#15803d}
+.badge-met{background:#fef9c3;color:#a16207}
+.theory-list{list-style:none}
+.theory-list li{padding:12px 0 12px 30px;position:relative;border-bottom:1px solid var(--border);font-size:15px}
+.theory-list li:last-child{border-bottom:none}
+.theory-list li::before{content:"";position:absolute;left:0;top:19px;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent))}
+.theory-list b{color:var(--primary)}
+.warn{color:#f59e0b;font-weight:600}
+.formula-box{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:12px 0;font-size:17px;text-align:center;color:var(--dark);font-weight:600;overflow-x:auto}
+.formula-box .eq{color:var(--primary);font-weight:800;font-size:19px}
+.quiz-progress{height:8px;background:var(--border);border-radius:8px;overflow:hidden;margin-bottom:24px}
+.quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));width:0%;transition:width .35s ease;border-radius:8px}
+.quiz-q{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:18px;line-height:1.5}
+.quiz-q .qnum{display:inline-block;background:var(--primary);color:#fff;border-radius:8px;padding:2px 12px;font-size:14px;margin-right:10px}
+.quiz-options{display:grid;gap:10px}
+.quiz-opt{padding:14px 18px;border:2px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;font-size:15.5px;font-family:inherit;text-align:left;transition:.18s;color:var(--text)}
+.quiz-opt:hover:not(:disabled){border-color:var(--primary);background:var(--primary-light)}
+.quiz-opt:disabled{cursor:default}
+.quiz-opt.correct{border-color:var(--success);background:#ecfdf5;color:#065f46;font-weight:600}
+.quiz-opt.wrong{border-color:var(--danger);background:#fef2f2;color:#991b1b}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:10px;flex-wrap:wrap}
+.quiz-btn{padding:11px 26px;border-radius:10px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s}
+.quiz-btn.primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.quiz-btn.primary:hover:not(:disabled){background:#4338ca}
+.quiz-btn.primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.quiz-btn.ghost{background:#f1f5f9;color:var(--muted)}
+.quiz-btn.ghost:hover{background:var(--border)}
+.quiz-result{text-align:center;padding:30px 20px}
+.quiz-score{font-size:54px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.quiz-score-label{color:var(--muted);font-size:15px;margin-top:6px}
+.quiz-msg{font-size:18px;font-weight:700;margin-top:18px;color:var(--dark)}
+.quiz-review{text-align:left;margin-top:26px}
+.review-item{padding:14px 18px;border-radius:12px;border:1px solid var(--border);margin-bottom:10px;background:#fff;border-left:4px solid var(--success)}
+.review-item .rq{font-weight:600;font-size:15px;margin-bottom:6px}
+.review-item .ra{font-size:14px;color:var(--muted)}
+.review-item .ra b{color:var(--success)}
+.mt-16{margin-top:16px}
+.text-muted{color:var(--muted);font-size:14.5px}
+strong.hl{color:var(--primary)}
+@media(max-width:600px){.wrap{padding:22px 14px 50px}.card{padding:18px}.input-group{flex-direction:column}.go-btn{width:100%}.result-grid{grid-template-columns:1fr}#threeCanvas{height:340px}th,td{padding:10px 12px;font-size:13.5px}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">⚛️ ХимРешетка</div>
+    <button class="nav-btn active" data-page="analyzer">🔬 Анализатор</button>
+    <button class="nav-btn" data-page="dissociation">⚡ Диссоциация</button>
+    <button class="nav-btn" data-page="acids">🧪 Кислоты</button>
+    <button class="nav-btn" data-page="bases">🧴 Основания</button>
+    <button class="nav-btn" data-page="salts">🧂 Соли</button>
+    <button class="nav-btn" data-page="hydrolysis">💧 Гидролиз</button>
+  </div>
+</nav>
+<main class="page active" id="page-analyzer">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Определитель связей и кристаллических решёток</h1>
+    <p>Введи формулу или название вещества — узнай тип связи, тип решётки и посмотри 3D-модель кристалла.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="mode-switch">
+      <button class="mode-btn active" id="modeFormula">🔬 По формуле</button>
+      <button class="mode-btn" id="modeName">🏷️ По названию</button>
+    </div>
+    <div class="input-group">
+      <input type="text" id="queryInput" placeholder="Например: NaCl, CO2, Fe, SiO2, NH4Cl..." autocomplete="off">
+      <button class="go-btn" id="analyzeBtn">Анализ</button>
+    </div>
+    <p class="hint" id="hintText">Введи химическую формулу, например: H2O, NaCl, Fe</p>
+    <div id="result"></div>
+  </div>
+
+  <div class="card" id="viewerCard" style="display:none;">
+    <div class="card-title"><span class="num">3D</span> Кристаллическая решётка</div>
+    <div class="viewer-container">
+      <canvas id="threeCanvas"></canvas>
+      <div class="viewer-info">
+        <h4 id="viewerTitle">—</h4>
+        <p id="viewerDesc">Модель вращается автоматически. Зажми мышкой, чтобы повернуть. Колёсико — масштаб. На каждом атоме подписан элемент и его заряд.</p>
+        <div class="legend" id="viewerLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">📊</span> Как определять тип связи</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Что в формуле</th><th>Тип связи</th><th>Тип решётки</th><th>Примеры</th></tr></thead>
+        <tbody>
+          <tr><td><b>Металл + Неметалл</b></td><td><span class="badge badge-ion">Ионная</span></td><td>Ионная</td><td>NaCl, CaO, KBr</td></tr>
+          <tr><td><b>Металл + OH-группа</b></td><td><span class="badge badge-ion">Ионная</span></td><td>Ионная</td><td>NaOH, Ca(OH)2</td></tr>
+          <tr><td><b>Металл + Кислотный остаток</b></td><td><span class="badge badge-ion">Ионная</span></td><td>Ионная</td><td>Na2SO4, Cu(NO3)2</td></tr>
+          <tr><td><b>Неметалл + Неметалл</b> (разные)</td><td><span class="badge badge-cov">Ковалентная полярная</span></td><td>Молекулярная / атомная</td><td>H2O, CO2, NH3</td></tr>
+          <tr><td><b>Неметалл + Неметалл</b> (одинаковые)</td><td><span class="badge badge-cov">Ковалентная неполярная</span></td><td>Молекулярная / атомная</td><td>O2, N2, Cl2</td></tr>
+          <tr><td><b>Металл + Металл</b></td><td><span class="badge badge-met">Металлическая</span></td><td>Металлическая</td><td>Fe, Cu, Al, Na</td></tr>
+          <tr><td><b>Аммиак + Кислота</b> (NH4+)</td><td><span class="badge badge-ion">Ионная</span></td><td>Ионная</td><td>NH4Cl, (NH4)2SO4</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">📚</span> Ключевые правила</div>
+    <ul class="theory-list">
+      <li><b>Ионная связь</b> — между металлом и неметаллом.</li>
+      <li><b>Ковалентная полярная</b> — между разными неметаллами.</li>
+      <li><b>Ковалентная неполярная</b> — между одинаковыми неметаллами.</li>
+      <li><b>Металлическая связь</b> — в металлах.</li>
+      <li><span class="warn">⚠ Исключение:</span> <b>SiO2</b> и <b>SiC</b> — ковалентная полярная, но решётка <b>атомная</b>!</li>
+      <li><span class="warn">⚠ Исключение:</span> <b>NH4Cl</b> — ковалентные связи N–H, но решётка <b>ионная</b>.</li>
+    </ul>
+  </div>
+</div>
+</main>
+
+<main class="page" id="page-dissociation">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Электролитическая диссоциация</h1>
+    <p>Полная теория: определения, механизмы, положения ТЭД, степень диссоциации, примеры и разборы.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§1</span> Что такое электролитическая диссоциация</div>
+    <p>Многие вещества, попадая в воду, начинают проводить электрический ток — их растворы становятся <b>проводниками второго рода</b>. Это возможно только потому, что в растворе появляются свободно движущиеся заряженные частицы — <b>ионы</b>.</p>
+    <p class="mt-16"><strong class="hl">Электролитическая диссоциация</strong> — это процесс распада молекул электролита на ионы (катионы и анионы) при растворении в воде или при расплавлении.</p>
+    <p class="mt-16"><b>Примеры:</b></p>
+    <div class="formula-box">NaCl <span class="eq">→</span> Na⁺ + Cl⁻ (в воде)</div>
+    <div class="formula-box">KOH <span class="eq">→</span> K⁺ + OH⁻ (в воде)</div>
+    <div class="formula-box">HNO₃ <span class="eq">→</span> H⁺ + NO₃⁻ (в воде)</div>
+    <p class="mt-16"><b>Вещества, распадающиеся на ионы, называются электролитами.</b> К ним относятся:</p>
+    <ul class="theory-list">
+      <li><b>Растворимые соли</b> — NaCl, KNO₃, CuSO₄, Na₂CO₃, NH₄Cl.</li>
+      <li><b>Растворимые основания (щёлочи)</b> — NaOH, KOH, LiOH, Ca(OH)₂, Ba(OH)₂.</li>
+      <li><b>Кислоты</b> — HCl, H₂SO₄, HNO₃, H₃PO₄, CH₃COOH.</li>
+    </ul>
+    <p class="mt-16"><b>Вещества, не распадающиеся на ионы, называются неэлектролитами.</b> К ним относятся:</p>
+    <ul class="theory-list">
+      <li><b>Органика</b> — сахар (C₁₂H₂₂O₁₁), глюкоза (C₆H₁₂O₆), спирт (C₂H₅OH), ацетон.</li>
+      <li><b>Простые вещества</b> — O₂, H₂, N₂, Cl₂.</li>
+      <li><b>Оксиды</b> — CO₂, SiO₂, SO₂, CaO.</li>
+      <li><b>Нерастворимые соли и основания</b> — CaCO₃, BaSO₄, Cu(OH)₂, Fe(OH)₃.</li>
+    </ul>
+    <p class="note">💡 Растворы неэлектролитов <b>не проводят</b> электрический ток, потому что в них нет свободных ионов — молекулы остаются нейтральными.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§2</span> Основные положения теории электролитической диссоциации</div>
+    <p>Теория электролитической диссоциации (ТЭД) была сформулирована шведским учёным <b>Сванте Аррениусом</b> в 1887 году. Она объясняет поведение растворов электролитов.</p>
+    <p class="mt-16"><b>Основные положения ТЭД:</b></p>
+    <ul class="theory-list">
+      <li><b>1. Электролиты при растворении в воде распадаются на ионы — катионы и анионы.</b><div class="formula-box">HCl → H⁺ + Cl⁻</div><b>Катион</b> — положительно заряженный ион (H⁺, Na⁺, Cu²⁺, NH₄⁺).<br><b>Анион</b> — отрицательно заряженный ион (Cl⁻, OH⁻, SO₄²⁻, PO₄³⁻).</li>
+      <li><b>2. Причиной диссоциации является взаимодействие молекул электролита с молекулами воды (гидратация).</b> Молекулы воды полярны: атом кислорода несёт частичный отрицательный заряд, атомы водорода — частичный положительный. Именно поэтому вода «растаскивает» кристалл или полярную молекулу на ионы.</li>
+      <li><b>3. Ионы в растворе взаимодействуют с молекулами воды и образуют гидратированные ионы.</b> Каждый ион окружён «шубой» из молекул воды (гидратной оболочкой). В уравнениях это обычно не показывают, но помнят.</li>
+      <li><b>4. Диссоциация — обратимый процесс.</b> Наряду с распадом молекул на ионы идёт обратный процесс — <b>ассоциация</b> (соединение ионов в молекулы).<div class="formula-box">CH₃COOH ⇄ CH₃COO⁻ + H⁺</div></li>
+      <li><b>5. Сильные электролиты диссоциируют полностью (необратимо), слабые — частично (обратимо).</b></li>
+      <li><b>6. Химические свойства растворов электролитов определяются свойствами тех ионов, которые образуются при диссоциации.</b> Именно поэтому все кислоты имеют кислый вкус, а все щёлочи — мылкие на ощупь.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§3</span> Механизм диссоциации</div>
+    <p>Механизм диссоциации зависит от типа связи в веществе.</p>
+    <p class="mt-16"><b>А. Вещества с ионной связью (соли, щёлочи).</b></p>
+    <p>Молекулы воды притягиваются к ионам кристаллической решётки: положительные концы молекул воды (водороды) ориентируются к анионам, отрицательные (кислороды) — к катионам. Притяжение молекул воды становится сильнее, чем притяжение ионов друг к другу — решётка разрушается, и каждый ион выходит в раствор вместе с оболочкой воды.</p>
+    <p class="mt-16"><b>Б. Вещества с ковалентной полярной связью (кислоты).</b></p>
+    <p>Молекулы воды подходят к полярной молекуле, ориентируются к её концам и «разрывают» связь. Общая электронная пара смещается к более электроотрицательному атому — образуются ионы, которые сразу гидратируются.</p>
+    <p class="note">💡 В расплавах диссоциация происходит потому, что при нагревании кристаллическая решётка разрушается и ионы получают свободу движения. Именно поэтому расплавленный NaCl проводит ток, а твёрдый — нет.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§4</span> Степень диссоциации</div>
+    <p>Разные электролиты распадаются на ионы в разной степени. Для количественной оценки введена <b>степень диссоциации (α)</b>.</p>
+    <p class="mt-16"><strong class="hl">Степень диссоциации</strong> — это отношение числа молекул, распавшихся на ионы, к общему числу растворённых молекул.</p>
+    <div class="formula-box">α = N(распавшихся) / N(общих)</div>
+    <p>Обычно α выражают в процентах:</p>
+    <div class="formula-box">α = N(распавшихся) / N(общих) × 100%</div>
+    <p class="mt-16"><b>Классификация электролитов по степени диссоциации:</b></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Категория</th><th>Степень α</th><th>Примеры</th></tr></thead>
+        <tbody>
+          <tr><td><b>Сильные</b></td><td>α > 30%</td><td>HCl, HBr, HI, HNO₃, H₂SO₄, HClO₄, NaOH, KOH, Ba(OH)₂, все растворимые соли</td></tr>
+          <tr><td><b>Средние</b></td><td>3% < α < 30%</td><td>H₃PO₄, HF, H₂SO₃, HNO₂, Ca(OH)₂</td></tr>
+          <tr><td><b>Слабые</b></td><td>α < 3%</td><td>CH₃COOH, H₂CO₃, H₂S, H₂SiO₃, NH₄OH, вода</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-16"><b>От чего зависит α:</b></p>
+    <ul class="theory-list">
+      <li><b>От природы электролита</b> — чем полярнее связь, тем легче диссоциация.</li>
+      <li><b>От температуры</b> — при нагревании α увеличивается.</li>
+      <li><b>От концентрации</b> — при разбавлении α увеличивается.</li>
+      <li><b>От природы растворителя</b> — в полярных растворителях диссоциация идёт лучше.</li>
+    </ul>
+    <p class="note">💡 <b>Пример задачи.</b> В растворе из 200 молекул уксусной кислоты распалось 6 молекул. Найдите α.<br><b>Решение:</b> α = 6 / 200 × 100% = 3%.<br><b>Ответ:</b> α = 3% — уксусная кислота относится к слабым электролитам.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§5</span> Сильные и слабые электролиты</div>
+    <p><b>Сильные электролиты</b> — распадаются на ионы практически полностью. В уравнениях диссоциации ставим знак <b>«→»</b>.</p>
+    <ul class="theory-list">
+      <li><b>Кислоты:</b> HCl, HBr, HI, HNO₃, H₂SO₄, HClO₄, HClO₃</li>
+      <li><b>Основания (щёлочи):</b> NaOH, KOH, LiOH, RbOH, CsOH, Ca(OH)₂, Sr(OH)₂, Ba(OH)₂</li>
+      <li><b>Соли:</b> все растворимые соли (NaCl, KNO₃, CuSO₄, NH₄Cl, Na₂CO₃…)</li>
+    </ul>
+    <p class="mt-16"><b>Слабые электролиты</b> — распадаются частично, в уравнениях ставим знак <b>«⇄»</b>.</p>
+    <ul class="theory-list">
+      <li><b>Кислоты:</b> H₂CO₃, H₂S, H₂SO₃, H₂SiO₃, CH₃COOH, HCOOH, HF, HCN, HClO, HNO₂</li>
+      <li><b>Основания:</b> NH₄OH, все нерастворимые основания (Cu(OH)₂, Fe(OH)₃, Al(OH)₃)</li>
+      <li><b>Вода:</b> H₂O (диссоциирует крайне слабо)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§6</span> Как писать уравнения диссоциации</div>
+    <p><b>Правила:</b></p>
+    <ul class="theory-list">
+      <li><b>1.</b> Формулу электролита пишем слева, ионы — справа.</li>
+      <li><b>2.</b> Число атомов каждого элемента слева и справа должно совпадать.</li>
+      <li><b>3.</b> Сумма зарядов ионов справа должна быть равна нулю.</li>
+      <li><b>4.</b> Многоосновные кислоты и многокислотные основания диссоциируют <b>ступенчато</b>.</li>
+    </ul>
+    <p class="mt-16"><b>Пример 1. Соль.</b></p>
+    <div class="formula-box">Al₂(SO₄)₃ → 2Al³⁺ + 3SO₄²⁻</div>
+    <p>Проверка: сумма зарядов 2·(+3) + 3·(−2) = +6 − 6 = 0. ✔</p>
+    <p class="mt-16"><b>Пример 2. Основание.</b></p>
+    <div class="formula-box">Ba(OH)₂ → Ba²⁺ + 2OH⁻</div>
+    <p class="mt-16"><b>Пример 3. Ступенчатая диссоциация H₃PO₄.</b></p>
+    <div class="formula-box">1-я ступень: H₃PO₄ ⇄ H⁺ + H₂PO₄⁻</div>
+    <div class="formula-box">2-я ступень: H₂PO₄⁻ ⇄ H⁺ + HPO₄²⁻</div>
+    <div class="formula-box">3-я ступень: HPO₄²⁻ ⇄ H⁺ + PO₄³⁻</div>
+    <p class="note">💡 Каждая следующая ступень идёт слабее предыдущей. Суммарно: H₃PO₄ ⇄ 3H⁺ + PO₄³⁻</p>
+    <p class="mt-16"><b>Пример 4. Ступенчатая диссоциация H₂SO₄.</b></p>
+    <div class="formula-box">1-я ступень (сильная): H₂SO₄ → H⁺ + HSO₄⁻</div>
+    <div class="formula-box">2-я ступень (слабая): HSO₄⁻ ⇄ H⁺ + SO₄²⁻</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§7</span> Значение теории</div>
+    <p>ТЭД объясняет целый ряд явлений:</p>
+    <ul class="theory-list">
+      <li><b>Почему растворы солей, кислот и щелочей проводят ток</b> — в них есть свободные ионы.</li>
+      <li><b>Почему все кислоты имеют кислый вкус и меняют цвет лакмуса</b> — все они образуют катионы H⁺.</li>
+      <li><b>Почему все щёлочи мылкие на ощупь и меняют цвет фенолфталеина</b> — все они образуют ионы OH⁻.</li>
+      <li><b>Почему реакции ионного обмена идут до конца</b> — потому что образуется осадок, газ или слабый электролит.</li>
+      <li><b>Почему электролиты в твёрдом виде не проводят ток</b> — ионы «заперты» в кристаллической решётке.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§8</span> Контрольные вопросы</div>
+    <ul class="theory-list">
+      <li>1. Что такое электролитическая диссоциация?</li>
+      <li>2. Чем электролиты отличаются от неэлектролитов? Приведите по 3 примера.</li>
+      <li>3. Сформулируйте основные положения ТЭД.</li>
+      <li>4. Опишите механизм диссоциации веществ с ионной и ковалентной полярной связью.</li>
+      <li>5. Что такое степень диссоциации? Как её вычисляют?</li>
+      <li>6. Как классифицируются электролиты по степени диссоциации?</li>
+      <li>7. Напишите уравнения диссоциации: NaCl, H₂SO₄, Ca(OH)₂, Al(NO₃)₃, Na₃PO₄.</li>
+      <li>8. Почему твёрдый NaCl не проводит ток, а его раствор — проводит?</li>
+      <li>9. Какие из перечисленных веществ — электролиты: сахар, NaCl, спирт, KOH, CO₂, HNO₃?</li>
+      <li>10. Приведите примеры сильных, средних и слабых электролитов.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§9</span> Тест (20 вариантов × 20 вопросов)</div>
+    <div id="quiz-dissociation"></div>
+  </div>
+</div>
+</main>
+<main class="page" id="page-acids">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Химические свойства кислот как электролитов</h1>
+    <p>Полная теория: определение, классификация, свойства, индикаторы, примеры реакций.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§1</span> Что такое кислота с точки зрения ТЭД</div>
+    <p><strong class="hl">Кислоты</strong> — это электролиты, которые при диссоциации в водном растворе образуют <b>только катионы водорода H⁺</b> (точнее — ионы гидроксония H₃O⁺) и анионы кислотного остатка.</p>
+    <p class="mt-16"><b>Примеры диссоциации:</b></p>
+    <div class="formula-box">HCl <span class="eq">→</span> H⁺ + Cl⁻</div>
+    <div class="formula-box">H₂SO₄ <span class="eq">→</span> 2H⁺ + SO₄²⁻</div>
+    <div class="formula-box">HNO₃ <span class="eq">→</span> H⁺ + NO₃⁻</div>
+    <div class="formula-box">H₃PO₄ <span class="eq">⇄</span> 3H⁺ + PO₄³⁻ (слабая, ступенчато)</div>
+    <p class="note">💡 Именно <b>катионы H⁺</b> определяют все общие свойства кислот: кислый вкус, окраску индикаторов, взаимодействие с металлами и основаниями.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§2</span> Классификация кислот</div>
+    <p><b>1. По содержанию кислорода:</b></p>
+    <ul class="theory-list">
+      <li><b>Кислородсодержащие:</b> H₂SO₄, HNO₃, H₃PO₄, H₂CO₃, H₂SiO₃, HClO₄</li>
+      <li><b>Бескислородные:</b> HCl, HBr, HI, HF, H₂S</li>
+    </ul>
+    <p class="mt-16"><b>2. По основности (число атомов H):</b></p>
+    <ul class="theory-list">
+      <li><b>Одноосновные:</b> HCl, HBr, HI, HNO₃, HF</li>
+      <li><b>Двухосновные:</b> H₂SO₄, H₂CO₃, H₂S, H₂SiO₃</li>
+      <li><b>Трёхосновные:</b> H₃PO₄, H₃BO₃</li>
+    </ul>
+    <p class="mt-16"><b>3. По силе:</b></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Категория</th><th>Кислоты</th></tr></thead>
+        <tbody>
+          <tr><td><b>Сильные</b></td><td>HCl, HBr, HI, HNO₃, H₂SO₄, HClO₄</td></tr>
+          <tr><td><b>Средние</b></td><td>H₃PO₄, HF, H₂SO₃, HNO₂</td></tr>
+          <tr><td><b>Слабые</b></td><td>H₂CO₃, H₂S, H₂SiO₃, CH₃COOH, HClO</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§3</span> Индикаторы в кислой среде</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Индикатор</th><th>Нейтральная</th><th>Кислая</th></tr></thead>
+        <tbody>
+          <tr><td>Лакмус</td><td>Фиолетовый</td><td><b>Красный</b></td></tr>
+          <tr><td>Метилоранж</td><td>Оранжевый</td><td><b>Розовый / красный</b></td></tr>
+          <tr><td>Фенолфталеин</td><td>Бесцветный</td><td><b>Бесцветный</b></td></tr>
+          <tr><td>Универсальный</td><td>Жёлто-зелёный</td><td><b>Красный / оранжевый</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§4</span> Химические свойства кислот</div>
+    <p><b>Свойство 1. Взаимодействие с индикаторами</b> (см. §3).</p>
+    <p class="mt-16"><b>Свойство 2. Взаимодействие с металлами.</b></p>
+    <p>Кислоты реагируют с металлами, стоящими в <b>ряду активности левее водорода</b>. При этом выделяется водород и образуется соль.</p>
+    <div class="formula-box">Zn + 2HCl <span class="eq">→</span> ZnCl₂ + H₂↑</div>
+    <div class="formula-box">Mg + H₂SO₄ <span class="eq">→</span> MgSO₄ + H₂↑</div>
+    <div class="formula-box">2Al + 6HCl <span class="eq">→</span> 2AlCl₃ + 3H₂↑</div>
+    <p class="note">⚠ Металлы правее водорода (Cu, Hg, Ag, Pt, Au) с обычными кислотами <b>не реагируют</b>.</p>
+    <p class="mt-16"><b>Ряд активности металлов:</b></p>
+    <div class="formula-box" style="font-size:15px;">Li K Ba Ca Na Mg Al Zn Cr Fe Ni Sn Pb <b>(H₂)</b> Cu Hg Ag Pt Au</div>
+
+    <p class="mt-16"><b>Свойство 3. Взаимодействие с основными оксидами.</b></p>
+    <div class="formula-box">CuO + H₂SO₄ <span class="eq">→</span> CuSO₄ + H₂O</div>
+    <div class="formula-box">MgO + 2HCl <span class="eq">→</span> MgCl₂ + H₂O</div>
+
+    <p class="mt-16"><b>Свойство 4. Взаимодействие с основаниями (нейтрализация).</b></p>
+    <div class="formula-box">NaOH + HCl <span class="eq">→</span> NaCl + H₂O</div>
+    <div class="formula-box">Ca(OH)₂ + 2HNO₃ <span class="eq">→</span> Ca(NO₃)₂ + 2H₂O</div>
+
+    <p class="mt-16"><b>Свойство 5. Взаимодействие с солями.</b></p>
+    <p>Реакция идёт, если образуется <b>осадок</b>, <b>газ</b> или <b>слабый электролит</b>.</p>
+    <div class="formula-box">CaCO₃ + 2HCl <span class="eq">→</span> CaCl₂ + H₂O + CO₂↑ (газ)</div>
+    <div class="formula-box">AgNO₃ + HCl <span class="eq">→</span> AgCl↓ + HNO₃ (осадок)</div>
+    <div class="formula-box">BaCl₂ + H₂SO₄ <span class="eq">→</span> BaSO₄↓ + 2HCl (осадок)</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§5</span> Особые свойства некоторых кислот</div>
+    <p><b>Серная кислота H₂SO₄</b> — сильная двухосновная кислота. Концентрированная H₂SO₄ — сильный окислитель, обугливает органику, реагирует с медью.</p>
+    <div class="formula-box">Cu + 2H₂SO₄(конц.) <span class="eq">→</span> CuSO₄ + SO₂↑ + 2H₂O</div>
+    <p class="mt-16"><b>Азотная кислота HNO₃</b> — сильный окислитель. Реагирует почти со всеми металлами (кроме Au, Pt), при этом выделяется не водород, а оксиды азота.</p>
+    <div class="formula-box">Cu + 4HNO₃(конц.) <span class="eq">→</span> Cu(NO₃)₂ + 2NO₂↑ + 2H₂O</div>
+    <p class="mt-16"><b>Соляная кислота HCl</b> — раствор хлороводорода в воде. Входит в состав желудочного сока.</p>
+    <p class="mt-16"><b>Уксусная кислота CH₃COOH</b> — слабая органическая кислота, содержится в уксусе (6–9%).</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§6</span> Применение кислот</div>
+    <ul class="theory-list">
+      <li><b>Серная кислота:</b> производство удобрений, аккумуляторы, очистка нефтепродуктов.</li>
+      <li><b>Соляная кислота:</b> травление металлов, в медицине, в пищевой промышленности.</li>
+      <li><b>Азотная кислота:</b> производство удобрений, взрывчатых веществ.</li>
+      <li><b>Фосфорная кислота:</b> производство удобрений, в пищевой промышленности (E338).</li>
+      <li><b>Уксусная кислота:</b> консервирование, приправа, производство полимеров.</li>
+    </ul>
+    <p class="note">⚠ <b>Техника безопасности.</b> При разбавлении серной кислоты нужно <b>лить кислоту в воду</b>, а не наоборот!</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§7</span> Контрольные вопросы</div>
+    <ul class="theory-list">
+      <li>1. Какое определение кислоты даёт теория электролитической диссоциации?</li>
+      <li>2. Как классифицируются кислоты по основности? Приведите примеры.</li>
+      <li>3. Как изменяют окраску лакмус, метилоранж и фенолфталеин в кислоте?</li>
+      <li>4. С какими металлами реагируют кислоты? Приведите пример.</li>
+      <li>5. Что такое реакция нейтрализации? Напишите пример.</li>
+      <li>6. При каких условиях кислота реагирует с солью?</li>
+      <li>7. Напишите уравнения: Zn + HCl, CuO + H₂SO₄, NaOH + HNO₃, CaCO₃ + HCl.</li>
+      <li>8. Почему медь не реагирует с соляной кислотой?</li>
+      <li>9. Чем отличается действие концентрированной и разбавленной серной кислоты на металлы?</li>
+      <li>10. Как правильно разбавлять серную кислоту? Почему?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§8</span> Тест (20 вариантов × 20 вопросов)</div>
+    <div id="quiz-acids"></div>
+  </div>
+</div>
+</main>
+
+<main class="page" id="page-bases">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Химические свойства оснований как электролитов</h1>
+    <p>Полная теория: определение, классификация, свойства, индикаторы, примеры реакций.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§1</span> Что такое основание с точки зрения ТЭД</div>
+    <p><strong class="hl">Основания</strong> — это электролиты, которые при диссоциации в водном растворе образуют <b>только гидроксид-ионы OH⁻</b> и катионы металла (или ион аммония NH₄⁺).</p>
+    <p class="mt-16"><b>Примеры диссоциации:</b></p>
+    <div class="formula-box">NaOH <span class="eq">→</span> Na⁺ + OH⁻</div>
+    <div class="formula-box">Ca(OH)₂ <span class="eq">→</span> Ca²⁺ + 2OH⁻</div>
+    <div class="formula-box">Ba(OH)₂ <span class="eq">→</span> Ba²⁺ + 2OH⁻</div>
+    <div class="formula-box">NH₄OH <span class="eq">⇄</span> NH₄⁺ + OH⁻ (слабое основание)</div>
+    <p class="note">💡 Именно <b>ионы OH⁻</b> определяют все общие свойства оснований: мылкость на ощупь, окраску индикаторов, взаимодействие с кислотами.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§2</span> Классификация оснований</div>
+    <p><b>1. По растворимости в воде:</b></p>
+    <ul class="theory-list">
+      <li><b>Растворимые (щёлочи):</b> NaOH, KOH, LiOH, RbOH, CsOH, Ca(OH)₂, Sr(OH)₂, Ba(OH)₂</li>
+      <li><b>Нерастворимые:</b> Cu(OH)₂, Fe(OH)₂, Fe(OH)₃, Al(OH)₃, Mg(OH)₂, Zn(OH)₂</li>
+    </ul>
+    <p class="mt-16"><b>2. По кислотности (число OH-групп):</b></p>
+    <ul class="theory-list">
+      <li><b>Однокислотные:</b> NaOH, KOH, LiOH, NH₄OH</li>
+      <li><b>Двухкислотные:</b> Ca(OH)₂, Ba(OH)₂, Mg(OH)₂, Fe(OH)₂</li>
+      <li><b>Трёхкислотные:</b> Fe(OH)₃, Al(OH)₃</li>
+    </ul>
+    <p class="mt-16"><b>3. По силе:</b></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Категория</th><th>Основания</th></tr></thead>
+        <tbody>
+          <tr><td><b>Сильные (щёлочи)</b></td><td>NaOH, KOH, LiOH, Ba(OH)₂, Ca(OH)₂ (частично)</td></tr>
+          <tr><td><b>Слабые</b></td><td>NH₄OH, Cu(OH)₂, Fe(OH)₃, Al(OH)₃, Mg(OH)₂, Zn(OH)₂</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-16"><b>4. Амфотерные гидроксиды:</b> Zn(OH)₂, Al(OH)₃, Be(OH)₂, Cr(OH)₃ — реагируют и с кислотами, и со щелочами.</p>
+    <p class="note">💡 <b>Амфотерность</b> — способность вещества проявлять и кислотные, и основные свойства:<br>
+    Al(OH)₃ + 3HCl → AlCl₃ + 3H₂O (как основание)<br>
+    Al(OH)₃ + NaOH → Na[Al(OH)₄] (как кислота)</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§3</span> Индикаторы в щелочной среде</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Индикатор</th><th>Нейтральная</th><th>Щелочная</th></tr></thead>
+        <tbody>
+          <tr><td>Лакмус</td><td>Фиолетовый</td><td><b>Синий</b></td></tr>
+          <tr><td>Метилоранж</td><td>Оранжевый</td><td><b>Жёлтый</b></td></tr>
+          <tr><td>Фенолфталеин</td><td>Бесцветный</td><td><b>Малиновый</b></td></tr>
+          <tr><td>Универсальный</td><td>Жёлто-зелёный</td><td><b>Синий / фиолетовый</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§4</span> Химические свойства оснований</div>
+    <p><b>Свойство 1. Взаимодействие с индикаторами</b> (см. §3).</p>
+
+    <p class="mt-16"><b>Свойство 2. Взаимодействие с кислотами (нейтрализация).</b></p>
+    <div class="formula-box">KOH + HNO₃ <span class="eq">→</span> KNO₃ + H₂O</div>
+    <div class="formula-box">Ca(OH)₂ + 2HCl <span class="eq">→</span> CaCl₂ + 2H₂O</div>
+    <div class="formula-box">2NaOH + H₂SO₄ <span class="eq">→</span> Na₂SO₄ + 2H₂O</div>
+
+    <p class="mt-16"><b>Свойство 3. Взаимодействие с кислотными оксидами.</b></p>
+    <div class="formula-box">2NaOH + CO₂ <span class="eq">→</span> Na₂CO₃ + H₂O</div>
+    <div class="formula-box">Ca(OH)₂ + SO₂ <span class="eq">→</span> CaSO₃ + H₂O</div>
+    <p class="note">💡 Это свойство используют для поглощения CO₂: известковая вода мутнеет.<br>Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O</p>
+
+    <p class="mt-16"><b>Свойство 4. Взаимодействие с солями.</b></p>
+    <p>Реакция идёт, если образуется <b>осадок</b> или <b>газ</b>.</p>
+    <div class="formula-box">2NaOH + CuSO₄ <span class="eq">→</span> Cu(OH)₂↓ + Na₂SO₄</div>
+    <div class="formula-box">FeCl₃ + 3NaOH <span class="eq">→</span> Fe(OH)₃↓ + 3NaCl</div>
+    <div class="formula-box">NH₄Cl + NaOH <span class="eq">→</span> NaCl + NH₃↑ + H₂O</div>
+
+    <p class="mt-16"><b>Свойство 5. Разложение нерастворимых оснований при нагревании.</b></p>
+    <div class="formula-box">Cu(OH)₂ <span class="eq">→t°→</span> CuO + H₂O</div>
+    <div class="formula-box">2Fe(OH)₃ <span class="eq">→t°→</span> Fe₂O₃ + 3H₂O</div>
+    <div class="formula-box">Mg(OH)₂ <span class="eq">→t°→</span> MgO + H₂O</div>
+    <p class="note">💡 Щёлочи (растворимые основания) устойчивы при нагревании. Исключение — Ca(OH)₂ разлагается при 580°C.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§5</span> Амфотерные гидроксиды</div>
+    <p>Некоторые гидроксиды (Zn(OH)₂, Al(OH)₃, Be(OH)₂, Cr(OH)₃) проявляют двойственные свойства: реагируют и с кислотами, и со щелочами.</p>
+    <p class="mt-16"><b>Al(OH)₃ + 3HCl → AlCl₃ + 3H₂O</b> (основные свойства)</p>
+    <p><b>Al(OH)₃ + NaOH → Na[Al(OH)₄]</b> (кислотные свойства)</p>
+    <p class="mt-16"><b>Zn(OH)₂ + 2HCl → ZnCl₂ + 2H₂O</b></p>
+    <p><b>Zn(OH)₂ + 2NaOH → Na₂[Zn(OH)₄]</b></p>
+    <p class="note">💡 Упрощённо в школе: Al(OH)₃ + NaOH → NaAlO₂ + 2H₂O</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§6</span> Применение оснований</div>
+    <ul class="theory-list">
+      <li><b>NaOH (едкий натр):</b> производство мыла, бумаги, очистка нефти.</li>
+      <li><b>KOH (едкое кали):</b> производство жидкого мыла, электролиты.</li>
+      <li><b>Ca(OH)₂ (гашёная известь):</b> строительство, побелка, обнаружение CO₂.</li>
+      <li><b>NH₄OH:</b> медицина, моющие средства.</li>
+      <li><b>Al(OH)₃, Mg(OH)₂:</b> лекарства от изжоги.</li>
+    </ul>
+    <p class="note">⚠ <b>Техника безопасности.</b> Щёлочи — едкие вещества, работают в перчатках и очках.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§7</span> Контрольные вопросы</div>
+    <ul class="theory-list">
+      <li>1. Какое определение основания даёт теория электролитической диссоциации?</li>
+      <li>2. Какие основания называются щелочами?</li>
+      <li>3. Как классифицируются основания по кислотности?</li>
+      <li>4. Как изменяют окраску лакмус, метилоранж и фенолфталеин в щёлочи?</li>
+      <li>5. Что такое реакция нейтрализации? Напишите пример.</li>
+      <li>6. Как основания реагируют с кислотными оксидами?</li>
+      <li>7. Как основания реагируют с солями?</li>
+      <li>8. Как разлагаются нерастворимые основания при нагревании?</li>
+      <li>9. Что такое амфотерный гидроксид?</li>
+      <li>10. Напишите уравнения: NaOH + HCl, Ca(OH)₂ + CO₂, CuSO₄ + NaOH, Cu(OH)₂ → t°.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§8</span> Тест (20 вариантов × 20 вопросов)</div>
+    <div id="quiz-bases"></div>
+  </div>
+</div>
+</main>
+<main class="page" id="page-salts">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Химические свойства солей как электролитов</h1>
+    <p>Полная теория: определение, классификация, свойства, условия реакций, ионные уравнения.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§1</span> Что такое соль с точки зрения ТЭД</div>
+    <p><strong class="hl">Соли</strong> — это электролиты, которые при диссоциации образуют <b>катионы металла</b> (или ион аммония NH₄⁺) и <b>анионы кислотного остатка</b>.</p>
+    <p class="mt-16"><b>Примеры диссоциации:</b></p>
+    <div class="formula-box">NaCl <span class="eq">→</span> Na⁺ + Cl⁻</div>
+    <div class="formula-box">K₂SO₄ <span class="eq">→</span> 2K⁺ + SO₄²⁻</div>
+    <div class="formula-box">Al₂(SO₄)₃ <span class="eq">→</span> 2Al³⁺ + 3SO₄²⁻</div>
+    <div class="formula-box">NH₄NO₃ <span class="eq">→</span> NH₄⁺ + NO₃⁻</div>
+    <p class="note">💡 При диссоциации солей <b>никогда не образуются</b> ни ионы H⁺, ни ионы OH⁻ — поэтому растворы многих солей нейтральны (но не всех — см. гидролиз).</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§2</span> Классификация солей</div>
+    <p><b>1. Средние (нормальные):</b> NaCl, K₂SO₄, Ca(NO₃)₂, Al₂(SO₄)₃, CuCl₂</p>
+    <p class="mt-16"><b>2. Кислые:</b> NaHCO₃, KHSO₄, Ca(H₂PO₄)₂, Na₂HPO₄</p>
+    <p class="mt-16"><b>3. Основные:</b> Cu₂(OH)₂CO₃ (малахит), Mg(OH)Cl, Al(OH)Cl₂</p>
+    <p class="mt-16"><b>4. Двойные:</b> KAl(SO₄)₂, KNaCO₃</p>
+    <p class="mt-16"><b>5. Комплексные:</b> Na₃[Al(OH)₆], K₄[Fe(CN)₆] (жёлтая кровяная соль), K₃[Fe(CN)₆]</p>
+    <p class="mt-16"><b>6. Кристаллогидраты:</b> CuSO₄·5H₂O (медный купорос), FeSO₄·7H₂O (железный купорос), Na₂CO₃·10H₂O, CaSO₄·2H₂O (гипс)</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§3</span> Химические свойства солей</div>
+    <p><b>Свойство 1. Взаимодействие с металлами.</b></p>
+    <p>Более активный металл вытесняет менее активный. Реакция возможна, если металл-реагент стоит <b>левее</b> металла в соли.</p>
+    <div class="formula-box">Fe + CuSO₄ <span class="eq">→</span> FeSO₄ + Cu↓</div>
+    <div class="formula-box">Zn + CuCl₂ <span class="eq">→</span> ZnCl₂ + Cu↓</div>
+    <div class="formula-box">Cu + 2AgNO₃ <span class="eq">→</span> Cu(NO₃)₂ + 2Ag↓</div>
+    <p class="note">⚠ Металлы I и II главных подгрупп (Na, K, Ca) с растворами солей так не реагируют — сначала взаимодействуют с водой.</p>
+
+    <p class="mt-16"><b>Свойство 2. Взаимодействие с кислотами.</b></p>
+    <p>Реакция идёт, если образуется осадок, газ или слабый электролит.</p>
+    <div class="formula-box">BaCl₂ + H₂SO₄ <span class="eq">→</span> BaSO₄↓ + 2HCl</div>
+    <div class="formula-box">Na₂CO₃ + 2HCl <span class="eq">→</span> 2NaCl + H₂O + CO₂↑</div>
+
+    <p class="mt-16"><b>Свойство 3. Взаимодействие с основаниями (щёлочами).</b></p>
+    <div class="formula-box">CuSO₄ + 2NaOH <span class="eq">→</span> Cu(OH)₂↓ + Na₂SO₄</div>
+    <div class="formula-box">FeCl₃ + 3NaOH <span class="eq">→</span> Fe(OH)₃↓ + 3NaCl</div>
+    <div class="formula-box">NH₄Cl + NaOH <span class="eq">→</span> NaCl + NH₃↑ + H₂O</div>
+
+    <p class="mt-16"><b>Свойство 4. Взаимодействие солей друг с другом.</b></p>
+    <div class="formula-box">AgNO₃ + NaCl <span class="eq">→</span> AgCl↓ + NaNO₃</div>
+    <div class="formula-box">BaCl₂ + Na₂SO₄ <span class="eq">→</span> BaSO₄↓ + 2NaCl</div>
+    <div class="formula-box">CaCl₂ + Na₂CO₃ <span class="eq">→</span> CaCO₃↓ + 2NaCl</div>
+
+    <p class="mt-16"><b>Свойство 5. Разложение при нагревании.</b></p>
+    <div class="formula-box">CaCO₃ <span class="eq">→t°→</span> CaO + CO₂↑</div>
+    <div class="formula-box">2NaHCO₃ <span class="eq">→t°→</span> Na₂CO₃ + CO₂↑ + H₂O</div>
+    <div class="formula-box">NH₄Cl <span class="eq">→t°→</span> NH₃↑ + HCl↑</div>
+    <div class="formula-box">2KNO₃ <span class="eq">→t°→</span> 2KNO₂ + O₂↑</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§4</span> Условия реакций ионного обмена</div>
+    <p>Реакции между растворами электролитов протекают до конца, если образуется <b>осадок</b>, <b>газ</b> или <b>слабый электролит</b>. Это правило Бертолле.</p>
+    <p class="mt-16"><b>1. Осадок (↓):</b></p>
+    <ul class="theory-list">
+      <li>AgCl — белый творожистый</li>
+      <li>BaSO₄ — белый, нерастворимый</li>
+      <li>CaCO₃ — белый</li>
+      <li>Cu(OH)₂ — голубой</li>
+      <li>Fe(OH)₃ — бурый</li>
+      <li>Fe(OH)₂ — зеленоватый</li>
+      <li>PbI₂ — жёлтый</li>
+    </ul>
+    <p class="mt-16"><b>2. Газ (↑):</b></p>
+    <ul class="theory-list">
+      <li>CO₂↑ — кислота + карбонат</li>
+      <li>H₂S↑ — кислота + сульфид</li>
+      <li>NH₃↑ — щёлочь + соль аммония</li>
+      <li>SO₂↑ — кислота + сульфит</li>
+    </ul>
+    <p class="mt-16"><b>3. Слабый электролит:</b></p>
+    <ul class="theory-list">
+      <li>HCl + NaOH → NaCl + H₂O</li>
+      <li>CH₃COONa + HCl → CH₃COOH + NaCl</li>
+    </ul>
+    <p class="note">💡 Если ни осадок, ни газ, ни слабый электролит не образуется — реакция <b>не идёт</b>. Пример: NaCl + KNO₃ → реакция не происходит.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§5</span> Как писать ионные уравнения</div>
+    <p>Реакции ионного обмена записывают в трёх формах:</p>
+    <p class="mt-16"><b>1. Молекулярное уравнение:</b></p>
+    <div class="formula-box">BaCl₂ + Na₂SO₄ → BaSO₄↓ + 2NaCl</div>
+    <p class="mt-16"><b>2. Полное ионное уравнение:</b></p>
+    <div class="formula-box">Ba²⁺ + 2Cl⁻ + 2Na⁺ + SO₄²⁻ → BaSO₄↓ + 2Na⁺ + 2Cl⁻</div>
+    <p class="mt-16"><b>3. Сокращённое ионное уравнение:</b></p>
+    <div class="formula-box">Ba²⁺ + SO₄²⁻ → BaSO₄↓</div>
+    <p class="note">💡 Сокращённое ионное уравнение показывает суть реакции.</p>
+    <p class="mt-16"><b>Пример разбора (CuSO₄ + NaOH):</b></p>
+    <div class="formula-box">Молекулярное: CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄</div>
+    <div class="formula-box">Полное: Cu²⁺ + SO₄²⁻ + 2Na⁺ + 2OH⁻ → Cu(OH)₂↓ + 2Na⁺ + SO₄²⁻</div>
+    <div class="formula-box">Сокращённое: Cu²⁺ + 2OH⁻ → Cu(OH)₂↓</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§6</span> Применение солей</div>
+    <ul class="theory-list">
+      <li><b>NaCl:</b> пища, получение хлора, соды, соляной кислоты.</li>
+      <li><b>NaHCO₃:</b> пищевая сода, разрыхлитель теста, медицина.</li>
+      <li><b>Na₂CO₃:</b> производство стекла, мыла, моющих средств.</li>
+      <li><b>CaCO₃:</b> строительство, мел, мрамор.</li>
+      <li><b>KNO₃:</b> удобрения, чёрный порох.</li>
+      <li><b>AgNO₃:</b> ляпис, фотография.</li>
+      <li><b>CuSO₄·5H₂O:</b> защита растений, электролиты.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§7</span> Контрольные вопросы</div>
+    <ul class="theory-list">
+      <li>1. Какое определение соли даёт теория электролитической диссоциации?</li>
+      <li>2. Как классифицируются соли? Приведите примеры каждого типа.</li>
+      <li>3. С какими металлами реагируют соли? При каком условии?</li>
+      <li>4. При каких условиях соль реагирует с кислотой?</li>
+      <li>5. При каких условиях соль реагирует со щёлочью?</li>
+      <li>6. При каких условиях соли реагируют друг с другом?</li>
+      <li>7. Какие соли разлагаются при нагревании?</li>
+      <li>8. Что такое правило Бертолле?</li>
+      <li>9. Напишите уравнения: Fe + CuSO₄, BaCl₂ + H₂SO₄, CuSO₄ + NaOH.</li>
+      <li>10. Напишите полное и сокращённое ионное уравнение для AgNO₃ + NaCl.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§8</span> Тест (20 вариантов × 20 вопросов)</div>
+    <div id="quiz-salts"></div>
+  </div>
+</div>
+</main>
+
+<main class="page" id="page-hydrolysis">
+<div class="wrap">
+  <div class="page-head">
+    <h1>Гидролиз солей</h1>
+    <p>Полная теория: определение, 4 типа солей, уравнения, изменение pH, правила.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§1</span> Что такое гидролиз солей</div>
+    <p><strong class="hl">Гидролиз солей</strong> — это обменная реакция между ионами соли и молекулами воды, приводящая к образованию слабого электролита и изменению кислотности среды.</p>
+    <p class="mt-16"><b>Почему это происходит?</b> Вода — слабый электролит:</p>
+    <div class="formula-box">H₂O ⇄ H⁺ + OH⁻</div>
+    <p>Когда в растворе есть ионы, способные связать H⁺ или OH⁻ в слабый электролит, они «забирают» эти ионы у воды, и равновесие смещается. Это приводит к изменению pH раствора.</p>
+    <p class="mt-16"><b>Гидролизуются только соли, образованные:</b></p>
+    <ul class="theory-list">
+      <li>Слабой кислотой и сильным основанием → среда <b>щелочная</b></li>
+      <li>Сильной кислотой и слабым основанием → среда <b>кислая</b></li>
+      <li>Слабой кислотой и слабым основанием → среда зависит от силы</li>
+    </ul>
+    <p><b>Не гидролизуются:</b> соли сильной кислоты и сильного основания (NaCl, KNO₃, BaSO₄).</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§2</span> Четыре типа солей</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Тип</th><th>Кислота</th><th>Основание</th><th>Гидролиз</th><th>pH</th><th>Пример</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Сильная</td><td>Сильное</td><td>Не гидролизуется</td><td>= 7</td><td>NaCl, KNO₃, BaSO₄</td></tr>
+          <tr><td>2</td><td>Слабая</td><td>Сильное</td><td>По аниону</td><td>&gt; 7</td><td>Na₂CO₃, CH₃COONa</td></tr>
+          <tr><td>3</td><td>Сильная</td><td>Слабое</td><td>По катиону</td><td>&lt; 7</td><td>NH₄Cl, CuCl₂, AlCl₃</td></tr>
+          <tr><td>4</td><td>Слабая</td><td>Слабое</td><td>По катиону и аниону</td><td>Зависит</td><td>CH₃COONH₄</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">💡 Чтобы определить тип соли, разбейте её на «кислоту» и «основание». Пример: Na₂CO₃ → NaOH (сильное) + H₂CO₃ (слабая) → тип 2, щелочная среда.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§3</span> Гидролиз по аниону (тип 2)</div>
+    <p><b>Соль образована слабой кислотой и сильным основанием.</b> Анион связывает H⁺ из воды, остаются OH⁻ — среда <b>щелочная</b>.</p>
+    <p class="mt-16"><b>Пример 1. Na₂CO₃</b></p>
+    <div class="formula-box">Na₂CO₃ → 2Na⁺ + CO₃²⁻</div>
+    <div class="formula-box">CO₃²⁻ + H₂O ⇄ HCO₃⁻ + OH⁻</div>
+    <div class="formula-box">Na₂CO₃ + H₂O ⇄ NaHCO₃ + NaOH</div>
+    <p class="mt-16"><b>Пример 2. CH₃COONa</b></p>
+    <div class="formula-box">CH₃COO⁻ + H₂O ⇄ CH₃COOH + OH⁻</div>
+    <p class="mt-16"><b>Пример 3. Na₂S</b></p>
+    <div class="formula-box">S²⁻ + H₂O ⇄ HS⁻ + OH⁻</div>
+    <p class="note">💡 Чем слабее кислота, тем сильнее гидролиз по аниону.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§4</span> Гидролиз по катиону (тип 3)</div>
+    <p><b>Соль образована сильной кислотой и слабым основанием.</b> Катион связывает OH⁻ из воды, остаются H⁺ — среда <b>кислая</b>.</p>
+    <p class="mt-16"><b>Пример 1. CuCl₂</b></p>
+    <div class="formula-box">Cu²⁺ + H₂O ⇄ CuOH⁺ + H⁺</div>
+    <div class="formula-box">CuCl₂ + H₂O ⇄ CuOHCl + HCl</div>
+    <p class="mt-16"><b>Пример 2. NH₄Cl</b></p>
+    <div class="formula-box">NH₄⁺ + H₂O ⇄ NH₄OH + H⁺</div>
+    <p class="mt-16"><b>Пример 3. AlCl₃</b></p>
+    <div class="formula-box">Al³⁺ + H₂O ⇄ AlOH²⁺ + H⁺</div>
+    <p class="note">💡 Чем слабее основание, тем сильнее гидролиз.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§5</span> Совместный гидролиз (тип 4)</div>
+    <p><b>Соль образована слабой кислотой и слабым основанием.</b> Оба иона гидролизуются одновременно. Реакция среды зависит от того, какой электролит слабее.</p>
+    <p class="mt-16"><b>Пример: CH₃COONH₄</b></p>
+    <div class="formula-box">CH₃COO⁻ + NH₄⁺ + H₂O ⇄ CH₃COOH + NH₄OH</div>
+    <p>CH₃COOH и NH₄OH примерно одинаковой силы → среда близка к <b>нейтральной</b>.</p>
+    <p class="mt-16"><b>Необратимый гидролиз:</b></p>
+    <div class="formula-box">Al₂S₃ + 6H₂O → 2Al(OH)₃↓ + 3H₂S↑</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§6</span> Правила и закономерности</div>
+    <p><b>Что усиливает гидролиз:</b></p>
+    <ul class="theory-list">
+      <li><b>Нагревание</b> — гидролиз эндотермичен.</li>
+      <li><b>Разбавление</b> — чем больше воды, тем больше гидролиз.</li>
+      <li><b>Добавление соли</b> — увеличивает концентрацию гидролизующихся ионов.</li>
+    </ul>
+    <p class="mt-16"><b>Что подавляет гидролиз:</b></p>
+    <ul class="theory-list">
+      <li><b>Добавление кислоты</b> — подавляет гидролиз по аниону.</li>
+      <li><b>Добавление щёлочи</b> — подавляет гидролиз по катиону.</li>
+      <li><b>Охлаждение</b> ослабляет гидролиз.</li>
+    </ul>
+    <p class="mt-16"><b>Сила кислот и оснований:</b></p>
+    <ul class="theory-list">
+      <li><b>Сильные кислоты:</b> HCl, HBr, HI, HNO₃, H₂SO₄, HClO₄</li>
+      <li><b>Сильные основания:</b> NaOH, KOH, LiOH, Ca(OH)₂, Ba(OH)₂</li>
+      <li><b>Слабые кислоты:</b> H₂CO₃, H₂S, CH₃COOH, H₃PO₄, HF, HNO₂</li>
+      <li><b>Слабые основания:</b> NH₄OH, Cu(OH)₂, Fe(OH)₃, Al(OH)₃, Zn(OH)₂</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§7</span> Значение гидролиза</div>
+    <ul class="theory-list">
+      <li><b>В природе:</b> гидролиз минералов, образование почвы.</li>
+      <li><b>В быту:</b> мыло гидролизуется, создавая щелочную среду.</li>
+      <li><b>В технике:</b> при приготовлении растворов солей учитывают pH.</li>
+      <li><b>В биологии:</b> гидролиз органических веществ.</li>
+      <li><b>В аналитической химии:</b> для обнаружения ионов.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§8</span> Контрольные вопросы</div>
+    <ul class="theory-list">
+      <li>1. Что такое гидролиз солей?</li>
+      <li>2. Какие соли подвергаются гидролизу, а какие — нет?</li>
+      <li>3. Назовите четыре типа солей и укажите, как каждая гидролизуется.</li>
+      <li>4. Что такое гидролиз по аниону?</li>
+      <li>5. Что такое гидролиз по катиону?</li>
+      <li>6. Как определить pH раствора соли?</li>
+      <li>7. Что усиливает и ослабляет гидролиз?</li>
+      <li>8. Что такое необратимый гидролиз?</li>
+      <li>9. Напишите уравнения гидролиза: Na₂CO₃, NH₄Cl, CH₃COONH₄.</li>
+      <li>10. Почему раствор Na₂CO₃ мылкий на ощупь?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="num">§9</span> Тест (20 вариантов × 20 вопросов)</div>
+    <div id="quiz-hydrolysis"></div>
+  </div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script>
+/* ============================================================
+   НАВИГАЦИЯ
+   ============================================================ */
+document.querySelectorAll('.nav-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var page=this.getAttribute('data-page');
+    document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+    this.classList.add('active');
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+    document.getElementById('page-'+page).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+/* ============================================================
+   БАЗА ВЕЩЕСТВ
+   ============================================================ */
+var SUBSTANCES=[
+  {formula:"NaCl",name:"Хлорид натрия",composition:{Na:1,Cl:1},aliases:["поваренная соль","каменная соль","соль","галит"],note:"Ионная решётка."},
+  {formula:"KCl",name:"Хлорид калия",composition:{K:1,Cl:1},aliases:["сильвин"],note:"Ионная решётка."},
+  {formula:"LiCl",name:"Хлорид лития",composition:{Li:1,Cl:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CaCl2",name:"Хлорид кальция",composition:{Ca:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"MgCl2",name:"Хлорид магния",composition:{Mg:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"BaCl2",name:"Хлорид бария",composition:{Ba:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"AlCl3",name:"Хлорид алюминия",composition:{Al:1,Cl:3},aliases:[],note:"Ионная решётка."},
+  {formula:"FeCl3",name:"Хлорид железа(III)",composition:{Fe:1,Cl:3},aliases:[],note:"Ионная решётка."},
+  {formula:"FeCl2",name:"Хлорид железа(II)",composition:{Fe:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"CuCl2",name:"Хлорид меди(II)",composition:{Cu:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"ZnCl2",name:"Хлорид цинка",composition:{Zn:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"AgCl",name:"Хлорид серебра",composition:{Ag:1,Cl:1},aliases:[],note:"Нерастворим."},
+  {formula:"NH4Cl",name:"Хлорид аммония",composition:{N:1,H:4,Cl:1},aliases:["нашатырь"],note:"Ионная решётка."},
+  {formula:"NaBr",name:"Бромид натрия",composition:{Na:1,Br:1},aliases:[],note:"Ионная решётка."},
+  {formula:"KBr",name:"Бромид калия",composition:{K:1,Br:1},aliases:[],note:"Ионная решётка."},
+  {formula:"NaI",name:"Иодид натрия",composition:{Na:1,I:1},aliases:[],note:"Ионная решётка."},
+  {formula:"KI",name:"Иодид калия",composition:{K:1,I:1},aliases:[],note:"Ионная решётка."},
+  {formula:"NaF",name:"Фторид натрия",composition:{Na:1,F:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CaF2",name:"Фторид кальция",composition:{Ca:1,F:2},aliases:["флюорит"],note:"Ионная решётка."},
+  {formula:"Na2SO4",name:"Сульфат натрия",composition:{Na:2,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"K2SO4",name:"Сульфат калия",composition:{K:2,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"MgSO4",name:"Сульфат магния",composition:{Mg:1,S:1,O:4},aliases:["английская соль"],note:"Ионная решётка."},
+  {formula:"CaSO4",name:"Сульфат кальция",composition:{Ca:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"BaSO4",name:"Сульфат бария",composition:{Ba:1,S:1,O:4},aliases:["барит"],note:"Нерастворим."},
+  {formula:"CuSO4",name:"Сульфат меди(II)",composition:{Cu:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"FeSO4",name:"Сульфат железа(II)",composition:{Fe:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"Al2(SO4)3",name:"Сульфат алюминия",composition:{Al:2,S:3,O:12},aliases:[],note:"Ионная решётка."},
+  {formula:"ZnSO4",name:"Сульфат цинка",composition:{Zn:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"(NH4)2SO4",name:"Сульфат аммония",composition:{N:2,H:8,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"CuSO4·5H2O",name:"Сульфат меди(II) пентагидрат",composition:{Cu:1,S:1,O:9,H:10},aliases:["медный купорос"],note:"Кристаллогидрат."},
+  {formula:"FeSO4·7H2O",name:"Сульфат железа(II) гептагидрат",composition:{Fe:1,S:1,O:11,H:14},aliases:["железный купорос"],note:"Кристаллогидрат."},
+  {formula:"CaSO4·2H2O",name:"Сульфат кальция дигидрат",composition:{Ca:1,S:1,O:6,H:4},aliases:["гипс"],note:"Кристаллогидрат."},
+  {formula:"NaNO3",name:"Нитрат натрия",composition:{Na:1,N:1,O:3},aliases:["натриевая селитра"],note:"Ионная решётка."},
+  {formula:"KNO3",name:"Нитрат калия",composition:{K:1,N:1,O:3},aliases:["калиевая селитра","селитра"],note:"Ионная решётка."},
+  {formula:"Ca(NO3)2",name:"Нитрат кальция",composition:{Ca:1,N:2,O:6},aliases:["кальциевая селитра"],note:"Ионная решётка."},
+  {formula:"AgNO3",name:"Нитрат серебра",composition:{Ag:1,N:1,O:3},aliases:["ляпис"],note:"Ионная решётка."},
+  {formula:"Cu(NO3)2",name:"Нитрат меди(II)",composition:{Cu:1,N:2,O:6},aliases:[],note:"Ионная решётка."},
+  {formula:"Al(NO3)3",name:"Нитрат алюминия",composition:{Al:1,N:3,O:9},aliases:[],note:"Ионная решётка."},
+  {formula:"NH4NO3",name:"Нитрат аммония",composition:{N:2,H:4,O:3},aliases:["аммиачная селитра"],note:"Ионная решётка."},
+  {formula:"Na2CO3",name:"Карбонат натрия",composition:{Na:2,C:1,O:3},aliases:["сода","кальцинированная сода"],note:"Ионная решётка."},
+  {formula:"K2CO3",name:"Карбонат калия",composition:{K:2,C:1,O:3},aliases:["поташ"],note:"Ионная решётка."},
+  {formula:"CaCO3",name:"Карбонат кальция",composition:{Ca:1,C:1,O:3},aliases:["мел","известняк","мрамор","кальцит"],note:"Ионная решётка."},
+  {formula:"BaCO3",name:"Карбонат бария",composition:{Ba:1,C:1,O:3},aliases:[],note:"Ионная решётка."},
+  {formula:"MgCO3",name:"Карбонат магния",composition:{Mg:1,C:1,O:3},aliases:["магнезит"],note:"Ионная решётка."},
+  {formula:"NaHCO3",name:"Гидрокарбонат натрия",composition:{Na:1,H:1,C:1,O:3},aliases:["пищевая сода"],note:"Ионная решётка."},
+  {formula:"Na3PO4",name:"Фосфат натрия",composition:{Na:3,P:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"K3PO4",name:"Фосфат калия",composition:{K:3,P:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"Ca3(PO4)2",name:"Фосфат кальция",composition:{Ca:3,P:2,O:8},aliases:["фосфорит"],note:"Ионная решётка."},
+  {formula:"Na2S",name:"Сульфид натрия",composition:{Na:2,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"K2S",name:"Сульфид калия",composition:{K:2,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"FeS",name:"Сульфид железа(II)",composition:{Fe:1,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"FeS2",name:"Дисульфид железа",composition:{Fe:1,S:2},aliases:["пирит"],note:"Ионная решётка."},
+  {formula:"ZnS",name:"Сульфид цинка",composition:{Zn:1,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CuS",name:"Сульфид меди(II)",composition:{Cu:1,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"HgS",name:"Сульфид ртути(II)",composition:{Hg:1,S:1},aliases:["киноварь"],note:"Ионная решётка."},
+  {formula:"Na2SO3",name:"Сульфит натрия",composition:{Na:2,S:1,O:3},aliases:[],note:"Ионная решётка."},
+  {formula:"KMnO4",name:"Перманганат калия",composition:{K:1,Mn:1,O:4},aliases:["марганцовка"],note:"Ионная решётка."},
+  {formula:"K2Cr2O7",name:"Дихромат калия",composition:{K:2,Cr:2,O:7},aliases:["хромпик"],note:"Ионная решётка."},
+  {formula:"KClO3",name:"Хлорат калия",composition:{K:1,Cl:1,O:3},aliases:["бертолетова соль"],note:"Ионная решётка."},
+  {formula:"Na2SiO3",name:"Силикат натрия",composition:{Na:2,Si:1,O:3},aliases:["жидкое стекло"],note:"Ионная решётка."},
+  {formula:"Na2B4O7·10H2O",name:"Тетраборат натрия декагидрат",composition:{Na:2,B:4,O:17,H:20},aliases:["бура"],note:"Кристаллогидрат."},
+  {formula:"CH3COONa",name:"Ацетат натрия",composition:{C:2,H:3,O:2,Na:1},aliases:[],note:"Ионная решётка."},
+  {formula:"NaOH",name:"Гидроксид натрия",composition:{Na:1,O:1,H:1},aliases:["едкий натр","каустическая сода"],note:"Щёлочь."},
+  {formula:"KOH",name:"Гидроксид калия",composition:{K:1,O:1,H:1},aliases:["едкое кали"],note:"Щёлочь."},
+  {formula:"LiOH",name:"Гидроксид лития",composition:{Li:1,O:1,H:1},aliases:[],note:"Щёлочь."},
+  {formula:"Ca(OH)2",name:"Гидроксид кальция",composition:{Ca:1,O:2,H:2},aliases:["гашеная известь"],note:"Щёлочь."},
+  {formula:"Ba(OH)2",name:"Гидроксид бария",composition:{Ba:1,O:2,H:2},aliases:[],note:"Щёлочь."},
+  {formula:"Mg(OH)2",name:"Гидроксид магния",composition:{Mg:1,O:2,H:2},aliases:[],note:"Нерастворим."},
+  {formula:"Al(OH)3",name:"Гидроксид алюминия",composition:{Al:1,O:3,H:3},aliases:[],note:"Амфотерный."},
+  {formula:"Cu(OH)2",name:"Гидроксид меди(II)",composition:{Cu:1,O:2,H:2},aliases:[],note:"Нерастворим."},
+  {formula:"Fe(OH)3",name:"Гидроксид железа(III)",composition:{Fe:1,O:3,H:3},aliases:[],note:"Нерастворим."},
+  {formula:"Fe(OH)2",name:"Гидроксид железа(II)",composition:{Fe:1,O:2,H:2},aliases:[],note:"Нерастворим."},
+  {formula:"Zn(OH)2",name:"Гидроксид цинка",composition:{Zn:1,O:2,H:2},aliases:[],note:"Амфотерный."},
+  {formula:"NH4OH",name:"Гидроксид аммония",composition:{N:1,H:5,O:1},aliases:["нашатырный спирт"],note:"Слабое основание."},
+  {formula:"Na2O",name:"Оксид натрия",composition:{Na:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"K2O",name:"Оксид калия",composition:{K:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CaO",name:"Оксид кальция",composition:{Ca:1,O:1},aliases:["негашеная известь","известь"],note:"Ионная решётка."},
+  {formula:"MgO",name:"Оксид магния",composition:{Mg:1,O:1},aliases:["жжёная магнезия"],note:"Ионная решётка."},
+  {formula:"BaO",name:"Оксид бария",composition:{Ba:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Al2O3",name:"Оксид алюминия",composition:{Al:2,O:3},aliases:["корунд","глинозём"],note:"Амфотерный."},
+  {formula:"CuO",name:"Оксид меди(II)",composition:{Cu:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Cu2O",name:"Оксид меди(I)",composition:{Cu:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Fe2O3",name:"Оксид железа(III)",composition:{Fe:2,O:3},aliases:["красный железняк","гематит"],note:"Ионная решётка."},
+  {formula:"FeO",name:"Оксид железа(II)",composition:{Fe:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Fe3O4",name:"Оксид железа(II,III)",composition:{Fe:3,O:4},aliases:["магнетит"],note:"Ионная решётка."},
+  {formula:"ZnO",name:"Оксид цинка",composition:{Zn:1,O:1},aliases:[],note:"Амфотерный."},
+  {formula:"PbO",name:"Оксид свинца(II)",composition:{Pb:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Ag2O",name:"Оксид серебра(I)",composition:{Ag:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"HgO",name:"Оксид ртути(II)",composition:{Hg:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"TiO2",name:"Оксид титана(IV)",composition:{Ti:1,O:2},aliases:[],note:"Ионная решётка."},
+  {formula:"MnO2",name:"Оксид марганца(IV)",composition:{Mn:1,O:2},aliases:["пиролюзит"],note:"Ионная решётка."},
+  {formula:"Cr2O3",name:"Оксид хрома(III)",composition:{Cr:2,O:3},aliases:[],note:"Ионная решётка."},
+  {formula:"CO",name:"Оксид углерода(II)",composition:{C:1,O:1},aliases:["угарный газ"],note:"Молекулярная."},
+  {formula:"CO2",name:"Оксид углерода(IV)",composition:{C:1,O:2},aliases:["углекислый газ"],note:"Молекулярная."},
+  {formula:"SO2",name:"Оксид серы(IV)",composition:{S:1,O:2},aliases:["сернистый газ"],note:"Молекулярная."},
+  {formula:"SO3",name:"Оксид серы(VI)",composition:{S:1,O:3},aliases:["серный ангидрид"],note:"Молекулярная."},
+  {formula:"N2O",name:"Оксид азота(I)",composition:{N:2,O:1},aliases:["веселящий газ"],note:"Молекулярная."},
+  {formula:"NO",name:"Оксид азота(II)",composition:{N:1,O:1},aliases:[],note:"Молекулярная."},
+  {formula:"NO2",name:"Оксид азота(IV)",composition:{N:1,O:2},aliases:[],note:"Молекулярная."},
+  {formula:"P2O5",name:"Оксид фосфора(V)",composition:{P:2,O:5},aliases:["фосфорный ангидрид"],note:"Молекулярная."},
+  {formula:"SiO2",name:"Оксид кремния(IV)",composition:{Si:1,O:2},aliases:["кварц","песок","кремнезём"],note:"Атомная решётка!"},
+  {formula:"H2O",name:"Вода",composition:{H:2,O:1},aliases:["оксид водорода","лёд"],note:"Молекулярная."},
+  {formula:"H2O2",name:"Пероксид водорода",composition:{H:2,O:2},aliases:["перекись водорода"],note:"Молекулярная."},
+  {formula:"HCl",name:"Соляная кислота",composition:{H:1,Cl:1},aliases:["хлороводород"],note:"Сильная кислота."},
+  {formula:"HBr",name:"Бромоводородная кислота",composition:{H:1,Br:1},aliases:["бромоводород"],note:"Сильная кислота."},
+  {formula:"HI",name:"Иодоводородная кислота",composition:{H:1,I:1},aliases:["иодоводород"],note:"Сильная кислота."},
+  {formula:"HF",name:"Плавиковая кислота",composition:{H:1,F:1},aliases:["фтороводород"],note:"Слабая кислота."},
+  {formula:"H2SO4",name:"Серная кислота",composition:{H:2,S:1,O:4},aliases:[],note:"Сильная кислота."},
+  {formula:"H2SO3",name:"Сернистая кислота",composition:{H:2,S:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"H2S",name:"Сероводородная кислота",composition:{H:2,S:1},aliases:["сероводород"],note:"Слабая кислота."},
+  {formula:"HNO3",name:"Азотная кислота",composition:{H:1,N:1,O:3},aliases:[],note:"Сильная кислота."},
+  {formula:"HNO2",name:"Азотистая кислота",composition:{H:1,N:1,O:2},aliases:[],note:"Слабая кислота."},
+  {formula:"H3PO4",name:"Фосфорная кислота",composition:{H:3,P:1,O:4},aliases:[],note:"Средней силы."},
+  {formula:"H2CO3",name:"Угольная кислота",composition:{H:2,C:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"H2SiO3",name:"Кремниевая кислота",composition:{H:2,Si:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"HClO4",name:"Хлорная кислота",composition:{H:1,Cl:1,O:4},aliases:[],note:"Очень сильная."},
+  {formula:"H3BO3",name:"Борная кислота",composition:{H:3,B:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"CH3COOH",name:"Уксусная кислота",composition:{C:2,H:4,O:2},aliases:["уксус"],note:"Слабая кислота."},
+  {formula:"HCOOH",name:"Муравьиная кислота",composition:{C:1,H:2,O:2},aliases:[],note:"Слабая кислота."},
+  {formula:"H2C2O4",name:"Щавелевая кислота",composition:{H:2,C:2,O:4},aliases:[],note:"Слабая кислота."},
+  {formula:"C6H8O7",name:"Лимонная кислота",composition:{C:6,H:8,O:7},aliases:[],note:"Слабая кислота."},
+  {formula:"Li",name:"Литий",composition:{Li:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Na",name:"Натрий",composition:{Na:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"K",name:"Калий",composition:{K:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Rb",name:"Рубидий",composition:{Rb:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Cs",name:"Цезий",composition:{Cs:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Be",name:"Бериллий",composition:{Be:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Mg",name:"Магний",composition:{Mg:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ca",name:"Кальций",composition:{Ca:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Sr",name:"Стронций",composition:{Sr:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ba",name:"Барий",composition:{Ba:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Al",name:"Алюминий",composition:{Al:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Fe",name:"Железо",composition:{Fe:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Cu",name:"Медь",composition:{Cu:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Zn",name:"Цинк",composition:{Zn:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ag",name:"Серебро",composition:{Ag:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Au",name:"Золото",composition:{Au:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Pt",name:"Платина",composition:{Pt:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Hg",name:"Ртуть",composition:{Hg:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Pb",name:"Свинец",composition:{Pb:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Sn",name:"Олово",composition:{Sn:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ni",name:"Никель",composition:{Ni:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Co",name:"Кобальт",composition:{Co:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Cr",name:"Хром",composition:{Cr:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Mn",name:"Марганец",composition:{Mn:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ti",name:"Титан",composition:{Ti:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"W",name:"Вольфрам",composition:{W:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"H2",name:"Водород",composition:{H:2},aliases:[],note:"Молекулярная."},
+  {formula:"O2",name:"Кислород",composition:{O:2},aliases:[],note:"Молекулярная."},
+  {formula:"O3",name:"Озон",composition:{O:3},aliases:[],note:"Молекулярная."},
+  {formula:"N2",name:"Азот",composition:{N:2},aliases:[],note:"Молекулярная."},
+  {formula:"Cl2",name:"Хлор",composition:{Cl:2},aliases:[],note:"Молекулярная."},
+  {formula:"F2",name:"Фтор",composition:{F:2},aliases:[],note:"Молекулярная."},
+  {formula:"Br2",name:"Бром",composition:{Br:2},aliases:[],note:"Молекулярная."},
+  {formula:"I2",name:"Йод",composition:{I:2},aliases:["иод"],note:"Молекулярная."},
+  {formula:"S",name:"Сера",composition:{S:1},aliases:[],note:"Молекулярная."},
+  {formula:"P",name:"Фосфор",composition:{P:1},aliases:[],note:"Атомная."},
+  {formula:"C",name:"Углерод",composition:{C:1},aliases:["алмаз","графит"],note:"Атомная решётка."},
+  {formula:"Si",name:"Кремний",composition:{Si:1},aliases:[],note:"Атомная решётка."},
+  {formula:"B",name:"Бор",composition:{B:1},aliases:[],note:"Атомная решётка."},
+  {formula:"He",name:"Гелий",composition:{He:1},aliases:[],note:"Молекулярная."},
+  {formula:"Ne",name:"Неон",composition:{Ne:1},aliases:[],note:"Молекулярная."},
+  {formula:"Ar",name:"Аргон",composition:{Ar:1},aliases:[],note:"Молекулярная."},
+  {formula:"NH3",name:"Аммиак",composition:{N:1,H:3},aliases:[],note:"Молекулярная."},
+  {formula:"CH4",name:"Метан",composition:{C:1,H:4},aliases:["болотный газ","природный газ"],note:"Молекулярная."},
+  {formula:"C2H6",name:"Этан",composition:{C:2,H:6},aliases:[],note:"Молекулярная."},
+  {formula:"C3H8",name:"Пропан",composition:{C:3,H:8},aliases:[],note:"Молекулярная."},
+  {formula:"C4H10",name:"Бутан",composition:{C:4,H:10},aliases:[],note:"Молекулярная."},
+  {formula:"C2H4",name:"Этилен",composition:{C:2,H:4},aliases:[],note:"Молекулярная."},
+  {formula:"C2H2",name:"Ацетилен",composition:{C:2,H:2},aliases:[],note:"Молекулярная."},
+  {formula:"C6H6",name:"Бензол",composition:{C:6,H:6},aliases:[],note:"Молекулярная."},
+  {formula:"C2H5OH",name:"Этанол",composition:{C:2,H:6,O:1},aliases:["спирт","этиловый спирт"],note:"Молекулярная."},
+  {formula:"CH3OH",name:"Метанол",composition:{C:1,H:4,O:1},aliases:["метиловый спирт"],note:"Молекулярная."},
+  {formula:"C3H8O3",name:"Глицерин",composition:{C:3,H:8,O:3},aliases:[],note:"Молекулярная."},
+  {formula:"C3H6O",name:"Ацетон",composition:{C:3,H:6,O:1},aliases:[],note:"Молекулярная."},
+  {formula:"CH2O",name:"Формальдегид",composition:{C:1,H:2,O:1},aliases:["формалин"],note:"Молекулярная."},
+  {formula:"CO(NH2)2",name:"Мочевина",composition:{C:1,O:1,N:2,H:4},aliases:["карбамид"],note:"Молекулярная."},
+  {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная."},
+  {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная."},
+  {formula:"SiC",name:"Карбид кремния",composition:{Si:1,C:1},aliases:["карборунд"],note:"Атомная решётка."},
+  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
+];
+
+/* ============================================================
+   СЛУЖЕБНЫЕ ФУНКЦИИ
+   ============================================================ */
+function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
+function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
+var NAME_INDEX=null,FORMULA_INDEX=null;
+function buildNameIndex(){
+  if(NAME_INDEX) return NAME_INDEX;
+  NAME_INDEX={};
+  for(var i=0;i<SUBSTANCES.length;i++){
+    var s=SUBSTANCES[i],k=normalize(s.name); if(!NAME_INDEX[k])NAME_INDEX[k]=s;
+    if(s.aliases) for(var j=0;j<s.aliases.length;j++){var k2=normalize(s.aliases[j]);if(!NAME_INDEX[k2])NAME_INDEX[k2]=s;}
+  }
+  return NAME_INDEX;
+}
+function buildFormulaIndex(){
+  if(FORMULA_INDEX) return FORMULA_INDEX;
+  FORMULA_INDEX={};
+  for(var i=0;i<SUBSTANCES.length;i++){var k=cleanFormula(SUBSTANCES[i].formula);if(!FORMULA_INDEX[k])FORMULA_INDEX[k]=SUBSTANCES[i];}
+  return FORMULA_INDEX;
+}
+var ELEMENT_BY_RUS={'водород':'H','гелий':'He','литий':'Li','бериллий':'Be','бор':'B','углерод':'C','азот':'N','кислород':'O','фтор':'F','неон':'Ne','натрий':'Na','магний':'Mg','алюминий':'Al','кремний':'Si','фосфор':'P','сера':'S','хлор':'Cl','аргон':'Ar','калий':'K','кальций':'Ca','титан':'Ti','хром':'Cr','марганец':'Mn','железо':'Fe','кобальт':'Co','никель':'Ni','медь':'Cu','цинк':'Zn','бром':'Br','серебро':'Ag','олово':'Sn','йод':'I','иод':'I','барий':'Ba','вольфрам':'W','платина':'Pt','золото':'Au','ртуть':'Hg','свинец':'Pb','рубидий':'Rb','цезий':'Cs','стронций':'Sr'};
+function parseFormula(formula){
+  var f=formula;
+  Object.keys(ELEMENT_BY_RUS).forEach(function(rus){
+    var re=new RegExp('(^|[^а-яё])'+rus+'(?=$|[^а-яё])','gi');
+    f=f.replace(re,function(m,pre){return pre+ELEMENT_BY_RUS[rus];});
+  });
+  var parts=f.replace(/\s/g,'').split(/[·*]/);
+  var total={};
+  for(var p=0;p<parts.length;p++){
+    var part=parts[p],m=part.match(/^(\d+)(.*)$/),mult=1,body=part;
+    if(m){mult=parseInt(m[1]);body=m[2];}
+    var re=/([A-Z][a-z]?)(\d*)/g,match,found=false;
+    while((match=re.exec(body))!==null){found=true;var el=match[1];var cnt=(parseInt(match[2])||1)*mult;total[el]=(total[el]||0)+cnt;}
+    if(!found&&body)return{};
+  }
+  return total;
+}
+function compositionsEqual(a,b){
+  var ka=Object.keys(a),kb=Object.keys(b);
+  if(ka.length!==kb.length) return false;
+  for(var i=0;i<ka.length;i++) if(a[ka[i]]!==b[ka[i]]) return false;
+  return true;
+}
+function findSubstance(query){
+  var raw=query.trim(); if(!raw)return null;
+  var lower=normalize(raw);
+  var nidx=buildNameIndex(); if(nidx[lower])return nidx[lower];
+  var fidx=buildFormulaIndex(); var fClean=cleanFormula(raw); if(fidx[fClean])return fidx[fClean];
+  var words=lower.split(/\s+/).filter(Boolean);
+  if(words.length>=2){
+    var sorted=words.slice().sort().join(' ');
+    for(var i=0;i<SUBSTANCES.length;i++){
+      var s=SUBSTANCES[i],cands=[s.name].concat(s.aliases||[]);
+      for(var c=0;c<cands.length;c++){
+        var cn=normalize(cands[c]),cnSorted=cn.split(/\s+/).filter(Boolean).sort().join(' ');
+        if(cnSorted===sorted)return s;
+      }
+    }
+  }
+  var comp=parseFormula(raw);
+  if(Object.keys(comp).length>0){
+    for(var k=0;k<SUBSTANCES.length;k++) if(compositionsEqual(SUBSTANCES[k].composition,comp))return SUBSTANCES[k];
+    return{formula:raw.replace(/\s/g,''),name:null,composition:comp,aliases:[],note:null};
+  }
+  return null;
+}
+
+/* ============================================================
+   ОПРЕДЕЛЕНИЕ СВЯЗИ
+   ============================================================ */
+var METALS=['Li','Na','K','Rb','Cs','Be','Mg','Ca','Sr','Ba','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Y','Zr','Nb','Mo','Ru','Rh','Pd','Ag','Cd','Sn','W','Pt','Au','Hg','Al','Ga','In','Tl','Pb','Bi','La','Ce','U'];
+function isMetal(el){return METALS.indexOf(el)!==-1;}
+function determineBond(composition,formula){
+  var f=cleanFormula(formula);
+  var elements=Object.keys(composition);
+  var metals=elements.filter(isMetal);
+  var nonmetals=elements.filter(function(e){return !isMetal(e);});
+  if(f==='SiO2'||f==='SiC') return{bond:'Ковалентная полярная',lattice:'Атомная',note:'Атомная решётка (исключение).'};
+  if(f==='C') return{bond:'Ковалентная неполярная',lattice:'Атомная',note:'Алмаз/графит — атомная решётка.'};
+  if(f.indexOf('NH4')===0) return{bond:'Ионная',lattice:'Ионная',note:'Связи N–H ковалентные, но решётка ионная.'};
+  if(metals.length>0&&nonmetals.length>0) return{bond:'Ионная',lattice:'Ионная',note:'Металл + неметалл.'};
+  if(metals.length>0) return{bond:'Металлическая',lattice:'Металлическая',note:'Простое вещество-металл.'};
+  if(nonmetals.length===1) return{bond:'Ковалентная неполярная',lattice:'Молекулярная',note:'Одинаковые неметаллы.'};
+  return{bond:'Ковалентная полярная',lattice:'Молекулярная',note:'Разные неметаллы.'};
+}
+var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Ti:'Титан',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Br:'Бром',Ag:'Серебро',Sn:'Олово',I:'Йод',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец',Rb:'Рубидий',Cs:'Цезий',Sr:'Стронций'};
+var ATOM_COLORS={H:'#e2e8f0',He:'#fecaca',Li:'#c4b5fd',Be:'#a7f3d0',B:'#fde68a',C:'#334155',N:'#3b82f6',O:'#ef4444',F:'#22d3ee',Ne:'#a78bfa',Na:'#f59e0b',Mg:'#84cc16',Al:'#94a3b8',Si:'#d4a373',P:'#f97316',S:'#eab308',Cl:'#22c55e',K:'#8b5cf6',Ca:'#a3e635',Ti:'#64748b',Cr:'#0891b2',Mn:'#a855f7',Fe:'#b45309',Co:'#2563eb',Ni:'#15803d',Cu:'#ea580c',Zn:'#71717a',Br:'#92400e',Ag:'#9ca3af',Sn:'#6b7280',I:'#7c3aed',Ba:'#65a30d',Au:'#fbbf24',Hg:'#94a3b8',Pb:'#52525b',Rb:'#a78bfa',Cs:'#7c3aed',Sr:'#84cc16',default:'#94a3b8'};
+
+/* ============================================================
+   THREE.JS 3D
+   ============================================================ */
+var scene,camera,renderer,latticeGroup;
+var isDragging=false,prevMouse={x:0,y:0};
+var rotX=0.35,rotY=0.6,targetRotX=0.35,targetRotY=0.6;
+var zoomDist=25,targetZoom=25,canvasInitialized=false;
+
+function makeLabel(text,color,size){
+  size=size||1;
+  var canvas=document.createElement('canvas');
+  canvas.width=128;canvas.height=128;
+  var ctx=canvas.getContext('2d');
+  ctx.fillStyle='rgba(255,255,255,0.92)';
+  ctx.beginPath();ctx.arc(64,64,58,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=color||'#333';ctx.lineWidth=6;ctx.stroke();
+  ctx.fillStyle=color||'#1e293b';
+  ctx.font='bold '+(text.length>2?48:60)+'px Arial';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(text,64,68);
+  var texture=new THREE.CanvasTexture(canvas);
+  texture.minFilter=THREE.LinearFilter;
+  var spriteMat=new THREE.SpriteMaterial({map:texture,depthTest:false,transparent:true});
+  var sprite=new THREE.Sprite(spriteMat);
+  sprite.scale.set(size*1.5,size*1.5,1);
+  sprite.position.set(0,0,0);
+  return sprite;
+}
+
+function initThree(){
+  if(canvasInitialized) return;
+  if(typeof THREE==='undefined'){console.warn('Three.js не загружен');return;}
+  var canvas=document.getElementById('threeCanvas'); if(!canvas) return;
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(45,canvas.clientWidth/canvas.clientHeight,0.1,1000);
+  renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+  scene.add(new THREE.AmbientLight(0xffffff,0.65));
+  var k=new THREE.DirectionalLight(0xffffff,1.0); k.position.set(6,10,8); scene.add(k);
+  var fl=new THREE.DirectionalLight(0xaaccff,0.5); fl.position.set(-8,-4,-6); scene.add(fl);
+  var rl=new THREE.DirectionalLight(0xffddaa,0.4); rl.position.set(-4,6,-10); scene.add(rl);
+  latticeGroup=new THREE.Group(); scene.add(latticeGroup);
+  canvas.addEventListener('mousedown',function(e){isDragging=true;prevMouse={x:e.clientX,y:e.clientY};});
+  window.addEventListener('mouseup',function(){isDragging=false;});
+  window.addEventListener('mousemove',function(e){if(!isDragging)return;targetRotY+=(e.clientX-prevMouse.x)*0.008;targetRotX+=(e.clientY-prevMouse.y)*0.008;targetRotX=Math.max(-1.4,Math.min(1.4,targetRotX));prevMouse={x:e.clientX,y:e.clientY};});
+  canvas.addEventListener('wheel',function(e){e.preventDefault();targetZoom+=e.deltaY*0.012;targetZoom=Math.max(10,Math.min(50,targetZoom));},{passive:false});
+  canvas.addEventListener('touchstart',function(e){if(e.touches.length===1){isDragging=true;prevMouse={x:e.touches[0].clientX,y:e.touches[0].clientY};}},{passive:true});
+  canvas.addEventListener('touchmove',function(e){if(!isDragging||e.touches.length!==1)return;targetRotY+=(e.touches[0].clientX-prevMouse.x)*0.008;targetRotX+=(e.touches[0].clientY-prevMouse.y)*0.008;targetRotX=Math.max(-1.4,Math.min(1.4,targetRotX));prevMouse={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+  canvas.addEventListener('touchend',function(){isDragging=false;},{passive:true});
+  window.addEventListener('resize',resizeCanvas);
+  canvasInitialized=true; animate();
+}
+function resizeCanvas(){if(!renderer)return;var c=document.getElementById('threeCanvas');if(!c||c.clientWidth===0)return;camera.aspect=c.clientWidth/c.clientHeight;camera.updateProjectionMatrix();renderer.setSize(c.clientWidth,c.clientHeight,false);}
+function animate(){requestAnimationFrame(animate);if(!isDragging)targetRotY+=0.0035;rotX+=(targetRotX-rotX)*0.1;rotY+=(targetRotY-rotY)*0.1;zoomDist+=(targetZoom-zoomDist)*0.1;if(latticeGroup){latticeGroup.rotation.x=rotX;latticeGroup.rotation.y=rotY;}camera.position.z=zoomDist;camera.lookAt(0,0,0);if(renderer)renderer.render(scene,camera);}
+function makeAtom(color,radius,x,y,z,emissive){var g=new THREE.SphereGeometry(radius,28,20);var m=new THREE.MeshPhongMaterial({color:color,shininess:80,specular:0x777777,emissive:emissive||0x000000,emissiveIntensity:0.18});var mesh=new THREE.Mesh(g,m);mesh.position.set(x,y,z);return mesh;}
+function makeBond(color,x1,y1,z1,x2,y2,z2,th){var s=new THREE.Vector3(x1,y1,z1),e=new THREE.Vector3(x2,y2,z2);var d=new THREE.Vector3().subVectors(e,s);var len=d.length();var g=new THREE.CylinderGeometry(th||0.06,th||0.06,len,8);var m=new THREE.MeshPhongMaterial({color:color,shininess:30});var mesh=new THREE.Mesh(g,m);mesh.position.copy(s).add(d.clone().multiplyScalar(0.5));mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());return mesh;}
+function clearLattice(){if(!latticeGroup)return;while(latticeGroup.children.length){var c=latticeGroup.children[0];latticeGroup.remove(c);if(c.geometry)c.geometry.dispose();if(c.material)c.material.dispose();}}
+
+/* ИОННАЯ РЕШЁТКА — с подписями и плотной упаковкой */
+function buildIonicLattice(){
+  var a=1.5,n=2;
+  var atoms=[];
+  for(var i=-n;i<=n;i++) for(var j=-n;j<=n;j++) for(var k=-n;k<=n;k++){
+    var isNa=((i+j+k)%2===0);
+    var x=i*a,y=j*a,z=k*a;
+    if(Math.abs(x)+Math.abs(y)+Math.abs(z)>n*a*1.65) continue;
+    var color=isNa?'#fbbf24':'#22c55e';
+    var r=isNa?0.6:0.6;
+    var atom=makeAtom(color,r,x,y,z,isNa?0x664400:0x004400);
+    atom.add(makeLabel(isNa?'Na⁺':'Cl⁻',isNa?'#7c2d12':'#065f46',0.75));
+    latticeGroup.add(atom);
+    atoms.push({x:x,y:y,z:z});
+  }
+  for(var p=0;p<atoms.length;p++) for(var q=p+1;q<atoms.length;q++){
+    var A=atoms[p],B=atoms[q];
+    var dx=A.x-B.x,dy=A.y-B.y,dz=A.z-B.z;
+    if(Math.abs(dx*dx+dy*dy+dz*dz-a*a)<0.05){
+      latticeGroup.add(makeBond('#94a3b8',A.x,A.y,A.z,B.x,B.y,B.z,0.04));
+    }
+  }
+}
+/* АТОМНАЯ РЕШЁТКА */
+function buildAtomicLattice(){
+  var a=2.2,color='#334155';
+  var offsets=[[0,0,0],[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.25,0.25,0.25],[0.75,0.75,0.25],[0.75,0.25,0.75],[0.25,0.75,0.75]];
+  var n=1,points=[];
+  for(var i=-n;i<=n;i++) for(var j=-n;j<=n;j++) for(var k=-n;k<=n;k++)
+    offsets.forEach(function(o){points.push([(i+o[0])*a,(j+o[1])*a,(k+o[2])*a]);});
+  var md=a*0.65,added={};
+  points.forEach(function(p){
+    var atom=makeAtom(color,0.5,p[0],p[1],p[2],0x112233);
+    atom.add(makeLabel('C','#1e293b',0.7));
+    latticeGroup.add(atom);
+  });
+  for(var x=0;x<points.length;x++) for(var y=x+1;y<points.length;y++){
+    var dx=points[x][0]-points[y][0],dy=points[x][1]-points[y][1],dz=points[x][2]-points[y][2];
+    var d=Math.sqrt(dx*dx+dy*dy+dz*dz);
+    if(d<md&&d>0.1){var key=x+'-'+y;if(!added[key]){added[key]=true;latticeGroup.add(makeBond('#94a3b8',points[x][0],points[x][1],points[x][2],points[y][0],points[y][1],points[y][2],0.06));}}
+  }
+}
+/* МОЛЕКУЛЯРНАЯ РЕШЁТКА — молекулы H₂O */
+function buildMolecularLattice(){
+  var a=3.6,n=2;
+  for(var i=-n;i<=n;i++) for(var j=-n;j<=n;j++) for(var k=-n;k<=n;k++){
+    var cx=i*a,cy=j*a,cz=k*a;
+    var o=makeAtom('#ef4444',0.5,cx,cy,cz,0x440000);
+    o.add(makeLabel('O','#7f1d1d',0.7));
+    latticeGroup.add(o);
+    var h1=makeAtom('#e2e8f0',0.35,cx-0.8,cy+0.4,cz,0x334155);
+    h1.add(makeLabel('H','#1e293b',0.55));
+    latticeGroup.add(h1);
+    var h2=makeAtom('#e2e8f0',0.35,cx+0.8,cy+0.4,cz,0x334155);
+    h2.add(makeLabel('H','#1e293b',0.55));
+    latticeGroup.add(h2);
+    latticeGroup.add(makeBond('#94a3b8',cx-0.8,cy+0.4,cz,cx,cy,cz,0.05));
+    latticeGroup.add(makeBond('#94a3b8',cx+0.8,cy+0.4,cz,cx,cy,cz,0.05));
+  }
+}
+/* МЕТАЛЛИЧЕСКАЯ РЕШЁТКА */
+function buildMetallicLattice(){
+  var a=1.9,color='#9ca3af',n=2,pts=[];
+  for(var i=-n;i<=n;i++) for(var j=-n;j<=n;j++) for(var k=-n;k<=n;k++){
+    var x=i*a,y=j*a,z=k*a;
+    if(Math.abs(x)+Math.abs(y)+Math.abs(z)>n*a*1.7) continue;
+    var atom=makeAtom(color,0.65,x,y,z,0x333333);
+    atom.add(makeLabel('Me','#1e293b',0.8));
+    latticeGroup.add(atom);
+    pts.push(new THREE.Vector3(x,y,z));
+  }
+  for(var p=0;p<pts.length;p++) for(var q=p+1;q<pts.length;q++){
+    var d=pts[p].distanceTo(pts[q]);
+    if(d<a*1.05&&d>0.1) latticeGroup.add(makeBond('#64748b',pts[p].x,pts[p].y,pts[p].z,pts[q].x,pts[q].y,pts[q].z,0.04));
+  }
+}
+function show3DViewer(latticeType,formula,composition){
+  var card=document.getElementById('viewerCard');
+  if(typeof THREE==='undefined'){card.style.display='none';return;}
+  card.style.display='block';
+  document.getElementById('viewerTitle').textContent='Кристаллическая решётка: '+formula;
+  var tn=latticeType.indexOf('Ионная')!==-1?'ионная':latticeType.indexOf('Атомная')!==-1?'атомная':latticeType.indexOf('Металлическая')!==-1?'металлическая':'молекулярная';
+  document.getElementById('viewerDesc').textContent='Тип решётки: '+tn+'. Каждый атом подписан. Зажми мышкой, чтобы повернуть. Колёсико — масштаб.';
+  var legend=document.getElementById('viewerLegend'); legend.innerHTML='';
+  Object.keys(composition).forEach(function(el){
+    var it=document.createElement('div'); it.className='legend-item';
+    it.innerHTML='<span class="legend-dot" style="background:'+(ATOM_COLORS[el]||ATOM_COLORS.default)+'">'+el+'</span>'+el+' — '+(ATOM_NAMES[el]||el);
+    legend.appendChild(it);
+  });
+  initThree(); if(!renderer) return;
+  clearLattice();
+  rotX=0.35;rotY=0.6;targetRotX=0.35;targetRotY=0.6;zoomDist=25;targetZoom=25;
+  if(latticeType.indexOf('Ионная')!==-1) buildIonicLattice();
+  else if(latticeType.indexOf('Атомная')!==-1) buildAtomicLattice();
+  else if(latticeType.indexOf('Металлическая')!==-1) buildMetallicLattice();
+  else buildMolecularLattice();
+  setTimeout(resizeCanvas,60);
+}
+
+/* ============================================================
+   ОБРАБОТЧИК АНАЛИЗАТОРА
+   ============================================================ */
+function analyze(){
+  var input=document.getElementById('queryInput').value.trim();
+  var result=document.getElementById('result');
+  result.style.display='block';
+  if(!input){result.innerHTML='<p class="not-found">⚠ Введи формулу или название.</p>';document.getElementById('viewerCard').style.display='none';return;}
+  var found=findSubstance(input);
+  if(!found){result.innerHTML='<p class="not-found">❌ «'+input+'» не найдено в базе.</p>';document.getElementById('viewerCard').style.display='none';return;}
+  var composition=found.composition,formula=found.formula,name=found.name;
+  if(!name){var parts=[];for(var el in composition) parts.push(ATOM_NAMES[el]||el);name=parts.join(' + ');}
+  var bondInfo=determineBond(composition,formula);
+  if(found.note) bondInfo.note=found.note;
+  var cards='';
+  for(var el2 in composition){
+    cards+='<div class="atom-card"><div class="atom-symbol" style="color:'+(ATOM_COLORS[el2]||ATOM_COLORS.default)+'">'+el2+'</div><div class="atom-name">'+(ATOM_NAMES[el2]||'—')+'</div><div class="atom-count">'+composition[el2]+' <span>атом(ов)</span></div></div>';
+  }
+  result.innerHTML='<div class="result-grid"><div class="result-item"><div class="lbl">Вещество</div><div class="val neutral">'+name+'</div></div><div class="result-item"><div class="lbl">Формула</div><div class="val">'+formula+'</div></div><div class="result-item"><div class="lbl">Тип связи</div><div class="val">'+bondInfo.bond+'</div></div><div class="result-item"><div class="lbl">Тип решётки</div><div class="val">'+bondInfo.lattice+'</div></div></div><h3 style="color:var(--dark);margin:6px 0 12px;font-size:16px;">Состав:</h3><div class="composition">'+cards+'</div><div class="final-formula">'+formula+'</div>'+(bondInfo.note?'<p class="note">💡 '+bondInfo.note+'</p>':'');
+  show3DViewer(bondInfo.lattice,formula,composition);
+}
+function switchMode(mode){
+  document.getElementById('modeFormula').classList.toggle('active',mode==='formula');
+  document.getElementById('modeName').classList.toggle('active',mode==='name');
+  var inp=document.getElementById('queryInput'),hint=document.getElementById('hintText');
+  if(mode==='formula'){inp.placeholder='Формула: NaCl, CO2, H2SO4, Fe2O3...';hint.textContent='Введи формулу — я покажу название и тип решётки';}
+  else{inp.placeholder='Название: натрий хлор, хлорид натрия, соль...';hint.textContent='Можно писать русское название, формулу или перечислять элементы';}
+  inp.value='';document.getElementById('result').style.display='none';document.getElementById('viewerCard').style.display='none';
+}
+document.getElementById('modeFormula').addEventListener('click',function(){switchMode('formula');});
+document.getElementById('modeName').addEventListener('click',function(){switchMode('name');});
+document.getElementById('analyzeBtn').addEventListener('click',analyze);
+document.getElementById('queryInput').addEventListener('keydown',function(e){if(e.key==='Enter')analyze();});
+
+/* ============================================================
+   ГЕНЕРАТОР ТЕСТОВ
+   ============================================================ */
+function seededRandom(seed){var s=seed;return function(){s=(s*9301+49297)%233280;return s/233280;};}
+function seededShuffle(arr,rnd){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function buildVariant(bank,seed,count){
+  count=count||20;
+  var rnd=(typeof seed==='number')?seededRandom(seed*7919+13):Math.random;
+  var pool=seededShuffle(bank,rnd).slice(0,count);
+  return pool.map(function(q){
+    var ct=q.options[q.correct],so=seededShuffle(q.options,rnd);
+    return{q:q.q,options:so,correct:so.indexOf(ct)};
+  });
+}
+function buildQuiz(containerId,bank,totalVariants){
+  var container=document.getElementById(containerId);if(!container)return;
+  totalVariants=totalVariants||20;
+  var currentVariant=1,questions=[],current=0,score=0,answered=false,active=false;
+  var nextBtnId='next-'+containerId,restartBtnId='restart-'+containerId,startBtnId='start-'+containerId,variantSelId='variant-'+containerId;
+  function renderStart(){
+    active=false;
+    var h='<div style="text-align:center;padding:10px 0 20px;">';
+    h+='<p style="color:var(--muted);font-size:15px;margin-bottom:16px;">Выбери вариант (20 вопросов). В банке '+bank.length+' вопросов.</p>';
+    h+='<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:20px;">';
+    h+='<label style="font-weight:600;color:var(--dark);">Вариант:</label>';
+    h+='<select id="'+variantSelId+'" style="padding:10px 14px;border-radius:10px;border:2px solid var(--border);font-size:15px;font-family:inherit;background:#fff;cursor:pointer;">';
+    for(var i=1;i<=totalVariants;i++) h+='<option value="'+i+'"'+(i===currentVariant?' selected':'')+'>Вариант '+i+'</option>';
+    h+='<option value="0">🎲 Случайный</option></select></div>';
+    h+='<button type="button" class="quiz-btn primary" id="'+startBtnId+'" style="padding:14px 40px;font-size:16px;">Начать тест</button></div>';
+    container.innerHTML=h;
+  }
+  function renderQuestion(){
+    if(current>=questions.length){renderResult();return;}
+    var q=questions[current],pct=Math.round((current/questions.length)*100),h='';
+    h+='<div class="quiz-progress"><div class="quiz-progress-bar" style="width:'+pct+'%"></div></div>';
+    h+='<div class="quiz-q"><span class="qnum">'+(current+1)+'</span>'+q.q+'</div>';
+    h+='<div class="quiz-options">';
+    q.options.forEach(function(o,i){h+='<button type="button" class="quiz-opt" data-idx="'+i+'">'+o+'</button>';});
+    h+='</div>';
+    h+='<div class="quiz-nav"><span class="text-muted" style="font-size:14px;">Вопрос '+(current+1)+' из '+questions.length+' &middot; Вариант '+(currentVariant===0?'случайный':currentVariant)+'</span>';
+    h+='<button type="button" class="quiz-btn primary" id="'+nextBtnId+'" disabled>Далее →</button></div>';
+    container.innerHTML=h;answered=false;
+  }
+  function renderResult(){
+    var pct=Math.round((score/questions.length)*100),msg='';
+    if(pct>=90) msg='🏆 Отлично!';
+    else if(pct>=70) msg='👍 Хорошо!';
+    else if(pct>=50) msg='📖 Неплохо.';
+    else msg='💪 Повтори тему.';
+    var rev='';
+    questions.forEach(function(q,i){rev+='<div class="review-item"><div class="rq">'+(i+1)+'. '+q.q+'</div><div class="ra">Правильный: <b>'+q.options[q.correct]+'</b></div></div>';});
+    container.innerHTML='<div class="quiz-result"><div class="quiz-score">'+score+'/'+questions.length+'</div><div class="quiz-score-label">правильных ('+pct+'%)</div><div class="quiz-msg">'+msg+'</div><div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button type="button" class="quiz-btn primary" id="'+restartBtnId+'">🔄 Новый набор</button><button type="button" class="quiz-btn ghost" id="'+startBtnId+'">📋 Другой вариант</button></div></div><div class="quiz-review">'+rev+'</div>';
+  }
+  function startVariant(seed){
+    currentVariant=seed;
+    questions=(seed===0)?buildVariant(bank,null,20):buildVariant(bank,seed,20);
+    current=0;score=0;active=true;renderQuestion();
+  }
+  container.addEventListener('click',function(e){
+    var tgt=e.target;
+    if(tgt.id===startBtnId){var sel=document.getElementById(variantSelId);startVariant(sel?parseInt(sel.value,10):1);return;}
+    var opt=tgt.closest?tgt.closest('.quiz-opt'):null;
+    if(opt&&container.contains(opt)&&active&&!answered){
+      answered=true;
+      var idx=parseInt(opt.getAttribute('data-idx'),10),correct=questions[current].correct;
+      container.querySelectorAll('.quiz-opt').forEach(function(b,i){b.disabled=true;if(i===correct)b.classList.add('correct');else if(i===idx)b.classList.add('wrong');});
+      if(idx===correct) score++;
+      var nx=document.getElementById(nextBtnId);if(nx){nx.disabled=false;nx.focus();}
+      return;
+    }
+    if(tgt.id===nextBtnId||(tgt.closest&&tgt.closest('#'+nextBtnId))){var n=document.getElementById(nextBtnId);if(n&&!n.disabled){current++;renderQuestion();}return;}
+    if(tgt.id===restartBtnId||(tgt.closest&&tgt.closest('#'+restartBtnId))){currentVariant=0;questions=buildVariant(bank,null,20);current=0;score=0;active=true;renderQuestion();return;}
+  });
+  renderStart();
+}
+
+/* ============================================================
+   БАНКИ ВОПРОСОВ
+   ============================================================ */
+var bankDissociation=[
+  {q:'Что такое электролитическая диссоциация?',options:['Распад электролита на ионы','Испарение воды','Образование осадка','Разложение при нагревании'],correct:0},
+  {q:'Что образуется при диссоциации кислот?',options:['Катионы металла и OH⁻','Катионы H⁺ и анионы кислотного остатка','Только молекулы воды','NH₄⁺ и OH⁻'],correct:1},
+  {q:'Что образуется при диссоциации оснований?',options:['H⁺ и кислотный остаток','Катионы металла и OH⁻','Только газы','Молекулы воды'],correct:1},
+  {q:'Сильный электролит:',options:['CH₃COOH','H₂CO₃','NaCl','H₂S'],correct:2},
+  {q:'Слабый электролит:',options:['HCl','NaOH','CH₃COOH','KNO₃'],correct:2},
+  {q:'Степень диссоциации — это:',options:['Отношение распавшихся к общему числу молекул','Количество вещества','Масса','Объём'],correct:0},
+  {q:'Сильные электролиты при α:',options:['> 30%','< 3%','= 0%','3–30%'],correct:0},
+  {q:'Причина диссоциации в воде:',options:['Нагревание','Взаимодействие с молекулами воды','Давление','Электрический ток'],correct:1},
+  {q:'Ассоциация — это:',options:['Распад на ионы','Соединение ионов в молекулы','Испарение','Растворение'],correct:1},
+  {q:'Диссоциация H₂SO₄:',options:['H⁺ и SO₄²⁻','H⁺ и SO₃²⁻','H₂⁺ и SO₄²⁻','2H⁺ и SO₄²⁻'],correct:3},
+  {q:'Неэлектролит:',options:['NaCl','HCl','Глюкоза','NaOH'],correct:2},
+  {q:'Диссоциация Ca(OH)₂:',options:['Ca²⁺ и 2OH⁻','Ca⁺ и OH⁻','Ca²⁺ и OH₂⁻','CaOH⁺ и OH⁻'],correct:0},
+  {q:'Диссоциация — процесс:',options:['Только необратимый','Только обратимый','Обратимый для слабых','Не связан с водой'],correct:2},
+  {q:'Слабый электролит:',options:['HNO₃','H₂SO₄','H₂CO₃','KOH'],correct:2},
+  {q:'Ионы в растворе:',options:['Сухие кристаллы','Гидратированные ионы','Нейтральные молекулы','Атомы'],correct:1},
+  {q:'Не относится к электролитам:',options:['NaCl','H₂SO₄','NaOH','Сахароза'],correct:3},
+  {q:'Степень диссоциации обозначается:',options:['α','β','γ','ω'],correct:0},
+  {q:'Диссоциация NaCl:',options:['Na⁺ + Cl⁻','Na²⁺ + Cl²⁻','Не диссоциирует','Na + Cl'],correct:0},
+  {q:'Сильный электролит:',options:['H₂S','H₂CO₃','HNO₃','CH₃COOH'],correct:2},
+  {q:'Слабый электролит:',options:['NaCl','KOH','HCl','NH₄OH'],correct:3},
+  {q:'Неэлектролит:',options:['Этанол','NaCl','H₂SO₄','KOH'],correct:0},
+  {q:'Диссоциация KOH:',options:['K⁺ + OH⁻','K²⁺ + OH₂⁻','K + OH','Не диссоциирует'],correct:0},
+  {q:'α измеряется:',options:['В % или долях','В граммах','В молях','В литрах'],correct:0},
+  {q:'Гидратация — это:',options:['Присоединение воды','Отщепление воды','Разложение','Окисление'],correct:0},
+  {q:'Диссоциация HNO₃:',options:['H⁺ + NO₃⁻','H⁺ + N³⁺ + 3O²⁻','H₂⁺ + NO₃²⁻','Не диссоциирует'],correct:0},
+  {q:'Слабая кислота:',options:['HCl','HNO₃','H₂S','H₂SO₄'],correct:2},
+  {q:'Диссоциация AlCl₃:',options:['Al³⁺ + 3Cl⁻','Al⁺ + Cl⁻','Al³⁺ + Cl₃⁻','Не диссоциирует'],correct:0},
+  {q:'Нерастворимые основания:',options:['Хорошо диссоциируют','Плохо диссоциируют','Не диссоциируют','Превращаются в кислоту'],correct:1},
+  {q:'Диссоциация Na₂SO₄:',options:['2Na⁺ + SO₄²⁻','Na₂⁺ + SO₄²⁻','2Na⁺ + S⁶⁺ + 4O²⁻','Na⁺ + SO₄⁻'],correct:0},
+  {q:'Сильный электролит:',options:['H₂S','H₂CO₃','NaOH','NH₄OH'],correct:2},
+  {q:'Слабый электролит:',options:['HNO₂','HNO₃','H₂SO₄','KOH'],correct:0},
+  {q:'Ионы — это:',options:['Заряженные частицы','Нейтральные молекулы','Атомы','Молекулы воды'],correct:0},
+  {q:'Электролиты — это:',options:['Вещества, распадающиеся на ионы','Нерастворимые вещества','Газы','Металлы'],correct:0},
+  {q:'Полностью диссоциируют:',options:['Растворимые соли','Нерастворимые соли','Кислотные','Основные'],correct:0},
+  {q:'α зависит от:',options:['Природы, температуры, концентрации','Цвета','Объёма','Массы'],correct:0},
+  {q:'Для слабых α:',options:['< 3%','> 30%','> 50%','= 100%'],correct:0},
+  {q:'Диссоциация H₂CO₃:',options:['2H⁺ + CO₃²⁻ ступенчато','H₂⁺ + CO₃²⁻','Не диссоциирует','H⁺ + HCO₂⁻'],correct:0},
+  {q:'Признак ионного обмена:',options:['Осадок, газ или вода','Изменение цвета','Только тепло','Только свет'],correct:0},
+  {q:'AgNO₃ + NaCl →',options:['Осадок AgCl','Газ H₂','Вода','Металл'],correct:0},
+  {q:'Ионное уравнение отражает:',options:['Суть реакции','Массу','Объём','Цвет'],correct:0},
+  {q:'Ток проводят:',options:['Ионы','Электроны','Молекулы','Нейтроны'],correct:0},
+  {q:'При α = 100%:',options:['Сильный','Слабый','Средний','Отсутствует'],correct:0},
+  {q:'При разбавлении α:',options:['Растёт','Уменьшается','Не меняется','= 0'],correct:0},
+  {q:'При нагревании диссоциация:',options:['Усиливается','Ослабевает','Не меняется','Прекращается'],correct:0},
+  {q:'Распадаются на ионы:',options:['Электролиты','Неэлектролиты','Металлы','Оксиды'],correct:0},
+  {q:'Неэлектролиты:',options:['Сахар, спирт, глюкоза','Соли, кислоты, щёлочи','Газы','Металлы'],correct:0},
+  {q:'Диссоциация — распад на:',options:['Ионы','Атомы','Молекулы','Электроны'],correct:0},
+  {q:'При растворении сахара:',options:['Диссоциации нет','Образуются ионы','Газ','Осадок'],correct:0},
+  {q:'Ступенчатая у:',options:['Многоосновных кислот','Одноосновных','Солей','Оксидов'],correct:0},
+  {q:'H₃PO₄ на 1-й ступени:',options:['H⁺ + H₂PO₄⁻','3H⁺ + PO₄³⁻','H₂⁺ + HPO₄²⁻','H₃⁺ + PO₄³⁻'],correct:0},
+  {q:'Ba(OH)₂ →',options:['Ba²⁺ + 2OH⁻','Ba⁺ + OH⁻','Ba²⁺ + OH₂⁻','BaOH⁺ + OH⁻'],correct:0},
+  {q:'Ион — это:',options:['Заряженная частица','Нейтральный атом','Молекула','Электрон'],correct:0},
+  {q:'Катион:',options:['Положительный','Отрицательный','Нейтральный','Любой'],correct:0},
+  {q:'Анион:',options:['Отрицательный','Положительный','Нейтральный','Любой'],correct:0},
+  {q:'Кислоты по ТЭД дают:',options:['Ионы H⁺','Ионы OH⁻','Ионы металла','Ионы аммония'],correct:0},
+  {q:'Основания по ТЭД дают:',options:['Ионы OH⁻','Ионы H⁺','Ионы металла','Газ'],correct:0},
+  {q:'Соли по ТЭД дают:',options:['Катион металла + анион кислотного остатка','H⁺','OH⁻','Газ'],correct:0},
+  {q:'При α = 3%:',options:['Слабый','Сильный','Средний','Нет'],correct:0},
+  {q:'Cu(OH)₂ в воде:',options:['Очень слабый','Сильный','Средний','Не диссоциирует'],correct:0},
+  {q:'Сильные в ионных:',options:['Как ионы','Как молекулы','Не пишут','Символом'],correct:0},
+  {q:'Слабые в ионных:',options:['Как молекулы','Как ионы','Не пишут','Символом'],correct:0},
+  {q:'Осадок:',options:['↓','↑','→','⇄'],correct:0},
+  {q:'Газ:',options:['↑','↓','→','⇄'],correct:0},
+  {q:'Обратимая:',options:['⇄','→','↓','↑'],correct:0},
+  {q:'Гидратация — причина:',options:['Диссоциации','Испарения','Плавления','Кристаллизации'],correct:0},
+  {q:'Твёрдый NaCl:',options:['Не проводит ток','Проводит ток','Плавится','Разлагается'],correct:0}
+];
+
+var bankAcids=[
+  {q:'Кислота по ТЭД даёт:',options:['OH⁻','H⁺','Металл','Газ'],correct:1},
+  {q:'Кислоты реагируют с металлами:',options:['До H₂','После H₂','Со всеми','Только со щелочными'],correct:0},
+  {q:'Zn + 2HCl →',options:['ZnCl₂ + H₂↑','ZnCl₂ + H₂O','ZnCl + HCl','Zn + Cl₂'],correct:0},
+  {q:'Нейтрализация:',options:['Кислота + металл','Кислота + основание','Кислота + соль','Кислота + оксид'],correct:1},
+  {q:'CuO + H₂SO₄ →',options:['CuSO₄ + H₂O','Cu + SO₃','CuSO₄ + H₂','CuS + H₂O'],correct:0},
+  {q:'Лакмус в кислоте:',options:['Красный','Синий','Малиновый','Бесцветный'],correct:0},
+  {q:'CaCO₃ + 2HCl →',options:['CaCl₂ + H₂O + CO₂↑','CaCl₂ + H₂↑','CaCl₂ + CO↑','CaCl₂ + H₂CO₃↓'],correct:0},
+  {q:'Сильная кислота:',options:['CH₃COOH','H₂CO₃','HCl','H₂S'],correct:2},
+  {q:'AgNO₃ + HCl →',options:['AgCl↓ + HNO₃','Ag + HClO','AgCl + H₂','AgH + NO₃'],correct:0},
+  {q:'Кислота + основной оксид →',options:['Соль + вода','Соль + газ','Основание + вода','Металл + вода'],correct:0},
+  {q:'Какой металл НЕ реагирует с HCl?',options:['Zn','Fe','Cu','Mg'],correct:2},
+  {q:'Соляная кислота — раствор:',options:['HCl в воде','NaCl в воде','H₂SO₄ в воде','HNO₃ в воде'],correct:0},
+  {q:'Слабая кислота:',options:['HNO₃','H₂SO₄','H₃PO₄','HCl'],correct:2},
+  {q:'Диссоциация H₃PO₄:',options:['3H⁺ + PO₄³⁻','H⁺ + H₂PO₄⁻','H₂⁺ + PO₄²⁻','H₃⁺ + PO₄³⁻'],correct:0},
+  {q:'Фенолфталеин в кислоте:',options:['Бесцветный','Малиновый','Красный','Синий'],correct:0},
+  {q:'Кислота + основание →',options:['Соль + вода','Соль + H₂','Оксид + H₂O','Металл + газ'],correct:0},
+  {q:'Кислота + соль, если:',options:['Осадок или газ','Всегда','Никогда','При нагревании'],correct:0},
+  {q:'H₂SO₄ + BaCl₂ →',options:['BaSO₄↓ + 2HCl','Ba + H₂SO₄','BaSO₄ + H₂','BaCl₂ + SO₃'],correct:0},
+  {q:'Кислотные свойства:',options:['Ионы H⁺','Ионы OH⁻','Молекулы воды','Металл'],correct:0},
+  {q:'Метилоранж в кислоте:',options:['Розовый/красный','Жёлтый','Оранжевый','Синий'],correct:0},
+  {q:'Бескислородная:',options:['HCl','H₂SO₄','HNO₃','H₃PO₄'],correct:0},
+  {q:'Одноосновная:',options:['HCl','H₂SO₄','H₃PO₄','H₂CO₃'],correct:0},
+  {q:'Двухосновная:',options:['H₂SO₄','HCl','HNO₃','H₃PO₄'],correct:0},
+  {q:'Трёхосновная:',options:['H₃PO₄','HCl','HNO₃','H₂S'],correct:0},
+  {q:'Mg + 2HCl →',options:['MgCl₂ + H₂↑','MgCl + HCl','MgH₂ + Cl₂','MgCl₂ + H₂O'],correct:0},
+  {q:'Fe + 2HCl →',options:['FeCl₂ + H₂↑','FeCl₃ + H₂','FeCl₂ + H₂O','FeCl₃ + H₂O'],correct:0},
+  {q:'Кислота + амфотерный оксид →',options:['Соль + вода','Соль + газ','Металл + вода','Основание'],correct:0},
+  {q:'HCl называется:',options:['Соляной','Серной','Азотной','Фосфорной'],correct:0},
+  {q:'H₂SO₄ называется:',options:['Серной','Соляной','Азотной','Угольной'],correct:0},
+  {q:'HNO₃ называется:',options:['Азотной','Серной','Соляной','Фосфорной'],correct:0},
+  {q:'В желудочном соке:',options:['HCl','H₂SO₄','HNO₃','H₃PO₄'],correct:0},
+  {q:'Остаток HCl:',options:['Cl⁻','Cl²⁻','H⁺','OH⁻'],correct:0},
+  {q:'Остаток H₂SO₄:',options:['SO₄²⁻','SO₃²⁻','S²⁻','HSO₄⁻'],correct:0},
+  {q:'Остаток HNO₃:',options:['NO₃⁻','NO₂⁻','N³⁻','NO⁻'],correct:0},
+  {q:'Остаток H₃PO₄:',options:['PO₄³⁻','PO₃³⁻','P³⁻','HPO₄²⁻'],correct:0},
+  {q:'Диссоциация HClO₄:',options:['H⁺ + ClO₄⁻','H⁺ + Cl⁻ + 4O²⁻','2H⁺ + ClO₄²⁻','Не диссоциирует'],correct:0},
+  {q:'CuCO₃ + HCl →',options:['CuCl₂ + H₂O + CO₂','Cu + CO₂','CuO + HCl','CuH + CO₂'],correct:0},
+  {q:'Кислота по ТЭД даёт:',options:['Катионы H⁺','Анионы OH⁻','Катионы металла','Газ'],correct:0},
+  {q:'Самая сильная:',options:['HClO₄','H₂CO₃','CH₃COOH','H₂S'],correct:0},
+  {q:'Слабая кислота:',options:['CH₃COOH','HCl','HNO₃','H₂SO₄'],correct:0},
+  {q:'Кислота + металл → ?',options:['H₂','O₂','H₂O','CO₂'],correct:0},
+  {q:'Кислоты реагируют с:',options:['Металлами до H₂, оксидами, основаниями, солями','Только с металлами','Только с водой','Только с газом'],correct:0},
+  {q:'С металлом выделяется:',options:['H₂','O₂','Cl₂','N₂'],correct:0},
+  {q:'Zn + H₂SO₄(разб.) →',options:['ZnSO₄ + H₂↑','ZnSO₄ + H₂O','ZnS + H₂O','ZnO + H₂S'],correct:0},
+  {q:'H₂CO₃:',options:['Угольная','Уксусная','Серная','Соляная'],correct:0},
+  {q:'H₂S:',options:['Сероводородная','Серная','Сернистая','Соляная'],correct:0},
+  {q:'HF:',options:['Плавиковая','Хлорная','Азотная','Фосфорная'],correct:0},
+  {q:'H₂SiO₃:',options:['Кремниевая','Угольная','Серная','Азотная'],correct:0},
+  {q:'Кислота + Cu(OH)₂ →',options:['Соль + вода','Металл + H₂O','Оксид + H₂','Газ'],correct:0},
+  {q:'Общее у кислот:',options:['Катионы H⁺','OH⁻','O₂','Cl⁻'],correct:0},
+  {q:'HCl реагирует с:',options:['Zn, CuO, NaOH, AgNO₃','Cu, Au, Ag','Только с металлами','Только с водой'],correct:0},
+  {q:'Кислоты по ТЭД дают:',options:['H⁺','OH⁻','Металл','Газ'],correct:0},
+  {q:'H₂SO₄ — формула:',options:['H₂SO₄','H₂SO₃','H₂S','H₂S₂O₃'],correct:0},
+  {q:'HNO₃ — формула:',options:['HNO₃','HNO₂','NH₃','N₂O₅'],correct:0},
+  {q:'HCl — формула:',options:['HCl','HClO','HClO₄','NaCl'],correct:0},
+  {q:'H₃PO₄ — формула:',options:['H₃PO₄','H₃PO₃','HPO₃','P₂O₅'],correct:0},
+  {q:'HCl + CaCO₃ даёт:',options:['CO₂','H₂','O₂','Cl₂'],correct:0},
+  {q:'Нейтрализация — это:',options:['Кислота + основание','Кислота + металл','Кислота + соль','Кислота + газ'],correct:0},
+  {q:'Продукты нейтрализации:',options:['Соль + вода','Соль + газ','Оксид + вода','Металл + газ'],correct:0},
+  {q:'Сильные кислоты:',options:['HCl, H₂SO₄, HNO₃','H₂CO₃, H₂S, CH₃COOH','H₂O, NaCl','O₂, N₂'],correct:0},
+  {q:'Соляная кислота:',options:['Раствор HCl','Раствор NaCl','Раствор H₂SO₄','Раствор NaOH'],correct:0},
+  {q:'Лакмус в кислоте:',options:['Красный','Синий','Зелёный','Жёлтый'],correct:0},
+  {q:'Метилоранж в кислоте:',options:['Розовый','Жёлтый','Синий','Зелёный'],correct:0},
+  {q:'Фенолфталеин в кислоте:',options:['Бесцветный','Малиновый','Красный','Синий'],correct:0},
+  {q:'Кислота + металл — это:',options:['Замещение','Обмен','Соединение','Разложение'],correct:0},
+  {q:'Кислота + соль, если:',options:['Осадок или газ','Всегда','Никогда','Только при t°'],correct:0}
+];
+
+var bankBases=[
+  {q:'Основание по ТЭД даёт:',options:['H⁺','OH⁻','Металл','Газ'],correct:1},
+  {q:'Щёлочь:',options:['Cu(OH)₂','Fe(OH)₃','NaOH','Al(OH)₃'],correct:2},
+  {q:'KOH + HNO₃ →',options:['KNO₃ + H₂O','KNO₃ + H₂','K + HNO₃','KOH + NO₂'],correct:0},
+  {q:'2NaOH + CO₂ →',options:['Na₂CO₃ + H₂O','NaHCO₃','Na₂O + H₂O','Na + CO₂'],correct:0},
+  {q:'2NaOH + CuSO₄ →',options:['Cu(OH)₂↓ + Na₂SO₄','Cu + Na₂SO₄','CuO + Na₂SO₄','CuSO₄ + H₂O'],correct:0},
+  {q:'Фенолфталеин в щёлочи:',options:['Бесцветный','Малиновый','Красный','Синий'],correct:1},
+  {q:'Cu(OH)₂ →t°:',options:['CuO + H₂O','Cu + H₂O','Cu₂O + H₂','Cu + H₂O₂'],correct:0},
+  {q:'Слабое основание:',options:['NaOH','KOH','NH₄OH','Ba(OH)₂'],correct:2},
+  {q:'Нерастворимое:',options:['NaOH','KOH','Fe(OH)₃','LiOH'],correct:2},
+  {q:'Ca(OH)₂ + CO₂ →',options:['CaCO₃↓ + H₂O','CaO + H₂O','Ca + CO₂','CaHCO₃'],correct:0},
+  {q:'Лакмус в щёлочи:',options:['Красный','Синий','Розовый','Бесцветный'],correct:1},
+  {q:'Ba(OH)₂ →',options:['Ba²⁺ + 2OH⁻','Ba⁺ + OH⁻','Ba²⁺ + OH₂⁻','BaOH⁺ + OH⁻'],correct:0},
+  {q:'Растворимое основание:',options:['Соль','Щёлочь','Кислота','Оксид'],correct:1},
+  {q:'Основания реагируют с:',options:['Кислотами','Металлами','Солями (осадок)','Все перечисленные'],correct:3},
+  {q:'NaOH + HCl →',options:['NaCl + H₂O','Na + HClO','NaCl + H₂','Не реагируют'],correct:0},
+  {q:'Щёлочи — это:',options:['Растворимые основания','Нерастворимые основания','Кислоты','Оксиды'],correct:0},
+  {q:'NaOH — формула:',options:['NaOH','Na₂O','NaCl','NaHCO₃'],correct:0},
+  {q:'KOH — формула:',options:['KOH','K₂O','KCl','K₂CO₃'],correct:0},
+  {q:'Ca(OH)₂ — формула:',options:['Ca(OH)₂','CaO','CaCO₃','CaCl₂'],correct:0},
+  {q:'Метилоранж в щёлочи:',options:['Жёлтый','Красный','Розовый','Бесцветный'],correct:0},
+  {q:'NH₄OH:',options:['Слабое','Сильное','Среднее','Не основание'],correct:0},
+  {q:'NaOH →',options:['Na⁺ + OH⁻','Na²⁺ + OH₂⁻','Na + OH','Не диссоциирует'],correct:0},
+  {q:'Свойства оснований:',options:['OH⁻','H⁺','Металл','Кислотный остаток'],correct:0},
+  {q:'Основание + кислотный оксид →',options:['Соль + вода','Металл + H₂','Газ + вода','Основание + газ'],correct:0},
+  {q:'Fe(OH)₃ →t°:',options:['Fe₂O₃ + H₂O','Fe + H₂O','FeO + H₂','Fe + O₂'],correct:0},
+  {q:'Основание + соль, если:',options:['Осадок','Газ','Вода','Всегда'],correct:0},
+  {q:'Малиновый в щёлочи:',options:['Фенолфталеин','Лакмус','Метилоранж','Универсальный'],correct:0},
+  {q:'KOH + HCl →',options:['KCl + H₂O','K + HClO','KCl + H₂','Не реагируют'],correct:0},
+  {q:'Основание + кислота — это:',options:['Нейтрализация','Замещение','Разложение','Обмен газов'],correct:0},
+  {q:'По растворимости:',options:['Растворимые и нерастворимые','Только растворимые','Только нерастворимые','Только газы'],correct:0},
+  {q:'По кислотности:',options:['Одно-, двух-, трёхкислотные','Только одно-','Только двух-','Только трёх-'],correct:0},
+  {q:'Fe(OH)₃:',options:['Нерастворимое','Растворимое','Щёлочь','Кислота'],correct:0},
+  {q:'Cu(OH)₂:',options:['Нерастворимое','Растворимое','Щёлочь','Кислота'],correct:0},
+  {q:'Щёлочи образуют:',options:['Na, K, Li, Ca, Ba','Cu, Fe, Al','Ag, Au, Pt','Zn, Pb, Sn'],correct:0},
+  {q:'Общее у оснований:',options:['Ионы OH⁻','Ионы H⁺','Ионы металла','Газ'],correct:0},
+  {q:'Основание + CO₂ →',options:['Соль + вода','Металл + газ','Кислота + вода','Оксид + газ'],correct:0},
+  {q:'Cu(OH)₂ цвет:',options:['Голубой','Белый','Чёрный','Красный'],correct:0},
+  {q:'Fe(OH)₃ цвет:',options:['Бурый','Голубой','Белый','Зелёный'],correct:0},
+  {q:'Fe(OH)₂ цвет:',options:['Зелёный','Бурый','Голубой','Белый'],correct:0},
+  {q:'Формула оснований:',options:['Me(OH)n','MeO','MeH','MeOH₂'],correct:0},
+  {q:'Al(OH)₃:',options:['Нерастворимое','Растворимое','Щёлочь','Кислота'],correct:0},
+  {q:'KOH + H₂SO₄ →',options:['K₂SO₄ + H₂O','K + H₂SO₄','K₂SO₄ + H₂','Не реагируют'],correct:0},
+  {q:'Растворимые основания:',options:['Щёлочи','Соли','Кислоты','Оксиды'],correct:0},
+  {q:'2NaOH + H₂SO₄ →',options:['Na₂SO₄ + 2H₂O','Na + H₂SO₄','Na₂SO₄ + H₂','Не реагируют'],correct:0},
+  {q:'Все основания:',options:['Реагируют с кислотами','Реагируют с металлами','Выделяют H₂','Разлагаются при н.у.'],correct:0},
+  {q:'NaOH растворимость:',options:['Хорошо растворим','Плохо','Не растворим','Газ'],correct:0},
+  {q:'Cu(OH)₂ растворимость:',options:['Не растворим','Хорошо','Средне','Газ'],correct:0},
+  {q:'Ba(OH)₂ — формула:',options:['Ba(OH)₂','BaO','BaCO₃','BaCl₂'],correct:0},
+  {q:'Fe(OH)₃ — формула:',options:['Fe(OH)₃','FeO','Fe₂O₃','FeCl₃'],correct:0},
+  {q:'NaOH называется:',options:['Гидроксид натрия','Соль натрия','Кислота натрия','Оксид натрия'],correct:0},
+  {q:'Ca(OH)₂ называется:',options:['Гидроксид кальция','Оксид кальция','Соль кальция','Кислота кальция'],correct:0},
+  {q:'Амфотерное:',options:['Zn(OH)₂','NaOH','KOH','Ca(OH)₂'],correct:0},
+  {q:'Амфотерный реагирует с:',options:['Кислотами и щелочами','Только кислотами','Только щелочами','Ни с чем'],correct:0},
+  {q:'Mg(OH)₂ + HCl →',options:['MgCl₂ + H₂O','Mg + HCl','MgCl₂ + H₂','MgO + HCl'],correct:0},
+  {q:'Лакмус в щёлочи:',options:['Синий','Красный','Розовый','Бесцветный'],correct:0},
+  {q:'Метилоранж в щёлочи:',options:['Жёлтый','Красный','Розовый','Бесцветный'],correct:0},
+  {q:'Фенолфталеин в щёлочи:',options:['Малиновый','Бесцветный','Красный','Синий'],correct:0},
+  {q:'Основания реагируют с:',options:['Кислотами','Металлами','Кислородом','Водородом'],correct:0},
+  {q:'По числу OH:',options:['Одно-, двух-, трёхкислотные','Только одно-','Только двух-','Только трёх-'],correct:0},
+  {q:'Щёлочь + кислотный оксид:',options:['Соль + вода','Металл + газ','Кислота + H₂','Оксид + O₂'],correct:0},
+  {q:'Лакмус в щёлочи:',options:['Синий','Красный','Розовый','Бесцветный'],correct:0},
+  {q:'NH₄OH:',options:['Слабое','Сильное','Не основание','Амфотерное'],correct:0},
+  {q:'Основание + индикатор:',options:['Меняет цвет','Не меняет','Испаряется','Разлагается'],correct:0},
+  {q:'Щёлочь + CuSO₄ →',options:['Cu(OH)₂↓','Cu','CuO','Cu₂O'],correct:0},
+  {q:'Растворимость LiOH:',options:['Хорошо','Плохо','Не растворим','Газ'],correct:0},
+  {q:'Формула Ca(OH)₂:',options:['Ca(OH)₂','CaO','CaCl₂','CaCO₃'],correct:0}
+];
+
+var bankSalts=[
+  {q:'Соль по ТЭД даёт:',options:['H⁺','OH⁻','Катион металла и анион кислотного остатка','Газ'],correct:2},
+  {q:'Fe + CuSO₄ →',options:['FeSO₄ + Cu↓','FeSO₄ + CuO','FeS + CuO','Fe + Cu + SO₄'],correct:0},
+  {q:'BaCl₂ + H₂SO₄ →',options:['BaSO₄↓ + 2HCl','Ba + H₂SO₄','BaSO₄ + H₂','BaCl₂ + SO₃'],correct:0},
+  {q:'Na₂CO₃ + 2HCl →',options:['2NaCl + H₂O + CO₂↑','2NaCl + H₂↑','NaCl + H₂CO₃','Na₂O + HCl'],correct:0},
+  {q:'FeCl₃ + 3NaOH →',options:['Fe(OH)₃↓ + 3NaCl','Fe + NaOH','Fe₂O₃ + NaCl','FeCl₂ + H₂O'],correct:0},
+  {q:'AgNO₃ + NaCl →',options:['AgCl↓ + NaNO₃','Ag + NaCl','AgCl + NaNO₃ (без осадка)','AgNa + ClNO₃'],correct:0},
+  {q:'CaCO₃ →t°:',options:['CaO + CO₂↑','Ca + CO₂','CaO₂ + CO','Ca + C + O₂'],correct:0},
+  {q:'Обмен до конца:',options:['Осадок, газ или вода','Только газ','Только осадок','Только вода'],correct:0},
+  {q:'2Al³⁺ + 3SO₄²⁻ даёт:',options:['Al₂(SO₄)₃','AlSO₄','Al₃(SO₄)₂','Al₂SO₄'],correct:0},
+  {q:'HCl + Na₂CO₃ даёт газ:',options:['CO₂','H₂','O₂','Cl₂'],correct:0},
+  {q:'Нерастворимая соль:',options:['NaCl','KNO₃','BaSO₄','CuCl₂'],correct:2},
+  {q:'CuSO₄ + 2NaOH →',options:['Cu(OH)₂↓ + Na₂SO₄','CuO + Na₂SO₄','Cu + Na₂SO₄','CuS + NaOH'],correct:0},
+  {q:'Условие обмена:',options:['Осадок нерастворим','Осадок растворим','Нет газа','Нет воды'],correct:0},
+  {q:'NH₄⁺ даёт:',options:['NH₄Cl','NaCl','K₂SO₄','CaCO₃'],correct:0},
+  {q:'Zn + CuCl₂ →',options:['ZnCl₂ + Cu↓','ZnCl₂ + CuO','ZnCu + Cl₂','ZnCl + Cu'],correct:0},
+  {q:'NaCl →',options:['Na⁺ + Cl⁻','Na²⁺ + Cl²⁻','Не диссоциирует','Na + Cl'],correct:0},
+  {q:'Соли по ТЭД дают:',options:['Катион металла + анион кислотного остатка','H⁺','OH⁻','Газ'],correct:0},
+  {q:'Соль + металл, если:',options:['Металл активнее','Всегда','Никогда','При t°'],correct:0},
+  {q:'Cu + AgNO₃ →',options:['Cu(NO₃)₂ + Ag↓','CuNO₃ + Ag','Cu + Ag + NO₃','Не реагируют'],correct:0},
+  {q:'Соль + соль, если:',options:['Осадок','Газ','Вода','Всегда'],correct:0},
+  {q:'Соль + кислота, если:',options:['Осадок или газ','Всегда','Никогда','Только при t°'],correct:0},
+  {q:'Соль + щёлочь, если:',options:['Осадок','Газ','Вода','Всегда'],correct:0},
+  {q:'NaCl + AgNO₃ →',options:['AgCl↓ + NaNO₃','Ag + NaCl','AgCl + NaNO₃ (раств.)','AgNa + ClNO₃'],correct:0},
+  {q:'K₂SO₄ + BaCl₂ →',options:['BaSO₄↓ + 2KCl','Ba + K₂SO₄','BaSO₄ + K₂','KCl + SO₃'],correct:0},
+  {q:'Na₂CO₃ + CaCl₂ →',options:['CaCO₃↓ + 2NaCl','Ca + Na₂CO₃','CaCO₃ + Na₂','NaCl + CO₂'],correct:0},
+  {q:'Правило Бертолле:',options:['Осадок, газ или вода','Все реакции','Только разложение','Только замещение'],correct:0},
+  {q:'Растворимые соли в ионных:',options:['Как ионы','Как молекулы','Не пишут','Символом'],correct:0},
+  {q:'CaCO₃ цвет:',options:['Белый','Голубой','Чёрный','Красный'],correct:0},
+  {q:'BaSO₄ цвет:',options:['Белый','Чёрный','Красный','Жёлтый'],correct:0},
+  {q:'AgCl цвет:',options:['Белый','Чёрный','Красный','Жёлтый'],correct:0},
+  {q:'Cu(OH)₂ цвет:',options:['Голубой','Белый','Чёрный','Красный'],correct:0},
+  {q:'Fe(OH)₃ цвет:',options:['Бурый','Голубой','Белый','Зелёный'],correct:0},
+  {q:'NaCl — формула:',options:['NaCl','Na₂O','NaOH','NaNO₃'],correct:0},
+  {q:'CuSO₄ — формула:',options:['CuSO₄','CuS','CuO','Cu(OH)₂'],correct:0},
+  {q:'Na₂CO₃ — формула:',options:['Na₂CO₃','NaHCO₃','Na₂O','NaOH'],correct:0},
+  {q:'AgNO₃ — формула:',options:['AgNO₃','Ag₂O','AgCl','AgOH'],correct:0},
+  {q:'Al₂(SO₄)₃ →',options:['2Al³⁺ + 3SO₄²⁻','Al³⁺ + SO₄²⁻','Al₂³⁺ + 3SO₄²⁻','Не диссоциирует'],correct:0},
+  {q:'CO₂ при реакции:',options:['CaCO₃ + HCl','NaCl + AgNO₃','BaCl₂ + H₂SO₄','CuSO₄ + NaOH'],correct:0},
+  {q:'AgCl при реакции:',options:['AgNO₃ + HCl','NaCl + KNO₃','CuSO₄ + NaOH','BaCl₂ + H₂SO₄'],correct:0},
+  {q:'BaSO₄ при реакции:',options:['BaCl₂ + H₂SO₄','NaCl + AgNO₃','CuSO₄ + NaOH','CaCO₃ + HCl'],correct:0},
+  {q:'Cu(OH)₂↓ при реакции:',options:['CuSO₄ + 2NaOH','NaCl + AgNO₃','BaCl₂ + H₂SO₄','KNO₃ + NaCl'],correct:0},
+  {q:'Соль + кислота, если:',options:['Осадок или газ','Всегда','Никогда','Только при t°'],correct:0},
+  {q:'Средняя соль:',options:['NaCl','NaHCO₃','KHSO₄','Ca(OH)Cl'],correct:0},
+  {q:'Кислая соль:',options:['NaHCO₃','NaCl','Na₂CO₃','NaOH'],correct:0},
+  {q:'Основная соль:',options:['Ca(OH)Cl','NaCl','Na₂CO₃','NaOH'],correct:0},
+  {q:'BaSO₄ — формула:',options:['BaSO₄','BaSO₃','BaS','BaO'],correct:0},
+  {q:'KNO₃ — формула:',options:['KNO₃','KNO₂','K₂O','KOH'],correct:0},
+  {q:'FeCl₃ — формула:',options:['FeCl₃','FeCl₂','FeO','Fe(OH)₃'],correct:0},
+  {q:'Ca₃(PO₄)₂ — формула:',options:['Ca₃(PO₄)₂','CaPO₄','Ca₂PO₄','CaHPO₄'],correct:0},
+  {q:'CaCO₃ — формула:',options:['CaCO₃','Ca(HCO₃)₂','CaO','Ca(OH)₂'],correct:0},
+  {q:'NaHCO₃ — формула:',options:['NaHCO₃','Na₂CO₃','NaOH','Na₂O'],correct:0},
+  {q:'Соль + соль →',options:['Новые соли (если осадок)','Металл + газ','Оксид + вода','Кислота + основание'],correct:0},
+  {q:'CuSO₄ + Fe →',options:['FeSO₄ + Cu↓','Cu + FeSO₄','Fe₂(SO₄)₃ + Cu','FeO + CuSO₃'],correct:0},
+  {q:'CaCO₃ + HCl →',options:['CaCl₂ + H₂O + CO₂↑','CaCl₂ + H₂↑','CaCl₂ + O₂↑','CaCl₂ + CO↑'],correct:0},
+  {q:'Соль + металл:',options:['Активный вытесняет менее активный','Всегда','Никогда','Только с водой'],correct:0},
+  {q:'AgCl + HNO₃ →',options:['Не реагируют','AgNO₃ + HCl','Ag + HCl','AgCl + H₂'],correct:0},
+  {q:'NaCl + KNO₃ →',options:['Не реагируют','NaNO₃ + KCl','Na + K + ClNO₃','NaK + ClNO₃'],correct:0},
+  {q:'Zn + FeSO₄ →',options:['ZnSO₄ + Fe↓','ZnFe + SO₄','Fe + ZnSO₃','Не реагируют'],correct:0},
+  {q:'Al₂(SO₄)₃ — формула:',options:['Al₂(SO₄)₃','AlSO₄','Al₃SO₄','Al(SO₄)₃'],correct:0},
+  {q:'NH₄Cl — формула:',options:['NH₄Cl','NH₃Cl','NH₄Cl₂','NH₄(OH)Cl'],correct:0},
+  {q:'Соли — продукты:',options:['Замещения H на металл','Окисления','Разложения','Растворения'],correct:0},
+  {q:'Na₂SO₄ + BaCl₂ →',options:['BaSO₄↓ + 2NaCl','Ba + Na₂SO₄','BaSO₄ + 2Na','NaCl + SO₃'],correct:0},
+  {q:'NH₄NO₃ →',options:['NH₄⁺ + NO₃⁻','NH₃⁺ + NO₃⁻','NH₄²⁺ + NO₃²⁻','Не диссоциирует'],correct:0},
+  {q:'Кристаллогидрат:',options:['CuSO₄·5H₂O','CuSO₄','Cu(OH)₂','CuO'],correct:0},
+  {q:'Медный купорос:',options:['CuSO₄·5H₂O','CuSO₄','CuO','Cu(OH)₂'],correct:0},
+  {q:'NaOH + CO₂ (избыток) →',options:['NaHCO₃','Na₂CO₃','Na','Na₂O'],correct:0}
+];
+
+var bankHydrolysis=[
+  {q:'Гидролиз — это:',options:['Взаимодействие с водой','Реакция с кислотой','Реакция с металлом','Разложение при t°'],correct:0},
+  {q:'Гидролизуются:',options:['Слабой кислотой и/или слабым основанием','Только сильной','Только сильным','Все'],correct:0},
+  {q:'NaCl:',options:['Не гидролизуется, pH = 7','По катиону','По аниону','pH > 7'],correct:0},
+  {q:'Na₂CO₃:',options:['По аниону, pH > 7','По катиону, pH < 7','pH = 7','Не гидролизуется'],correct:0},
+  {q:'CuCl₂:',options:['По катиону, pH < 7','По аниону, pH > 7','pH = 7','Не гидролизуется'],correct:0},
+  {q:'CH₃COONH₄:',options:['По катиону и аниону','Не гидролизуется','pH = 7 всегда','Только по катиону'],correct:0},
+  {q:'Индикатор в кислой:',options:['Лакмус красный','Лакмус синий','Фенолфталеин малиновый','Бесцветный'],correct:0},
+  {q:'Индикатор в щелочной:',options:['Фенолфталеин малиновый','Лакмус красный','Метилоранж розовый','Все бесцветные'],correct:0},
+  {q:'pH нейтрального:',options:['= 7','< 7','> 7','= 0'],correct:0},
+  {q:'pH кислого:',options:['< 7','= 7','> 7','= 14'],correct:0},
+  {q:'pH щелочного:',options:['> 7','= 7','< 7','= 0'],correct:0},
+  {q:'Не гидролизуются:',options:['Сильная + сильное','Слабая + слабое','Сильная + слабое','Слабая + сильное'],correct:0},
+  {q:'Na₂CO₃ + H₂O ⇄',options:['NaHCO₃ + NaOH','Na₂O + H₂CO₃','Na + H₂CO₃','NaOH + CO₂↑'],correct:0},
+  {q:'CuCl₂ + H₂O ⇄',options:['CuOHCl + HCl','CuO + HCl','Cu + HCl','Cu(OH)₂ + HCl'],correct:0},
+  {q:'Гидролиз по аниону:',options:['CH₃COONa','NH₄Cl','NaCl','CuSO₄'],correct:0},
+  {q:'Гидролиз по катиону:',options:['NH₄Cl','CH₃COONa','NaCl','KNO₃'],correct:0},
+  {q:'Не гидролизуется:',options:['NaNO₃','Na₂CO₃','CuCl₂','CH₃COONH₄'],correct:0},
+  {q:'Кислая среда:',options:['NH₄Cl','NaCl','Na₂CO₃','KNO₃'],correct:0},
+  {q:'Щелочная среда:',options:['Na₂CO₃','NaCl','NH₄Cl','KNO₃'],correct:0},
+  {q:'Условие:',options:['Слабая кислота и/или слабое основание','Только сильная','Только сильное','Не важно'],correct:0},
+  {q:'При нагревании гидролиз:',options:['Усиливается','Ослабевает','Не изменяется','Прекращается'],correct:0},
+  {q:'При разбавлении:',options:['Усиливается','Ослабевает','Не изменяется','Прекращается'],correct:0},
+  {q:'Кислота к раствору по аниону:',options:['Подавляет гидролиз','Усиливает','Не влияет','Меняет цвет'],correct:0},
+  {q:'Щёлочь к раствору по катиону:',options:['Подавляет гидролиз','Усиливает','Не влияет','Меняет цвет'],correct:0},
+  {q:'Слабая кислота:',options:['H₂CO₃','HCl','HNO₃','H₂SO₄'],correct:0},
+  {q:'Слабое основание:',options:['NH₄OH','NaOH','KOH','Ca(OH)₂'],correct:0},
+  {q:'Сильная кислота:',options:['HCl','H₂CO₃','CH₃COOH','H₂S'],correct:0},
+  {q:'Сильное основание:',options:['NaOH','NH₄OH','Cu(OH)₂','Fe(OH)₃'],correct:0},
+  {q:'Na₂S — образована:',options:['Слабой кислотой + сильным основанием','Сильной + слабым','Слабой + слабым','Сильной + сильным'],correct:0},
+  {q:'AlCl₃ — образована:',options:['Сильной + слабым основанием','Слабой + сильным','Слабой + слабым','Сильной + сильным'],correct:0},
+  {q:'CH₃COONa гидролиз:',options:['CH₃COOH + NaOH','CH₃COO + H₂O','CH₄ + NaOH','CH₃OH + Na'],correct:0},
+  {q:'NH₄Cl гидролиз:',options:['NH₄OH + HCl','NH₃ + HCl','NH₄ + Cl','NH₄Cl + H₂O'],correct:0},
+  {q:'pH Na₂CO₃:',options:['> 7','< 7','= 7','= 0'],correct:0},
+  {q:'pH NH₄Cl:',options:['< 7','> 7','= 7','= 14'],correct:0},
+  {q:'pH NaCl:',options:['= 7','< 7','> 7','Зависит от t'],correct:0},
+  {q:'OH⁻ даёт соль:',options:['Na₂CO₃','NH₄Cl','NaCl','KNO₃'],correct:0},
+  {q:'H⁺ даёт соль:',options:['CuCl₂','NaCl','Na₂CO₃','KNO₃'],correct:0},
+  {q:'Гидролиз — реакция:',options:['Обмена с водой','Замещения','Разложения','Соединения'],correct:0},
+  {q:'Гидролиз — процесс:',options:['Обратимый','Необратимый','Только в расплаве','Только в газе'],correct:0},
+  {q:'Универсальный в кислой:',options:['Красный/оранжевый','Синий/фиолетовый','Зелёный','Бесцветный'],correct:0},
+  {q:'Универсальный в нейтральной:',options:['Зелёный/жёлтый','Красный','Синий','Малиновый'],correct:0},
+  {q:'Универсальный в щелочной:',options:['Синий/фиолетовый','Красный','Зелёный','Бесцветный'],correct:0},
+  {q:'ZnCl₂ гидролиз:',options:['По катиону','По аниону','По обоим','Не гидролизуется'],correct:0},
+  {q:'K₂S гидролиз:',options:['По аниону','По катиону','По обоим','Не гидролизуется'],correct:0},
+  {q:'K₂SO₄ гидролиз:',options:['Не гидролизуется','По катиону','По аниону','По обоим'],correct:0},
+  {q:'FeCl₃ среда:',options:['Кислая','Щелочная','Нейтральная','Не изменяет'],correct:0},
+  {q:'K₂CO₃ среда:',options:['Щелочная','Кислая','Нейтральная','Не изменяет'],correct:0},
+  {q:'NaCl среда:',options:['Нейтральная','Кислая','Щелочная','Зависит от t'],correct:0},
+  {q:'Na₂SO₃ гидролиз:',options:['По аниону, pH > 7','По катиону, pH < 7','Не идёт','pH = 7'],correct:0},
+  {q:'Al(NO₃)₃ гидролиз:',options:['По катиону, pH < 7','По аниону, pH > 7','Не идёт','pH = 7'],correct:0},
+  {q:'Сильно щелочная:',options:['Na₂CO₃','NaCl','NH₄Cl','NaNO₃'],correct:0},
+  {q:'Сильно кислая:',options:['AlCl₃','NaCl','Na₂CO₃','KNO₃'],correct:0},
+  {q:'В гидролизе участвуют:',options:['Ионы слабой кислоты или основания','Только металла','Только остатка','Все ионы'],correct:0},
+  {q:'Гидролиз усиливается:',options:['Нагреванием','Охлаждением','Увеличением концентрации','Добавлением соли'],correct:0},
+  {q:'По катиону и аниону:',options:['CH₃COONH₄','NaCl','Na₂CO₃','CuCl₂'],correct:0},
+  {q:'(NH₄)₂CO₃ pH:',options:['Зависит от констант','Кислый','Щелочной','Нейтральный'],correct:0},
+  {q:'Na₂SO₄ гидролиз:',options:['Не гидролизуется','По катиону','По аниону','По обоим'],correct:0},
+  {q:'CuSO₄ гидролиз:',options:['По катиону','По аниону','По обоим','Не гидролизуется'],correct:0},
+  {q:'KNO₃ гидролиз:',options:['Не гидролизуется','По катиону','По аниону','По обоим'],correct:0},
+  {q:'NH₄Cl гидролиз:',options:['NH₄OH + HCl','NH₃ + HCl','NH₄ + Cl','NH₄Cl'],correct:0},
+  {q:'CH₃COONa гидролиз:',options:['CH₃COOH + NaOH','CH₄ + NaOH','CH₃OH + Na','CH₃COONa + H₂O'],correct:0},
+  {q:'Гидролиз — причина:',options:['Изменения pH','Цвета','Запаха','Массы'],correct:0},
+  {q:'Фенолфталеин в Na₂CO₃:',options:['Малиновый','Бесцветный','Красный','Синий'],correct:0},
+  {q:'Лакмус в NH₄Cl:',options:['Красный','Синий','Малиновый','Бесцветный'],correct:0},
+  {q:'Лакмус в NaCl:',options:['Фиолетовый','Красный','Синий','Малиновый'],correct:0},
+  {q:'Необратимый гидролиз:',options:['Al₂S₃ + H₂O → Al(OH)₃ + H₂S','NaCl + H₂O','KNO₃ + H₂O','Na₂SO₄ + H₂O'],correct:0},
+  {q:'Щёлочь + соль аммония →',options:['NH₃↑','H₂↑','O₂↑','Cl₂↑'],correct:0}
+];
+
+/* ============================================================
+   ЗАПУСК ТЕСТОВ
+   ============================================================ */
+buildQuiz('quiz-dissociation',bankDissociation,20);
+buildQuiz('quiz-acids',bankAcids,20);
+buildQuiz('quiz-bases',bankBases,20);
+buildQuiz('quiz-salts',bankSalts,20);
+buildQuiz('quiz-hydrolysis',bankHydrolysis,20);
+</script>
+
+</body>
+</html>
