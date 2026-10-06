@@ -6,8 +6,21 @@ function showPage(page){
   if (el) el.classList.add('active');
   window.scrollTo({top:0, behavior:'smooth'});
 }
-document.querySelectorAll('.nav-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){ showPage(this.getAttribute('data-page')); });
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.nav-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ showPage(this.getAttribute('data-page')); });
+  });
+
+  renderContents('contents8List', CHAPTERS8);
+  renderContents('contents9List', CHAPTERS9);
+
+  var inp = document.getElementById('analyzerInput');
+  if (inp) {
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') runAnalyzer();
+    });
+  }
 });
 
 /* ==================== БАЗА ВЕЩЕСТВ ==================== */
@@ -39,7 +52,7 @@ var SUBSTANCES = [
   {formula:"KNO3",name:"Нитрат калия",composition:{K:1,N:1,O:3},aliases:["калиевая селитра"],note:"Ионная решётка."},
   {formula:"AgNO3",name:"Нитрат серебра",composition:{Ag:1,N:1,O:3},aliases:["ляпис"],note:"Ионная решётка."},
   {formula:"NH4NO3",name:"Нитрат аммония",composition:{N:2,H:4,O:3},aliases:["аммиачная селитра"],note:"Ионная решётка."},
-  {formula:"Na2CO3",name:"Карбонат натрия",composition:{Na:2,C:1,O:3},aliases:["сода"],note:"Ионная решётка."},
+  {formula:"Na2CO3",name:"Карбонат натрия",composition:{Na:2,C:1,O:3},aliases:["сода","кальцинированная сода"],note:"Ионная решётка."},
   {formula:"K2CO3",name:"Карбонат калия",composition:{K:2,C:1,O:3},aliases:["поташ"],note:"Ионная решётка."},
   {formula:"CaCO3",name:"Карбонат кальция",composition:{Ca:1,C:1,O:3},aliases:["мел","известняк","мрамор"],note:"Ионная решётка."},
   {formula:"NaHCO3",name:"Гидрокарбонат натрия",composition:{Na:1,H:1,C:1,O:3},aliases:["пищевая сода"],note:"Ионная решётка."},
@@ -141,10 +154,12 @@ var SUBSTANCES = [
   {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная."},
   {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная."},
   {formula:"SiC",name:"Карбид кремния",composition:{Si:1,C:1},aliases:["карборунд"],note:"Атомная решётка."},
-  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
+  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."},
+  {formula:"PbS",name:"Сульфид свинца",composition:{Pb:1,S:1},aliases:["галенит"],note:"Ионная решётка."},
+  {formula:"HgS",name:"Сульфид ртути",composition:{Hg:1,S:1},aliases:["киноварь"],note:"Ионная решётка."}
 ];
 
-/* ==================== ПАРСЕР ==================== */
+/* ==================== ПАРСЕР ФОРМУЛ ==================== */
 function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
 function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
 
@@ -173,6 +188,7 @@ function parseGroup(s){
   }
   return result;
 }
+
 function parseFormula(formula){
   var f=formula.replace(/\s/g,'');
   var parts=f.split(/[·*]/);
@@ -186,28 +202,39 @@ function parseFormula(formula){
   return total;
 }
 
+/* ==================== ИНДЕКСЫ ==================== */
 var NAME_INDEX=null,FORMULA_INDEX=null;
+
 function buildNameIndex(){
   if(NAME_INDEX) return NAME_INDEX;
   NAME_INDEX={};
   for(var i=0;i<SUBSTANCES.length;i++){
     var s=SUBSTANCES[i],k=normalize(s.name); if(!NAME_INDEX[k])NAME_INDEX[k]=s;
-    if(s.aliases) for(var j=0;j<s.aliases.length;j++){var k2=normalize(s.aliases[j]);if(!NAME_INDEX[k2])NAME_INDEX[k2]=s;}
+    if(s.aliases) for(var j=0;j<s.aliases.length;j++){
+      var k2=normalize(s.aliases[j]);
+      if(!NAME_INDEX[k2])NAME_INDEX[k2]=s;
+    }
   }
   return NAME_INDEX;
 }
+
 function buildFormulaIndex(){
   if(FORMULA_INDEX) return FORMULA_INDEX;
   FORMULA_INDEX={};
-  for(var i=0;i<SUBSTANCES.length;i++){var k=cleanFormula(SUBSTANCES[i].formula);if(!FORMULA_INDEX[k])FORMULA_INDEX[k]=SUBSTANCES[i];}
+  for(var i=0;i<SUBSTANCES.length;i++){
+    var k=cleanFormula(SUBSTANCES[i].formula);
+    if(!FORMULA_INDEX[k])FORMULA_INDEX[k]=SUBSTANCES[i];
+  }
   return FORMULA_INDEX;
 }
+
 function compositionsEqual(a,b){
   var ka=Object.keys(a),kb=Object.keys(b);
   if(ka.length!==kb.length) return false;
   for(var i=0;i<ka.length;i++) if(a[ka[i]]!==b[ka[i]]) return false;
   return true;
 }
+
 function findSubstance(query){
   var raw=query.trim(); if(!raw)return null;
   var lower=normalize(raw);
@@ -216,53 +243,237 @@ function findSubstance(query){
   var comp=parseFormula(raw);
   if(Object.keys(comp).length>0){
     for(var k=0;k<SUBSTANCES.length;k++) if(compositionsEqual(SUBSTANCES[k].composition,comp))return SUBSTANCES[k];
-    return{formula:raw.replace(/\s/g,''),name:null,composition:comp,aliases:[],note:null};
+    return {formula:raw.replace(/\s/g,''),name:null,composition:comp,aliases:[],note:null};
   }
   return null;
 }
+
+/* ==================== ТИП СВЯЗИ ==================== */
 var METALS=['Li','Na','K','Rb','Cs','Be','Mg','Ca','Sr','Ba','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Y','Zr','Nb','Mo','Ru','Rh','Pd','Ag','Cd','Sn','W','Pt','Au','Hg','Al','Ga','In','Tl','Pb','Bi'];
 function isMetal(el){return METALS.indexOf(el)!==-1;}
+
 function determineBond(composition,formula){
   var f=cleanFormula(formula);
   var elements=Object.keys(composition);
   var metals=elements.filter(isMetal);
   var nonmetals=elements.filter(function(e){return !isMetal(e);});
-  if(f==='SiO2'||f==='SiC') return{bond:'Ковалентная полярная',lattice:'Атомная',note:'Атомная решётка (исключение).'};
-  if(f==='C') return{bond:'Ковалентная неполярная',lattice:'Атомная',note:'Алмаз/графит — атомная решётка.'};
-  if(f.indexOf('NH4')===0) return{bond:'Ионная',lattice:'Ионная',note:'Связи N–H ковалентные, но решётка ионная.'};
-  if(metals.length>0&&nonmetals.length>0) return{bond:'Ионная',lattice:'Ионная',note:'Металл + неметалл.'};
-  if(metals.length>0) return{bond:'Металлическая',lattice:'Металлическая',note:'Простое вещество-металл.'};
-  if(nonmetals.length===1) return{bond:'Ковалентная неполярная',lattice:'Молекулярная',note:'Одинаковые неметаллы.'};
-  return{bond:'Ковалентная полярная',lattice:'Молекулярная',note:'Разные неметаллы.'};
+  if(f==='SiO2'||f==='SiC') return {bond:'Ковалентная полярная',lattice:'Атомная',note:'Атомная решётка (исключение).'};
+  if(f==='C') return {bond:'Ковалентная неполярная',lattice:'Атомная',note:'Алмаз/графит — атомная решётка.'};
+  if(f.indexOf('NH4')===0) return {bond:'Ионная',lattice:'Ионная',note:'Связи N–H ковалентные, но решётка ионная.'};
+  if(metals.length>0&&nonmetals.length>0) return {bond:'Ионная',lattice:'Ионная',note:'Металл + неметалл.'};
+  if(metals.length>0) return {bond:'Металлическая',lattice:'Металлическая',note:'Простое вещество-металл.'};
+  if(nonmetals.length===1) return {bond:'Ковалентная неполярная',lattice:'Молекулярная',note:'Одинаковые неметаллы.'};
+  return {bond:'Ковалентная полярная',lattice:'Молекулярная',note:'Разные неметаллы.'};
 }
-var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Ti:'Титан',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Br:'Бром',Ag:'Серебро',Sn:'Олово',I:'Йод',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец'};
+
+/* ==================== НАЗВАНИЯ АТОМОВ И ЦВЕТА ==================== */
+var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Sc:'Скандий',Ti:'Титан',V:'Ванадий',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Ga:'Галлий',Ge:'Германий',As:'Мышьяк',Se:'Селен',Br:'Бром',Kr:'Криптон',Rb:'Рубидий',Sr:'Стронций',Ag:'Серебро',Sn:'Олово',Sb:'Сурьма',Te:'Теллур',I:'Йод',Xe:'Ксенон',Cs:'Цезий',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец',Bi:'Висмут'};
+
+var ATOM_COLORS={
+  H:'#e2e8f0', He:'#c7d2fe', Li:'#c4b5fd', Be:'#a7f3d0', B:'#fde68a',
+  C:'#334155', N:'#3b82f6', O:'#ef4444', F:'#22d3ee', Ne:'#67e8f9',
+  Na:'#f59e0b', Mg:'#84cc16', Al:'#94a3b8', Si:'#d4a373', P:'#f97316',
+  S:'#eab308', Cl:'#22c55e', Ar:'#a5b4fc', K:'#8b5cf6', Ca:'#a3e635',
+  Sc:'#facc15', Ti:'#a1a1aa', V:'#7c3aed', Cr:'#0891b2', Mn:'#a855f7',
+  Fe:'#b45309', Co:'#2563eb', Ni:'#15803d', Cu:'#ea580c', Zn:'#71717a',
+  Ga:'#84cc16', Ge:'#94a3b8', As:'#f97316', Se:'#eab308', Br:'#92400e',
+  Rb:'#8b5cf6', Sr:'#a3e635', Ag:'#9ca3af', Sn:'#6b7280', Sb:'#a855f7',
+  Te:'#eab308', I:'#7c3aed', Cs:'#8b5cf6', Ba:'#65a30d', W:'#334155',
+  Pt:'#a1a1aa', Au:'#fbbf24', Hg:'#94a3b8', Pb:'#52525b', Bi:'#7c3aed',
+  _default:'#94a3b8'
+};
+function getAtomColor(el){ return ATOM_COLORS[el] || ATOM_COLORS._default; }
 
 /* ==================== АНАЛИЗАТОР ==================== */
 function runAnalyzer(){
   var input=document.getElementById('analyzerInput');
   var q=input.value.trim();
   var box=document.getElementById('analyzerResult');
-  if(!q){box.innerHTML='<div class="card"><div class="not-found">Введи формулу или название</div></div>';return;}
+  if(!q){
+    box.innerHTML='<div class="card"><div class="not-found">Введи формулу или название</div></div>';
+    return;
+  }
   var s=findSubstance(q);
-  if(!s){box.innerHTML='<div class="card"><div class="not-found">Не нашёл вещество: «'+q+'»</div></div>';return;}
+  if(!s){
+    box.innerHTML='<div class="card"><div class="not-found">Не нашёл вещество: «'+q+'»</div></div>';
+    return;
+  }
+
   var bond=determineBond(s.composition,s.formula);
   var els=Object.keys(s.composition);
   var cards='';
   els.forEach(function(el){
-    cards+='<div class="atom-card"><div class="atom-symbol">'+el+'</div><div class="atom-name">'+(ATOM_NAMES[el]||'')+'</div><div class="atom-count">×'+s.composition[el]+'</div></div>';
-  });
-  box.innerHTML=
-    '<div class="card"><div class="card-title"><span class="num">📋</span> '+(s.name||s.formula)+'</div>'+
-    '<div class="result-grid">'+
-      '<div class="result-item"><div class="lbl">Формула</div><div class="val">'+s.formula+'</div></div>'+
-      '<div class="result-item"><div class="lbl">Тип связи</div><div class="val">'+bond.bond+'</div></div>'+
-      '<div class="result-item"><div class="lbl">Решётка</div><div class="val">'+bond.lattice+'</div></div>'+
-      '<div class="result-item"><div class="lbl">Атомов</div><div class="val neutral">'+els.length+' видов</div></div>'+
-    '</div>'+
-    '<div class="note">'+bond.note+(s.note?' '+s.note:'')+'</div>'+
-    '<div class="card-title" style="margin-top:16px"><span class="num">⚛️</span> Состав</div>'+
-    '<div class="composition">'+cards+'</div>'+
+    var color = getAtomColor(el);
+    cards += '<div class="atom-card" style="border-color:'+color+'">'+
+      '<div class="atom-symbol" style="color:'+color+'">'+el+'</div>'+
+      '<div class="atom-name">'+(ATOM_NAMES[el]||'')+'</div>'+
+      '<div class="atom-count">×'+s.composition[el]+'</div>'+
     '</div>';
+  });
+
+  box.innerHTML =
+    '<div class="card">'+
+      '<div class="card-title"><span class="num">📋</span> '+(s.name||s.formula)+'</div>'+
+      '<div class="result-grid">'+
+        '<div class="result-item"><div class="lbl">Формула</div><div class="val">'+s.formula+'</div></div>'+
+        '<div class="result-item"><div class="lbl">Тип связи</div><div class="val">'+bond.bond+'</div></div>'+
+        '<div class="result-item"><div class="lbl">Решётка</div><div class="val">'+bond.lattice+'</div></div>'+
+        '<div class="result-item"><div class="lbl">Атомов</div><div class="val neutral">'+els.length+' видов</div></div>'+
+      '</div>'+
+      '<div class="note">'+bond.note+(s.note?' '+s.note:'')+'</div>'+
+      '<div class="card-title" style="margin-top:16px"><span class="num">⚛️</span> Состав</div>'+
+      '<div class="composition">'+cards+'</div>'+
+      '<div class="card-title" style="margin-top:20px"><span class="num">🧊</span> 3D-модель молекулы</div>'+
+      '<canvas id="molecule3D"></canvas>'+
+      '<div class="legend" id="moleculeLegend"></div>'+
+    '</div>';
+
+  renderMolecule(s.composition);
+}
+
+/* ==================== 3D МОЛЕКУЛА ==================== */
+var _molScene=null,_molCamera=null,_molRenderer=null,_molControls=null,_molAnimId=null;
+
+function destroyMolecule(){
+  if(_molAnimId){ cancelAnimationFrame(_molAnimId); _molAnimId=null; }
+  if(_molRenderer){ _molRenderer.dispose(); _molRenderer=null; }
+  _molScene=null; _molCamera=null; _molControls=null;
+}
+
+function renderMolecule(composition){
+  destroyMolecule();
+  var canvas = document.getElementById('molecule3D');
+  if(!canvas) return;
+  var THREE = window.THREE;
+  if(!THREE){
+    canvas.parentNode.insertAdjacentHTML('beforeend','<div class="not-found">Three.js не загружен</div>');
+    return;
+  }
+
+  var w = canvas.parentNode.clientWidth || 500;
+  var h = 420;
+
+  _molRenderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
+  _molRenderer.setSize(w, h);
+  _molRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  _molScene = new THREE.Scene();
+  _molCamera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000);
+  _molCamera.position.set(0, 0, 7);
+
+  _molControls = new THREE.OrbitControls(_molCamera, _molRenderer.domElement);
+  _molControls.enableDamping = true;
+  _molControls.dampingFactor = 0.08;
+  _molControls.autoRotate = true;
+  _molControls.autoRotateSpeed = 2;
+
+  _molScene.add(new THREE.AmbientLight(0xffffff, 0.8));
+  var d1 = new THREE.DirectionalLight(0xffffff, 1);
+  d1.position.set(5, 10, 7);
+  _molScene.add(d1);
+  var d2 = new THREE.PointLight(0x06b6d4, 0.6);
+  d2.position.set(-5, -3, -5);
+  _molScene.add(d2);
+
+  // Собираем все атомы как плоский список
+  var atoms = [];
+  var els = Object.keys(composition);
+  els.forEach(function(el){
+    for(var i=0;i<composition[el];i++) atoms.push(el);
+  });
+
+  // Позиционируем атомы: если есть центральный — в центре, остальные вокруг
+  // Простая схема: если один атом — центр; иначе по кругу
+  var positions = [];
+  var n = atoms.length;
+  if(n===1){
+    positions.push([0,0,0]);
+  } else if(n===2){
+    positions.push([-1,0,0]); positions.push([1,0,0]);
+  } else {
+    // Выбираем самый «тяжёлый» элемент (обычно центральный)
+    var centerIdx = 0;
+    var maxZ = 0;
+    for(var i=0;i<n;i++){
+      var el = atoms[i];
+      // Ищем: углерод/азот/сера/фосфор обычно в центре
+      if(['C','N','S','P','Si','Cl'].indexOf(el)!==-1 && maxZ < 10){ centerIdx = i; maxZ = 10; }
+    }
+    // Остальные — по кругу в 3D-спирали
+    var r = 1.8;
+    var rest = n - 1;
+    for(var i=0;i<n;i++){
+      if(i===centerIdx){
+        positions.push([0,0,0]);
+      } else {
+        var idx = i < centerIdx ? i : i - 1;
+        var angle = (idx / rest) * Math.PI * 2;
+        var y = (idx % 2 === 0 ? 0.6 : -0.6);
+        positions.push([r*Math.cos(angle), y, r*Math.sin(angle)]);
+      }
+    }
+  }
+
+  var spheres = [];
+  // Радиусы атомов
+  var RADII = {H:0.35, C:0.55, N:0.5, O:0.5, F:0.4, Cl:0.6, Br:0.65, I:0.7, S:0.65, P:0.65, Si:0.65};
+  function getRadius(el){ return RADII[el] || 0.55; }
+
+  for(var i=0;i<n;i++){
+    var el = atoms[i];
+    var radius = getRadius(el);
+    var geo = new THREE.SphereGeometry(radius, 32, 32);
+    var mat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(getAtomColor(el)),
+      roughness: 0.4,
+      metalness: 0.1,
+      emissive: new THREE.Color(getAtomColor(el)),
+      emissiveIntensity: 0.1
+    });
+    var sphere = new THREE.Mesh(geo, mat);
+    sphere.position.set(positions[i][0], positions[i][1], positions[i][2]);
+    _molScene.add(sphere);
+    spheres.push(sphere);
+  }
+
+  // Связи между атомами (если 2+ атомов)
+  if(n > 1){
+    // Соединяем все пары ближайших друг к другу
+    var lineMat = new THREE.LineBasicMaterial({color: 0x64748b, transparent:true, opacity:0.7});
+    for(var i=0;i<n;i++){
+      for(var j=i+1;j<n;j++){
+        var dx = positions[i][0]-positions[j][0];
+        var dy = positions[i][1]-positions[j][1];
+        var dz = positions[i][2]-positions[j][2];
+        var dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
+        if(dist < 3.0){
+          var g = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(positions[i][0], positions[i][1], positions[i][2]),
+            new THREE.Vector3(positions[j][0], positions[j][1], positions[j][2])
+          ]);
+          var line = new THREE.Line(g, lineMat);
+          _molScene.add(line);
+        }
+      }
+    }
+  }
+
+  // Легенда
+  var legend = document.getElementById('moleculeLegend');
+  if(legend){
+    legend.innerHTML = '';
+    els.forEach(function(el){
+      var color = getAtomColor(el);
+      legend.innerHTML += '<div class="legend-item"><span class="legend-dot" style="background:'+color+'"></span><span>'+el+' — '+(ATOM_NAMES[el]||'')+'</span></div>';
+    });
+  }
+
+  function animate(){
+    _molAnimId = requestAnimationFrame(animate);
+    if(_molControls) _molControls.update();
+    if(_molRenderer && _molScene && _molCamera) _molRenderer.render(_molScene, _molCamera);
+  }
+  animate();
 }
 
 /* ==================== ОГЛАВЛЕНИЯ ==================== */
@@ -379,275 +590,21 @@ function renderContents(containerId, chapters){
   document.getElementById(containerId).innerHTML = html;
 }
 
-renderContents('contents8List', CHAPTERS8);
-renderContents('contents9List', CHAPTERS9);
-
-var lastContentsPage = 'contents9';
+/* ==================== ПРОСМОТР ПАРАГРАФА ==================== */
+var lastContentsPage = 'contents8';
 function backFromViewer(){ showPage(lastContentsPage); }
 
-var PAGES = {
-
-  'ch8-1-1': {
-    title: '§ 1. Предмет химии. Роль химии в жизни человека',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Химия</span> — наука о веществах, их свойствах, превращениях и явлениях, которые сопровождают эти превращения.</div>
-      <div class="card"><div class="card-title"><span class="num">📖</span> Что изучает химия</div>
-        <ul class="theory-list">
-          <li><b>Вещества</b> — то, из чего состоят физические тела.</li>
-          <li><b>Свойства веществ</b> — признаки, по которым одни вещества отличаются от других.</li>
-          <li><b>Химические реакции</b> — превращения одних веществ в другие.</li>
-        </ul>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">⚛️</span> Основные понятия</div>
-        <div class="definition"><span class="term">Атом</span> — мельчайшая химически неделимая частица вещества.</div>
-        <div class="definition"><span class="term">Молекула</span> — мельчайшая частица вещества, обладающая его химическими свойствами.</div>
-        <div class="definition"><span class="term">Химический элемент</span> — вид атомов с одинаковым зарядом ядра.</div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">🌍</span> Роль химии в жизни</div>
-        <p class="paragraph">Химия окружает нас повсюду: лекарства, продукты питания, строительные материалы, топливо, одежда, моющие средства.</p>
-        <div class="example-box"><div class="lbl">Примеры</div><b>H₂O</b> — вода · <b>O₂</b> — кислород · <b>CO₂</b> — углекислый газ · <b>NaCl</b> — поваренная соль.</div>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-2': {
-    title: '§ 2. Методы изучения химии',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="card"><div class="card-title"><span class="num">🔬</span> Основные методы</div>
-        <div class="definition"><span class="term">Наблюдение</span> — целенаправленное восприятие предметов и явлений с помощью органов чувств.</div>
-        <div class="definition"><span class="term">Эксперимент</span> — метод познания, при котором явление изучают в специально созданных условиях.</div>
-        <div class="definition"><span class="term">Моделирование</span> — метод познания, при котором изучают не сам объект, а его модель.</div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">⚠️</span> Правила безопасности в лаборатории</div>
-        <ul class="theory-list">
-          <li>Работать в халате и перчатках.</li>
-          <li>Не пробовать вещества на вкус.</li>
-          <li>Не наклоняться над сосудом с жидкостью.</li>
-          <li>Тушить огонь песком или одеялом.</li>
-        </ul>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-3': {
-    title: '§ 3. Агрегатные состояния веществ',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="paragraph">Одно и то же вещество может находиться в трёх агрегатных состояниях — в зависимости от температуры и давления.</div>
-      <div class="card"><div class="card-title"><span class="num">❄️</span> Твёрдое</div><p class="paragraph">Сохраняет форму и объём. Частицы расположены упорядоченно. Пример: лёд, NaCl, Fe.</p></div>
-      <div class="card"><div class="card-title"><span class="num">💧</span> Жидкое</div><p class="paragraph">Сохраняет объём, но не форму. Частицы близко, но беспорядочно. Пример: вода, спирт, ртуть.</p></div>
-      <div class="card"><div class="card-title"><span class="num">💨</span> Газообразное</div><p class="paragraph">Не сохраняет ни форму, ни объём. Пример: O₂, CO₂, N₂.</p></div>
-      <div class="example-box"><div class="lbl">Переходы</div><b>Плавление</b> — тв. → жидк. · <b>Кристаллизация</b> — жидк. → тв.<br><b>Парообразование</b> — жидк. → газ · <b>Конденсация</b> — газ → жидк.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-4': {
-    title: '§ 4. Физические явления — основа разделения смесей',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Физические явления</span> — явления, при которых изменяются агрегатное состояние, форма или размеры тела, но состав вещества остаётся неизменным.</div>
-      <div class="card"><div class="card-title"><span class="num">⚗️</span> Способы разделения смесей</div>
-        <ul class="theory-list">
-          <li><b>Отстаивание</b> — для нерастворимых веществ.</li>
-          <li><b>Фильтрование</b> — для жидкости и нерастворимого твёрдого.</li>
-          <li><b>Выпаривание</b> — для растворённого вещества.</li>
-          <li><b>Дистилляция</b> — для жидкостей с разной t° кипения.</li>
-          <li><b>Магнит</b> — для отделения железа.</li>
-        </ul>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-5': {
-    title: '§ 5. Атомно-молекулярное учение. Химические элементы',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="card"><div class="card-title"><span class="num">📚</span> Основные положения</div>
-        <ol class="theory-list" style="list-style:decimal;padding-left:26px">
-          <li>Все вещества состоят из молекул, а молекулы — из атомов.</li>
-          <li>Атомы одного вида одинаковы, а разных видов — различны.</li>
-          <li>При химических реакциях атомы только перегруппировываются.</li>
-        </ol>
-      </div>
-      <div class="definition"><span class="term">Химический элемент</span> — вид атомов с одинаковым зарядом ядра.</div>
-      <div class="card"><div class="card-title"><span class="num">🌐</span> Простые и сложные вещества</div>
-        <ul class="theory-list">
-          <li><b>Простое</b> — из атомов одного элемента: O₂, H₂, Fe, S.</li>
-          <li><b>Сложное</b> — из атомов разных элементов: H₂O, CO₂, NaCl.</li>
-        </ul>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-6': {
-    title: '§ 6. Знаки химических элементов',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="paragraph">Каждый химический элемент имеет свой символ — знак. Он состоит из одной или двух букв латинского названия.</div>
-      <div class="card"><div class="card-title"><span class="num">🔤</span> Примеры знаков</div>
-        <div class="table-wrap"><table>
-          <tr><th>Знак</th><th>Название</th><th>Латинское</th></tr>
-          <tr><td>H</td><td>Водород</td><td>Hydrogenium</td></tr>
-          <tr><td>O</td><td>Кислород</td><td>Oxygenium</td></tr>
-          <tr><td>C</td><td>Углерод</td><td>Carboneum</td></tr>
-          <tr><td>Fe</td><td>Железо</td><td>Ferrum</td></tr>
-          <tr><td>Au</td><td>Золото</td><td>Aurum</td></tr>
-          <tr><td>Na</td><td>Натрий</td><td>Natrium</td></tr>
-          <tr><td>Cu</td><td>Медь</td><td>Cuprum</td></tr>
-        </table></div>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-7': {
-    title: '§ 7. Периодическая таблица',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Периодическая система</span> — графическое выражение периодического закона Д. И. Менделеева.</div>
-      <div class="card"><div class="card-title"><span class="num">📊</span> Структура таблицы</div>
-        <ul class="theory-list">
-          <li><b>Периоды</b> — горизонтальные ряды (7).</li>
-          <li><b>Группы</b> — вертикальные столбцы (8, делятся на A и B).</li>
-          <li><b>Порядковый номер</b> = заряд ядра = число протонов = число электронов.</li>
-        </ul>
-      </div>
-      <div class="example-box"><div class="lbl">Пример</div>Натрий <b>Na</b>: № 11, 3-й период, I-A группа.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-8': {
-    title: '§ 8. Химические формулы',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Химическая формула</span> — условная запись состава вещества с помощью знаков и индексов.</div>
-      <div class="card"><div class="card-title"><span class="num">🔢</span> Что показывает формула</div>
-        <p class="paragraph"><b>Индекс</b> показывает число атомов данного элемента в молекуле.</p>
-        <div class="formula-box">H<sub>2</sub>O — 2 атома водорода и 1 атом кислорода</div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">⚖️</span> Относительная молекулярная масса</div>
-        <div class="formula-box">Mr(H<sub>2</sub>O) = 2·1 + 16 = <span class="eq">18</span></div>
-        <div class="formula-box">Mr(H<sub>2</sub>SO<sub>4</sub>) = 2 + 32 + 64 = <span class="eq">98</span></div>
-      </div>
-      <div class="task-box"><div class="lbl">Задача</div>Найдите Mr(CO₂).<br><b>Решение:</b> Mr(CO₂) = 12 + 2·16 = 44.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-9': {
-    title: '§ 9. Валентность',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Валентность</span> — свойство атома присоединять или замещать определённое число атомов другого элемента. Обозначается римскими цифрами I–V.</div>
-      <div class="card"><div class="card-title"><span class="num">📌</span> Постоянная валентность</div>
-        <div class="table-wrap"><table>
-          <tr><th>Валентность</th><th>Элементы</th></tr>
-          <tr><td>I</td><td>H, Na, K, Li, F, Ag</td></tr>
-          <tr><td>II</td><td>O, Mg, Ca, Ba, Zn</td></tr>
-          <tr><td>III</td><td>Al, B</td></tr>
-        </table></div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">🔍</span> Как определить по формуле</div>
-        <p class="paragraph">Через НОК:</p>
-        <div class="formula-box">Al<sub>2</sub>O<sub>3</sub> → O(II) → НОК(2,3)=6 → Al = 6:2 = <span class="eq">III</span></div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">🎯</span> Переменная валентность</div>
-        <ul class="theory-list">
-          <li><b>Fe</b>: II (FeO), III (Fe₂O₃)</li>
-          <li><b>Cu</b>: I (Cu₂O), II (CuO)</li>
-          <li><b>S</b>: II (H₂S), IV (SO₂), VI (SO₃)</li>
-        </ul>
-      </div>
-      <div class="task-box"><div class="lbl">Задача</div>Составьте формулу оксида серы(VI).<br><b>Решение:</b> S(VI) O(II) → НОК=6 → S=1, O=3 → <b>SO₃</b>.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-10': {
-    title: '§ 10. Химические реакции',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Химическая реакция</span> — процесс превращения одних веществ в другие, при котором изменяется состав и свойства веществ.</div>
-      <div class="card"><div class="card-title"><span class="num">🎨</span> Признаки химических реакций</div>
-        <ul class="theory-list">
-          <li>Изменение цвета</li>
-          <li>Выделение газа</li>
-          <li>Выпадение осадка</li>
-          <li>Выделение или поглощение теплоты</li>
-          <li>Появление запаха</li>
-        </ul>
-      </div>
-      <div class="example-box"><div class="lbl">Пример</div>Горение магния: <b>2Mg + O₂ → 2MgO</b> — белое пламя, образование порошка.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-11': {
-    title: '§ 11. Химические уравнения',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="definition"><span class="term">Химическое уравнение</span> — условная запись химической реакции с помощью формул и коэффициентов.</div>
-      <div class="card"><div class="card-title"><span class="num">⚖️</span> Закон сохранения массы</div>
-        <p class="paragraph">Масса веществ, вступивших в реакцию, равна массе веществ, образовавшихся в результате реакции (М. В. Ломоносов, 1748).</p>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">✏️</span> Как составлять</div>
-        <ol class="theory-list" style="list-style:decimal;padding-left:26px">
-          <li>Записать формулы исходных веществ и продуктов.</li>
-          <li>Подобрать коэффициенты.</li>
-          <li>Проверить по каждому элементу.</li>
-        </ol>
-        <div class="formula-box">2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O <span class="eq">✓</span></div>
-      </div>
-      <div class="task-box"><div class="lbl">Задача</div>Уравняйте: Al + O₂ → Al₂O₃.<br><b>Решение:</b> 4Al + 3O₂ → 2Al₂O₃.</div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  },
-
-  'ch8-1-12': {
-    title: '§ 12. Типы химических реакций',
-    sub: 'Глава 1. Первоначальные химические понятия',
-    html: `
-      <div class="card"><div class="card-title"><span class="num">1️⃣</span> Соединения</div>
-        <p class="paragraph">Из нескольких веществ — одно.</p>
-        <div class="formula-box">A + B → AB</div>
-        <div class="formula-box">2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O</div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">2️⃣</span> Разложения</div>
-        <p class="paragraph">Из одного — несколько.</p>
-        <div class="formula-box">AB → A + B</div>
-        <div class="formula-box">2H<sub>2</sub>O → 2H<sub>2</sub> + O<sub>2</sub></div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">3️⃣</span> Замещения</div>
-        <p class="paragraph">Простое замещает атом в сложном.</p>
-        <div class="formula-box">A + BC → AC + B</div>
-        <div class="formula-box">Fe + CuSO<sub>4</sub> → FeSO<sub>4</sub> + Cu</div>
-      </div>
-      <div class="card"><div class="card-title"><span class="num">4️⃣</span> Обмена</div>
-        <p class="paragraph">Два сложных обмениваются частями.</p>
-        <div class="formula-box">AB + CD → AD + CB</div>
-        <div class="formula-box">NaOH + HCl → NaCl + H<sub>2</sub>O</div>
-      </div>
-      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
-    `
-  }
-
-};
-
 function openPage(id){
-  var page = PAGES[id];
+  var allPages = {};
+  if (typeof PAGES_8 !== 'undefined') for(var k in PAGES_8) allPages[k] = PAGES_8[k];
+  if (typeof PAGES_9 !== 'undefined') for(var k2 in PAGES_9) allPages[k2] = PAGES_9[k2];
+
+  var page = allPages[id];
   if(!page){
     document.getElementById('viewerContainer').innerHTML =
       '<div class="para-title">Параграф</div>' +
       '<div class="para-sub">Теория для этого параграфа ещё не добавлена</div>' +
-      '<div class="note">Попроси добавить эту главу.</div>';
+      '<div class="note">Обратитесь к учителю или попросите дополнить сайт.</div>';
     lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
     showPage('viewer');
     return;
@@ -658,342 +615,3 @@ function openPage(id){
   lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
   showPage('viewer');
 }
-
-/* ==================== УРАВНИВАНИЕ ==================== */
-function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a; }
-
-function balanceEquation(equation){
-  try{
-    var eq = equation.replace(/[→➔➜➝]|->|=>/g,'=').replace(/\s+/g,' ').trim();
-    if(eq.indexOf('=')===-1) return {error:'Нужен знак «=» между частями'};
-    var sides = eq.split('=');
-    if(sides.length !== 2) return {error:'Должно быть ровно одно «=»'};
-    var leftRaw = sides[0].trim(), rightRaw = sides[1].trim();
-    if(!leftRaw || !rightRaw) return {error:'Одна из частей пустая'};
-
-    var leftParts = leftRaw.split('+').map(function(s){return s.trim();}).filter(Boolean);
-    var rightParts = rightRaw.split('+').map(function(s){return s.trim();}).filter(Boolean);
-    if(leftParts.length===0 || rightParts.length===0) return {error:'Не удалось разбить вещества'};
-
-    function parsePart(p){
-      var m = p.match(/^(\d*)\s*(.+)$/);
-      var coef = m[1] ? parseInt(m[1]) : 1;
-      var formula = m[2].trim();
-      return { coef: coef, formula: formula, atoms: parseFormula(formula) };
-    }
-    var leftParsed = leftParts.map(parsePart);
-    var rightParsed = rightParts.map(parsePart);
-    for(var i=0;i<leftParsed.length;i++) if(Object.keys(leftParsed[i].atoms).length===0) return {error:'Не разобрал: '+leftParsed[i].formula};
-    for(var j=0;j<rightParsed.length;j++) if(Object.keys(rightParsed[j].atoms).length===0) return {error:'Не разобрал: '+rightParsed[j].formula};
-
-    var elSet = {};
-    leftParsed.concat(rightParsed).forEach(function(p){ for(var e in p.atoms) elSet[e]=1; });
-    var elements = Object.keys(elSet);
-    if(elements.length===0) return {error:'Не нашёл элементов'};
-
-    var n = leftParsed.length + rightParsed.length;
-    var mat = [];
-    for(var e=0;e<elements.length;e++){
-      var row = new Array(n).fill(0);
-      for(var li=0; li<leftParsed.length; li++) row[li] = leftParsed[li].atoms[elements[e]] || 0;
-      for(var ri=0; ri<rightParsed.length; ri++) row[leftParsed.length + ri] = -(rightParsed[ri].atoms[elements[e]] || 0);
-      mat.push(row);
-    }
-
-    var solution = nullSpace(mat, n);
-    if(!solution) return {error:'Не удалось уравнять. Проверь формулы'};
-
-    var maxAbs = 0;
-    for(var k=0;k<solution.length;k++) maxAbs = Math.max(maxAbs, Math.abs(solution[k]));
-    if(maxAbs < 1e-9) return {error:'Нулевое решение'};
-    var ints = solution.map(function(v){ return Math.round(v / maxAbs * 1000000); });
-    var g = ints[0];
-    for(var q=1;q<ints.length;q++) g = gcd(g, ints[q]);
-    if(g===0) return {error:'Не привёл к целым'};
-    var finalCoefs = ints.map(function(v){ return Math.abs(v/g); });
-
-    function buildSide(parsed, startIdx){
-      return parsed.map(function(p, i){
-        var c = finalCoefs[startIdx + i];
-        return (c===1 ? '' : c) + p.formula;
-      }).join(' + ');
-    }
-    return {
-      success: true,
-      left: buildSide(leftParsed, 0),
-      right: buildSide(rightParsed, leftParsed.length),
-      coefs: finalCoefs
-    };
-  }catch(err){
-    return {error:'Ошибка: '+err.message};
-  }
-}
-
-function nullSpace(matrix, nCols){
-  var rows = matrix.length;
-  if(rows===0 || nCols===0) return null;
-  var A = matrix.map(function(r){return r.slice();});
-  var pivotRow = 0;
-  var pivots = [];
-  for(var col=0; col<nCols && pivotRow<rows; col++){
-    var sel = -1;
-    for(var r=pivotRow; r<rows; r++) if(Math.abs(A[r][col]) > 1e-9){ sel = r; break; }
-    if(sel === -1) continue;
-    var tmp = A[pivotRow]; A[pivotRow] = A[sel]; A[sel] = tmp;
-    var div = A[pivotRow][col];
-    for(var c=col; c<nCols; c++) A[pivotRow][c] /= div;
-    for(var r2=0; r2<rows; r2++){
-      if(r2===pivotRow) continue;
-      var f = A[r2][col];
-      if(Math.abs(f)<1e-9) continue;
-      for(var c2=col; c2<nCols; c2++) A[r2][c2] -= f * A[pivotRow][c2];
-    }
-    pivots.push(col);
-    pivotRow++;
-  }
-  var freeCols = [];
-  for(var c3=0; c3<nCols; c3++) if(pivots.indexOf(c3)===-1) freeCols.push(c3);
-  if(freeCols.length===0) return null;
-  var x = new Array(nCols).fill(0);
-  x[freeCols[0]] = 1;
-  for(var pi=pivots.length-1; pi>=0; pi--){
-    var pc = pivots[pi];
-    var sum = 0;
-    for(var fi=0; fi<freeCols.length; fi++) sum += A[pi][freeCols[fi]] * x[freeCols[fi]];
-    x[pc] = -sum;
-  }
-  var signs = [];
-  for(var z=0; z<x.length; z++) if(Math.abs(x[z])>1e-6) signs.push(Math.sign(x[z]));
-  if(signs.length===0) return null;
-  for(var s=1; s<signs.length; s++) if(signs[s] !== signs[0]) return null;
-  return x;
-}
-
-/* ==================== РЕШЁТКИ ==================== */
-var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
-
-var LATTICE_DB = {
-  'NaCl':{name:'Хлорид натрия (NaCl)',type:'Ионная',system:'ГЦК',desc:'Каждый Na+ окружён 6 Cl-. Координационное число 6.',
-    ions:[{el:'Na',charge:'+',color:0x4f46e5,radius:0.28,pos:'fcc'},{el:'Cl',charge:'-',color:0x10b981,radius:0.42,pos:'octa'}]},
-  'CsCl':{name:'Хлорид цезия (CsCl)',type:'Ионная',system:'Примитивная кубическая',desc:'Cs+ в центре куба, 8 Cl- по вершинам.',
-    ions:[{el:'Cs',charge:'+',color:0xf59e0b,radius:0.38,pos:[[0.5,0.5,0.5]]},{el:'Cl',charge:'-',color:0x10b981,radius:0.4,pos:'corners'}]},
-  'diamond':{name:'Алмаз (C)',type:'Атомная',system:'Тетраэдрическая',desc:'Каждый атом C связан с 4 другими.',
-    ions:[{el:'C',charge:'',color:0x334155,radius:0.22,pos:'diamond'}]},
-  'graphite':{name:'Графит (C)',type:'Атомная',system:'Слоистая',desc:'Слои гексагональной сетки. Мягкий, проводит ток.',
-    ions:[{el:'C',charge:'',color:0x475569,radius:0.18,pos:'graphite'}]},
-  'Cu':{name:'Медь (Cu)',type:'Металлическая',system:'ГЦК',desc:'Атомы в узлах ГЦК, электроны общие.',
-    ions:[{el:'Cu',charge:'',color:0xea580c,radius:0.32,pos:'fcc'}]},
-  'Fe':{name:'Железо (Fe)',type:'Металлическая',system:'ОЦК',desc:'ОЦК: атомы в вершинах куба и один в центре.',
-    ions:[{el:'Fe',charge:'',color:0x71717a,radius:0.3,pos:'bcc'}]},
-  'CO2':{name:'Углекислый газ (CO2)',type:'Молекулярная',system:'Молекулярная',desc:'Слабые межмолекулярные связи.',
-    ions:[{el:'CO2',charge:'',color:0x64748b,radius:0.3,pos:'simple'}]},
-  'SiO2':{name:'Оксид кремния (SiO2)',type:'Атомная',system:'Тетраэдрическая',desc:'Каждый Si связан с 4 O. Кварц, песок.',
-    ions:[{el:'Si',charge:'',color:0xd4a373,radius:0.3,pos:'silica-si'},{el:'O',charge:'',color:0xef4444,radius:0.2,pos:'silica-o'}]}
-};
-
-function posFCC(){var p=[];for(var x=0;x<=1;x++)for(var y=0;y<=1;y++)for(var z=0;z<=1;z++)p.push([x,y,z]);p.push([0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]);return p;}
-function posOcta(){return [[0.5,0,0],[0.5,1,0],[0.5,0,1],[0.5,1,1],[0,0.5,0],[1,0.5,0],[0,0.5,1],[1,0.5,1],[0,0,0.5],[1,0,0.5],[0,1,0.5],[1,1,0.5],[0.5,0.5,0.5]];}
-function posCorners(){var p=[];for(var x=0;x<=1;x++)for(var y=0;y<=1;y++)for(var z=0;z<=1;z++)p.push([x,y,z]);return p;}
-function posBCC(){var p=posCorners();p.push([0.5,0.5,0.5]);return p;}
-function posDiamond(){var p=posFCC();var off=[0.25,0.25,0.25];posFCC().forEach(function(q){p.push([q[0]+off[0],q[1]+off[1],q[2]+off[2]]);});return p;}
-function posGraphite(){var p=[],a=0.55;for(var i=0;i<3;i++)for(var j=0;j<3;j++){var x=i*a+(j%2)*(a/2);var y=j*a*0.866;p.push([x,y,0]);p.push([x+a/2,y+a*0.288,0]);}for(var i2=0;i2<3;i2++)for(var j2=0;j2<3;j2++){var x2=i2*a+(j2%2)*(a/2)+a/2;var y2=j2*a*0.866;p.push([x2,y2,0.8]);}return p;}
-function posSimple(){var p=[];for(var x=0;x<2;x++)for(var y=0;y<2;y++)for(var z=0;z<2;z++)p.push([x*1.5,y*1.5,z*1.5]);return p;}
-function posSilicaSi(){return [[0,0,0],[1,0.5,0.5],[0.5,1,0.5],[0.5,0.5,1]];}
-function posSilicaO(){var si=posSilicaSi(),o=[];si.forEach(function(s){o.push([s[0]+0.3,s[1]+0.3,s[2]+0.3]);o.push([s[0]-0.3,s[1]-0.3,s[2]+0.3]);o.push([s[0]+0.3,s[1]-0.3,s[2]-0.3]);o.push([s[0]-0.3,s[1]+0.3,s[2]-0.3]);});return o;}
-
-function getLatticePositions(name){
-  switch(name){
-    case 'fcc': return posFCC();
-    case 'octa': return posOcta();
-    case 'corners': return posCorners();
-    case 'bcc': return posBCC();
-    case 'diamond': return posDiamond();
-    case 'graphite': return posGraphite();
-    case 'simple': return posSimple();
-    case 'silica-si': return posSilicaSi();
-    case 'silica-o': return posSilicaO();
-  }
-  return [];
-}
-
-function findLattice(query){
-  var q = query.trim().toLowerCase();
-  if(LATTICE_DB[query]) return LATTICE_DB[query];
-  for(var key in LATTICE_DB){
-    if(key.toLowerCase() === q) return LATTICE_DB[key];
-    if(LATTICE_DB[key].name.toLowerCase().indexOf(q) !== -1) return LATTICE_DB[key];
-  }
-  if(q.indexOf('nacl')!==-1 || q.indexOf('поварен')!==-1) return LATTICE_DB['NaCl'];
-  if(q.indexOf('cscl')!==-1) return LATTICE_DB['CsCl'];
-  if(q.indexOf('алмаз')!==-1 || q.indexOf('diamond')!==-1) return LATTICE_DB['diamond'];
-  if(q.indexOf('графит')!==-1) return LATTICE_DB['graphite'];
-  if(q.indexOf('медь')!==-1 || q === 'cu') return LATTICE_DB['Cu'];
-  if(q.indexOf('желез')!==-1 || q === 'fe') return LATTICE_DB['Fe'];
-  if(q.indexOf('кварц')!==-1 || q.indexOf('кремнез')!==-1 || q === 'sio2') return LATTICE_DB['SiO2'];
-  if(q === 'co2' || q.indexOf('углекисл')!==-1) return LATTICE_DB['CO2'];
-  return null;
-}
-
-function buildLattice(containerId, substance){
-  var data = findLattice(substance);
-  if(!data) return {error:'Не нашёл решётку для «'+substance+'». Доступно: NaCl, CsCl, алмаз, графит, Cu, Fe, SiO2, CO2'};
-  var container = document.getElementById(containerId);
-  if(!container) return {error:'Не найден контейнер '+containerId};
-  destroyLattice();
-  container.innerHTML = '';
-  var THREE = window.THREE;
-  if(!THREE) return {error:'Three.js не загружен. Проверь подключение в <head>.'};
-  var w = container.clientWidth || 500;
-  var h = container.clientHeight || 400;
-  _latticeScene = new THREE.Scene();
-  _latticeScene.background = new THREE.Color(0xf8fafc);
-  _latticeCamera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000);
-  _latticeCamera.position.set(3.5, 2.5, 4);
-  _latticeRenderer = new THREE.WebGLRenderer({antialias:true});
-  _latticeRenderer.setSize(w, h);
-  _latticeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(_latticeRenderer.domElement);
-  _latticeControls = new THREE.OrbitControls(_latticeCamera, _latticeRenderer.domElement);
-  _latticeControls.enableDamping = true;
-  _latticeControls.dampingFactor = 0.08;
-  _latticeControls.autoRotate = true;
-  _latticeControls.autoRotateSpeed = 1.5;
-  _latticeScene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  var d1 = new THREE.DirectionalLight(0xffffff, 1.1);
-  d1.position.set(5,10,7);
-  _latticeScene.add(d1);
-  var d2 = new THREE.PointLight(0x06b6d4, 0.5);
-  d2.position.set(-5,-3,-5);
-  _latticeScene.add(d2);
-  var allPos = [];
-  data.ions.forEach(function(ion){
-    var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
-    allPos = allPos.concat(positions);
-  });
-  var cx=0,cy=0,cz=0;
-  allPos.forEach(function(p){cx+=p[0];cy+=p[1];cz+=p[2];});
-  cx/=allPos.length;cy/=allPos.length;cz/=allPos.length;
-  data.ions.forEach(function(ion){
-    var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
-    positions.forEach(function(pos){
-      var geo = new THREE.SphereGeometry(ion.radius, 32, 32);
-      var mat = new THREE.MeshStandardMaterial({
-        color: ion.color, roughness: 0.35, metalness: 0.15,
-        emissive: ion.color, emissiveIntensity: 0.08
-      });
-      var sphere = new THREE.Mesh(geo, mat);
-      sphere.position.set(pos[0]-cx, pos[1]-cy, pos[2]-cz);
-      _latticeScene.add(sphere);
-      _latticeMeshes.push(sphere);
-    });
-  });
-  if(data.type !== 'Ионная'){
-    var allAtoms = [];
-    data.ions.forEach(function(ion){
-      var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
-      positions.forEach(function(p){ allAtoms.push([p[0]-cx, p[1]-cy, p[2]-cz]); });
-    });
-    var lineMat = new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.5});
-    for(var a=0;a<allAtoms.length;a++){
-      for(var b=a+1;b<allAtoms.length;b++){
-        var dx=allAtoms[a][0]-allAtoms[b][0], dy=allAtoms[a][1]-allAtoms[b][1], dz=allAtoms[a][2]-allAtoms[b][2];
-        var dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
-        if(dist < 1.1 && dist > 0.05){
-          var g2 = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(allAtoms[a][0], allAtoms[a][1], allAtoms[a][2]),
-            new THREE.Vector3(allAtoms[b][0], allAtoms[b][1], allAtoms[b][2])
-          ]);
-          var line = new THREE.Line(g2, lineMat);
-          _latticeScene.add(line);
-          _latticeMeshes.push(line);
-        }
-      }
-    }
-  }
-  var boxGeo = new THREE.BoxGeometry(2,2,2);
-  var edges = new THREE.EdgesGeometry(boxGeo);
-  var boxLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.4}));
-  boxLine.position.set(-cx+0.5, -cy+0.5, -cz+0.5);
-  _latticeScene.add(boxLine);
-  _latticeMeshes.push(boxLine);
-  function animate(){
-    _latticeAnimId = requestAnimationFrame(animate);
-    if(_latticeControls) _latticeControls.update();
-    if(_latticeRenderer && _latticeScene && _latticeCamera) _latticeRenderer.render(_latticeScene, _latticeCamera);
-  }
-  animate();
-  return {success:true, data:data};
-}
-
-function destroyLattice(){
-  if(_latticeAnimId){ cancelAnimationFrame(_latticeAnimId); _latticeAnimId = null; }
-  _latticeMeshes.forEach(function(m){
-    if(m.geometry) m.geometry.dispose();
-    if(m.material) m.material.dispose();
-  });
-  _latticeMeshes = [];
-  if(_latticeRenderer){ _latticeRenderer.dispose(); _latticeRenderer = null; }
-  _latticeScene = null; _latticeCamera = null; _latticeControls = null;
-}
-
-/* ==================== ПОМОЩНИК ==================== */
-function assistantRun(){
-  var input = document.getElementById('assistantInput');
-  var text = input.value.trim();
-  if(!text) return;
-
-  var resultBody = document.getElementById('assistantResult');
-  var latticeCard = document.getElementById('assistantLatticeCard');
-  var latticeTitle = document.getElementById('assistantLatticeTitle');
-  var latticeLegend = document.getElementById('assistantLatticeLegend');
-
-  latticeCard.style.display = 'none';
-  latticeLegend.innerHTML = '';
-  destroyLattice();
-
-  // Уравнение — если есть знак "="
-  if(text.indexOf('=') !== -1){
-    var eq = text.replace(/уравня(й|ть)?/gi,'').trim();
-    var r = balanceEquation(eq);
-    if(r.error){
-      resultBody.innerHTML = '<div class="card"><div class="not-found">'+r.error+'</div></div>';
-      return;
-    }
-    resultBody.innerHTML =
-      '<div class="card"><div class="card-title"><span class="num">⚖️</span> Уравненное уравнение</div>' +
-      '<div class="eq-output">' + r.left + ' <span class="arrow">→</span> ' + r.right + '</div>' +
-      '<div class="eq-info"><div class="lbl">Коэффициенты</div>' + r.coefs.join(' : ') + '</div></div>';
-    return;
-  }
-
-  // Решётка
-  var sub = text
-    .replace(/покажи/gi,'')
-    .replace(/решётку|решетку|решётка|решетка|решётк|решетк/gi,'')
-    .replace(/кристаллическую|кристалл/gi,'')
-    .trim();
-
-  var res = buildLattice('assistantLatticeCanvas', sub);
-  if(res.error){
-    resultBody.innerHTML = '<div class="card"><div class="not-found">'+res.error+'</div></div>';
-    return;
-  }
-
-  latticeCard.style.display = 'block';
-  latticeTitle.innerHTML = '<span class="num">💎</span> ' + res.data.name;
-  resultBody.innerHTML = '<div class="card"><div class="definition"><span class="term">'+res.data.name+'</span>'+res.data.desc+'<br><b>Тип:</b> '+res.data.type+' · <b>Сингония:</b> '+res.data.system+'</div></div>';
-
-  res.data.ions.forEach(function(ion){
-    var color = '#' + ion.color.toString(16).padStart(6,'0');
-    latticeLegend.innerHTML += '<div class="legend-item"><span class="legend-dot" style="background:'+color+'"></span><span>'+ion.el+ion.charge+'</span></div>';
-  });
-
-  setTimeout(function(){ buildLattice('assistantLatticeCanvas', sub); }, 80);
-}
-
-document.getElementById('assistantInput').addEventListener('keydown', function(e){
-  if(e.key === 'Enter') assistantRun();
-});
-document.getElementById('analyzerInput').addEventListener('keydown', function(e){
-  if(e.key === 'Enter') runAnalyzer();
-});
