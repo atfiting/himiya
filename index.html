@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Химия — Учебник 8-9 класс</title>
+<link rel="icon" href="data:,">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#f8fafc;--card:#fff;--dark:#0f172a;--muted:#64748b;--primary:#4f46e5;--primary-light:#eef2ff;--accent:#06b6d4;--accent-light:#ecfeff;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--border:#e2e8f0;--radius:14px;--shadow:0 2px 12px rgba(15,23,42,.06)}
@@ -83,14 +84,10 @@ tr:last-child td{border-bottom:none}
 .back-btn:hover{background:var(--border);color:var(--dark)}
 .para-title{font-size:clamp(20px,3.5vw,26px);font-weight:800;color:var(--dark);margin-bottom:6px;letter-spacing:-.3px}
 .para-sub{color:var(--muted);font-size:14.5px;margin-bottom:18px}
-.eq-output{background:#0f172a;color:#a5f3fc;padding:20px;border-radius:12px;font-family:'Consolas','Monaco',monospace;font-size:20px;text-align:center;font-weight:700;letter-spacing:1px;margin:14px 0;word-break:break-word;line-height:1.6}
+.eq-output{background:#0f172a;color:#a5f3fc;padding:20px;border-radius:12px;font-family:'Consolas','Monaco',monospace;font-size:20px;text-align:center;font-weight:700;letter-spacing:1px;margin:14px 0;word-break:break-word;line-height:1.8}
 .eq-output .arrow{color:#f59e0b}
 .eq-output .coef{color:#fbbf24}
-  .eq-output sub{
-  font-size:0.65em;
-  vertical-align:-0.25em;
-  line-height:0;
-}
+.eq-output sub{font-size:0.65em;vertical-align:-0.25em;line-height:0}
 .eq-info{background:#f0f9ff;border:1px solid #7dd3fc;border-radius:10px;padding:14px 18px;margin-top:14px;font-size:14.5px}
 .eq-info .lbl{font-weight:700;color:#0369a1;text-transform:uppercase;font-size:12px;letter-spacing:.4px;margin-bottom:6px}
 @media(max-width:600px){
@@ -119,22 +116,14 @@ tr:last-child td{border-bottom:none}
 
 <main class="page active" id="page-contents8">
 <div class="wrap">
-  <div class="page-head">
-    <h1>Химия. 8 класс</h1>
-    <p>Выбери параграф — откроется теория с примерами и задачами</p>
-    <div class="accent-line"></div>
-  </div>
+  <div class="page-head"><h1>Химия. 8 класс</h1><p>Выбери параграф — откроется теория с примерами и задачами</p><div class="accent-line"></div></div>
   <div id="toc8"></div>
 </div>
 </main>
 
 <main class="page" id="page-contents9">
 <div class="wrap">
-  <div class="page-head">
-    <h1>Химия. 9 класс</h1>
-    <p>Выбери параграф — откроется теория с примерами и задачами</p>
-    <div class="accent-line"></div>
-  </div>
+  <div class="page-head"><h1>Химия. 9 класс</h1><p>Выбери параграф — откроется теория с примерами и задачами</p><div class="accent-line"></div></div>
   <div id="toc9"></div>
 </div>
 </main>
@@ -148,11 +137,7 @@ tr:last-child td{border-bottom:none}
 
 <main class="page" id="page-analyzer">
 <div class="wrap">
-  <div class="page-head">
-    <h1>🔬 Анализатор веществ</h1>
-    <p>Введи формулу или название — узнаешь состав, тип связи, решётку и увидишь 3D-модель</p>
-    <div class="accent-line"></div>
-  </div>
+  <div class="page-head"><h1>🔬 Анализатор веществ</h1><p>Введи формулу или название — узнаешь состав, тип связи, решётку и увидишь 3D-модель</p><div class="accent-line"></div></div>
   <div class="card">
     <div class="mode-switch">
       <button class="mode-btn active" id="modeFormula">🔬 По формуле</button>
@@ -181,11 +166,7 @@ tr:last-child td{border-bottom:none}
 
 <main class="page" id="page-equation">
 <div class="wrap">
-  <div class="page-head">
-    <h1>⚖️ Уравниватель реакций</h1>
-    <p>Введи реакцию или реагенты — программа расставит коэффициенты и объяснит тип реакции</p>
-    <div class="accent-line"></div>
-  </div>
+  <div class="page-head"><h1>⚖️ Уравниватель реакций</h1><p>Введи реакцию или реагенты — программа расставит коэффициенты и объяснит тип реакции</p><div class="accent-line"></div></div>
   <div class="card">
     <div class="input-group">
       <input type="text" id="eqInput" placeholder="Например: H2 + O2, Na + H2O, Fe + HCl" autocomplete="off">
@@ -197,27 +178,18 @@ tr:last-child td{border-bottom:none}
   <div class="card">
     <div class="card-title"><span class="num">📖</span> Примеры для проверки</div>
     <ul class="theory-list">
-      <li>H2 + O2</li>
-      <li>Na + H2O</li>
-      <li>Fe + HCl</li>
-      <li>NaOH + HCl</li>
-      <li>CaCO3 + HCl</li>
-      <li>Al + Fe2O3</li>
-      <li>Cu + HNO3(конц.)</li>
-      <li>KClO3 → KCl + O2</li>
+      <li>H2 + O2</li><li>Na + H2O</li><li>Fe + HCl</li><li>NaOH + HCl</li>
+      <li>CaCO3 + HCl</li><li>Al + Fe2O3</li><li>Cu + HNO3</li><li>KClO3 → KCl + O2</li>
     </ul>
   </div>
 </div>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
-/* ============================================================
-   НАВИГАЦИЯ
-   ============================================================ */
+/* ============ НАВИГАЦИЯ ============ */
 function showPage(page){
-  document.querySelectorAll('.nav-btn').forEach(function(b){
-    b.classList.toggle('active', b.getAttribute('data-page') === page);
-  });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-page') === page); });
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   var el = document.getElementById('page-' + page);
   if (el) el.classList.add('active');
@@ -227,40 +199,32 @@ function showPage(page){
 document.querySelectorAll('.nav-btn').forEach(function(btn){
   btn.addEventListener('click', function(){ showPage(this.getAttribute('data-page')); });
 });
-
 var lastContentsPage = 'contents9';
-function showContentsOf9(){ lastContentsPage = 'contents9'; showPage('contents9'); }
-function showContentsOf8(){ lastContentsPage = 'contents8'; showPage('contents8'); }
 function backFromViewer(){ showPage(lastContentsPage); }
-
+var PAGES = {};
 function openPage(id){
   var page = PAGES[id];
   if (!page) return;
   var container = document.getElementById('viewerContainer');
   container.innerHTML = '<div class="para-title">' + page.title + '</div>' +
-    (page.sub ? '<div class="para-sub">' + page.sub + '</div>' : '') +
-    page.html;
+    (page.sub ? '<div class="para-sub">' + page.sub + '</div>' : '') + page.html;
   lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
   showPage('viewer');
 }
 
-/* ============================================================
-   ОГЛАВЛЕНИЕ: 9 КЛАСС
-   ============================================================ */
+/* ============ ОГЛАВЛЕНИЯ ============ */
 var CHAPTERS9 = [
   {num:1, title:'Обобщение знаний. Химические реакции', paragraphs:[
     {id:'ch9-1-1', num:'1', title:'Классификация неорганических соединений'},
     {id:'ch9-1-2', num:'2', title:'Классификация химических реакций'},
-    {id:'ch9-1-3', num:'3', title:'Скорость реакций. Катализ'}
-  ]},
+    {id:'ch9-1-3', num:'3', title:'Скорость реакций. Катализ'}]},
   {num:2, title:'Химические реакции в растворах', paragraphs:[
     {id:'ch9-2-1', num:'1', title:'Электролитическая диссоциация'},
     {id:'ch9-2-2', num:'2', title:'Положения теории электролитической диссоциации'},
     {id:'ch9-2-3', num:'3', title:'Свойства кислот как электролитов'},
     {id:'ch9-2-4', num:'4', title:'Свойства оснований как электролитов'},
     {id:'ch9-2-5', num:'5', title:'Свойства солей как электролитов'},
-    {id:'ch9-2-6', num:'6', title:'Гидролиз солей'}
-  ]},
+    {id:'ch9-2-6', num:'6', title:'Гидролиз солей'}]},
   {num:3, title:'Неметаллы и их соединения', paragraphs:[
     {id:'ch9-3-1', num:'1', title:'Общая характеристика неметаллов'},
     {id:'ch9-3-2', num:'2', title:'Галогены (VIIA)'},
@@ -282,8 +246,7 @@ var CHAPTERS9 = [
     {id:'ch9-3-18', num:'18', title:'Кислородсодержащие органические соединения'},
     {id:'ch9-3-19', num:'19', title:'Кремний и его соединения'},
     {id:'ch9-3-20', num:'20', title:'Получение неметаллов'},
-    {id:'ch9-3-21', num:'21', title:'Важнейшие соединения неметаллов'}
-  ]},
+    {id:'ch9-3-21', num:'21', title:'Важнейшие соединения неметаллов'}]},
   {num:4, title:'Металлы', paragraphs:[
     {id:'ch9-4-1', num:'1', title:'Общая характеристика металлов'},
     {id:'ch9-4-2', num:'2', title:'Химические свойства металлов'},
@@ -293,24 +256,18 @@ var CHAPTERS9 = [
     {id:'ch9-4-6', num:'6', title:'Алюминий и его соединения'},
     {id:'ch9-4-7', num:'7', title:'Железо и его соединения'},
     {id:'ch9-4-8', num:'8', title:'Коррозия металлов'},
-    {id:'ch9-4-9', num:'9', title:'Металлы в природе. Металлургия'}
-  ]},
+    {id:'ch9-4-9', num:'9', title:'Металлы в природе. Металлургия'}]},
   {num:5, title:'Химия и окружающая среда', paragraphs:[
     {id:'ch9-5-1', num:'1', title:'Химический состав планеты Земля'},
-    {id:'ch9-5-2', num:'2', title:'Охрана окружающей среды'}
-  ]},
+    {id:'ch9-5-2', num:'2', title:'Охрана окружающей среды'}]},
   {num:6, title:'Обобщение знаний. Подготовка к ОГЭ', paragraphs:[
     {id:'ch9-6-1', num:'1', title:'Вещества'},
     {id:'ch9-6-2', num:'2', title:'Химические реакции'},
     {id:'ch9-6-3', num:'3', title:'Основы неорганической химии'},
     {id:'ch9-6-4', num:'4', title:'Качественные реакции'},
-    {id:'ch9-6-5', num:'5', title:'Предметный указатель'}
-  ]}
+    {id:'ch9-6-5', num:'5', title:'Предметный указатель'}]}
 ];
 
-/* ============================================================
-   ОГЛАВЛЕНИЕ: 8 КЛАСС
-   ============================================================ */
 var CHAPTERS8 = [
   {num:1, title:'Первоначальные химические понятия', paragraphs:[
     {id:'ch8-1-1', num:'1', title:'Предмет химии. Роль химии в жизни человека'},
@@ -324,8 +281,7 @@ var CHAPTERS8 = [
     {id:'ch8-1-9', num:'9', title:'Валентность'},
     {id:'ch8-1-10', num:'10', title:'Химические реакции'},
     {id:'ch8-1-11', num:'11', title:'Химические уравнения'},
-    {id:'ch8-1-12', num:'12', title:'Типы химических реакций'}
-  ]},
+    {id:'ch8-1-12', num:'12', title:'Типы химических реакций'}]},
   {num:2, title:'Кислород. Водород. Вода. Растворы', paragraphs:[
     {id:'ch8-2-1', num:'1', title:'Воздух и его состав'},
     {id:'ch8-2-2', num:'2', title:'Кислород'},
@@ -337,55 +293,41 @@ var CHAPTERS8 = [
     {id:'ch8-2-8', num:'8', title:'Молярный объём газов'},
     {id:'ch8-2-9', num:'9', title:'Расчёты по химическим уравнениям'},
     {id:'ch8-2-10', num:'10', title:'Вода. Основания'},
-    {id:'ch8-2-11', num:'11', title:'Растворы. Массовая доля растворённого вещества'}
-  ]},
+    {id:'ch8-2-11', num:'11', title:'Растворы. Массовая доля растворённого вещества'}]},
   {num:3, title:'Классы неорганических соединений', paragraphs:[
     {id:'ch8-3-1', num:'1', title:'Оксиды: классификация и химические свойства'},
     {id:'ch8-3-2', num:'2', title:'Основания: классификация и химические свойства'},
     {id:'ch8-3-3', num:'3', title:'Кислоты: классификация и химические свойства'},
     {id:'ch8-3-4', num:'4', title:'Соли: классификация и химические свойства'},
-    {id:'ch8-3-5', num:'5', title:'Генетическая связь между классами неорганических соединений'}
-  ]},
+    {id:'ch8-3-5', num:'5', title:'Генетическая связь между классами неорганических соединений'}]},
   {num:4, title:'Периодический закон и строение атома', paragraphs:[
     {id:'ch8-4-1', num:'1', title:'Естественные семейства химических элементов. Амфотерность'},
     {id:'ch8-4-2', num:'2', title:'Открытие периодического закона Д. И. Менделеева'},
     {id:'ch8-4-3', num:'3', title:'Основные сведения о строении атома'},
     {id:'ch8-4-4', num:'4', title:'Строение электронных оболочек атомов'},
-    {id:'ch8-4-5', num:'5', title:'Характеристика элемента по положению в таблице'}
-  ]},
+    {id:'ch8-4-5', num:'5', title:'Характеристика элемента по положению в таблице'}]},
   {num:5, title:'Химическая связь. ОВР', paragraphs:[
     {id:'ch8-5-1', num:'1', title:'Ионная химическая связь'},
     {id:'ch8-5-2', num:'2', title:'Ковалентная химическая связь'},
     {id:'ch8-5-3', num:'3', title:'Ковалентная неполярная и полярная связь'},
     {id:'ch8-5-4', num:'4', title:'Металлическая химическая связь'},
     {id:'ch8-5-5', num:'5', title:'Степень окисления'},
-    {id:'ch8-5-6', num:'6', title:'Окислительно-восстановительные реакции'}
-  ]}
+    {id:'ch8-5-6', num:'6', title:'Окислительно-восстановительные реакции'}]}
 ];
 
-/* ============================================================
-   РЕНДЕР ОГЛАВЛЕНИЙ
-   ============================================================ */
-function renderContents(containerId, chapters, label){
-  var container = document.getElementById(containerId);
+function renderContents(containerId, chapters){
   var html = '';
   chapters.forEach(function(ch){
-    html += '<div class="chapter-block">';
-    html += '<h2><span>Глава ' + ch.num + '.</span> ' + ch.title + '</h2>';
-    html += '<div class="grid-paragraphs">';
+    html += '<div class="chapter-block"><h2><span>Глава ' + ch.num + '.</span> ' + ch.title + '</h2><div class="grid-paragraphs">';
     ch.paragraphs.forEach(function(p){
-      html += '<button class="para-btn" onclick="openPage(\'' + p.id + '\')">' +
-        '<span class="num">§' + p.num + '</span>' + p.title +
-      '</button>';
+      html += '<button class="para-btn" onclick="openPage(\'' + p.id + '\')"><span class="num">§' + p.num + '</span>' + p.title + '</button>';
     });
     html += '</div></div>';
   });
-  container.innerHTML = html;
+  document.getElementById(containerId).innerHTML = html;
 }
 
-/* ============================================================
-   БАЗА ВЕЩЕСТВ
-   ============================================================ */
+/* ============ БАЗА ВЕЩЕСТВ ============ */
 var SUBSTANCES = [
   {formula:"NaCl",name:"Хлорид натрия",composition:{Na:1,Cl:1},aliases:["поваренная соль","каменная соль","соль","галит"],note:"Ионная решётка."},
   {formula:"KCl",name:"Хлорид калия",composition:{K:1,Cl:1},aliases:["сильвин"],note:"Ионная решётка."},
@@ -410,8 +352,6 @@ var SUBSTANCES = [
   {formula:"CuSO4",name:"Сульфат меди(II)",composition:{Cu:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
   {formula:"FeSO4",name:"Сульфат железа(II)",composition:{Fe:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
   {formula:"Al2(SO4)3",name:"Сульфат алюминия",composition:{Al:2,S:3,O:12},aliases:[],note:"Ионная решётка."},
-  {formula:"CuSO4·5H2O",name:"Медный купорос",composition:{Cu:1,S:1,O:9,H:10},aliases:["сульфат меди пентагидрат"],note:"Кристаллогидрат."},
-  {formula:"FeSO4·7H2O",name:"Железный купорос",composition:{Fe:1,S:1,O:11,H:14},aliases:[],note:"Кристаллогидрат."},
   {formula:"NaNO3",name:"Нитрат натрия",composition:{Na:1,N:1,O:3},aliases:["натриевая селитра"],note:"Ионная решётка."},
   {formula:"KNO3",name:"Нитрат калия",composition:{K:1,N:1,O:3},aliases:["калиевая селитра","селитра"],note:"Ионная решётка."},
   {formula:"AgNO3",name:"Нитрат серебра",composition:{Ag:1,N:1,O:3},aliases:["ляпис"],note:"Ионная решётка."},
@@ -525,11 +465,49 @@ var SUBSTANCES = [
   {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
 ];
 
-/* ============================================================
-   СЛУЖЕБНЫЕ ФУНКЦИИ
-   ============================================================ */
+/* ============ СЛУЖЕБНЫЕ ============ */
 function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
 function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
+
+/* Парсер формулы с поддержкой скобок */
+function parseGroup(s){
+  var result={},i=0;
+  while(i<s.length){
+    var ch=s[i];
+    if(ch==='('){
+      var depth=1,j=i+1;
+      while(j<s.length&&depth>0){ if(s[j]==='(')depth++; else if(s[j]===')')depth--; if(depth===0)break; j++; }
+      var inner=s.substring(i+1,j);
+      var innerP=parseGroup(inner);
+      i=j+1;
+      var num='';
+      while(i<s.length&&/\d/.test(s[i])){num+=s[i];i++;}
+      var mul=num?parseInt(num):1;
+      for(var el in innerP) result[el]=(result[el]||0)+innerP[el]*mul;
+    } else if(/[A-Z]/.test(ch)){
+      var el=ch;i++;
+      if(i<s.length&&/[a-z]/.test(s[i])){el+=s[i];i++;}
+      var num2='';
+      while(i<s.length&&/\d/.test(s[i])){num2+=s[i];i++;}
+      var cnt=num2?parseInt(num2):1;
+      result[el]=(result[el]||0)+cnt;
+    } else { i++; }
+  }
+  return result;
+}
+function parseFormula(formula){
+  var f=formula.replace(/\s/g,'');
+  var parts=f.split(/[·*]/);
+  var total={};
+  for(var p=0;p<parts.length;p++){
+    var part=parts[p],m=part.match(/^(\d+)(.*)$/),mult=1,body=part;
+    if(m){mult=parseInt(m[1]);body=m[2];}
+    var parsed=parseGroup(body);
+    for(var el in parsed) total[el]=(total[el]||0)+parsed[el]*mult;
+  }
+  return total;
+}
+
 var NAME_INDEX=null,FORMULA_INDEX=null;
 function buildNameIndex(){
   if(NAME_INDEX) return NAME_INDEX;
@@ -545,19 +523,6 @@ function buildFormulaIndex(){
   FORMULA_INDEX={};
   for(var i=0;i<SUBSTANCES.length;i++){var k=cleanFormula(SUBSTANCES[i].formula);if(!FORMULA_INDEX[k])FORMULA_INDEX[k]=SUBSTANCES[i];}
   return FORMULA_INDEX;
-}
-function parseFormula(formula){
-  var f=formula.replace(/\s/g,'');
-  var parts=f.split(/[·*]/);
-  var total={};
-  for(var p=0;p<parts.length;p++){
-    var part=parts[p],m=part.match(/^(\d+)(.*)$/),mult=1,body=part;
-    if(m){mult=parseInt(m[1]);body=m[2];}
-    var re=/([A-Z][a-z]?)(\d*)/g,match,found=false;
-    while((match=re.exec(body))!==null){found=true;var el=match[1];var cnt=(parseInt(match[2])||1)*mult;total[el]=(total[el]||0)+cnt;}
-    if(!found&&body)return{};
-  }
-  return total;
 }
 function compositionsEqual(a,b){
   var ka=Object.keys(a),kb=Object.keys(b);
@@ -594,19 +559,7 @@ function determineBond(composition,formula){
 }
 var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Ti:'Титан',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Br:'Бром',Ag:'Серебро',Sn:'Олово',I:'Йод',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец'};
 var ATOM_COLORS={H:'#e2e8f0',Li:'#c4b5fd',Be:'#a7f3d0',B:'#fde68a',C:'#334155',N:'#3b82f6',O:'#ef4444',F:'#22d3ee',Na:'#f59e0b',Mg:'#84cc16',Al:'#94a3b8',Si:'#d4a373',P:'#f97316',S:'#eab308',Cl:'#22c55e',K:'#8b5cf6',Ca:'#a3e635',Cr:'#0891b2',Mn:'#a855f7',Fe:'#b45309',Co:'#2563eb',Ni:'#15803d',Cu:'#ea580c',Zn:'#71717a',Br:'#92400e',Ag:'#9ca3af',Sn:'#6b7280',I:'#7c3aed',Ba:'#65a30d',Au:'#fbbf24',Hg:'#94a3b8',Pb:'#52525b',default:'#94a3b8'};
-
-/* ============================================================
-   ХРАНИЛИЩЕ СТРАНИЦ ПАРАГРАФОВ
-   ============================================================ */
-var PAGES = {};
-
-/* ============================================================
-   СТАРТ
-   ============================================================ */
-renderContents('toc8', CHAPTERS8, '8');
-  /* ============================================================
-   THREE.JS 3D
-   ============================================================ */
+/* ============ THREE.JS 3D ============ */
 var scene,camera,renderer,latticeGroup;
 var isDragging=false,prevMouse={x:0,y:0};
 var rotX=0.35,rotY=0.6,targetRotX=0.35,targetRotY=0.6;
@@ -631,7 +584,6 @@ function makeLabel(text,color,size){
   sprite.scale.set(size*1.5,size*1.5,1);
   return sprite;
 }
-
 function initThree(){
   if(canvasInitialized) return;
   if(typeof THREE==='undefined') return;
@@ -737,9 +689,7 @@ function show3DViewer(latticeType,formula,composition){
   setTimeout(resizeCanvas,60);
 }
 
-/* ============================================================
-   АНАЛИЗАТОР
-   ============================================================ */
+/* ============ АНАЛИЗАТОР ============ */
 function analyze(){
   var input=document.getElementById('queryInput').value.trim();
   var result=document.getElementById('result');
@@ -770,14 +720,9 @@ document.getElementById('modeFormula').addEventListener('click',function(){switc
 document.getElementById('modeName').addEventListener('click',function(){switchMode('name');});
 document.getElementById('analyzeBtn').addEventListener('click',analyze);
 document.getElementById('queryInput').addEventListener('keydown',function(e){if(e.key==='Enter')analyze();});
-  /* ============================================================
-   УРАВНИВАТЕЛЬ РЕАКЦИЙ
-   ============================================================ */
-
-/* База реакций школьного курса 8-9 класса */
+/* ============ УРАВНИВАТЕЛЬ ============ */
 var REACTIONS = [
-  /* ===== ГОРЕНИЕ / СОЕДИНЕНИЕ ===== */
-  {r:['H2','O2'], p:['H2O'], t:'соединение', n:'Горение водорода (гремучий газ)', c:''},
+  {r:['H2','O2'], p:['H2O'], t:'соединение', n:'Горение водорода', c:''},
   {r:['C','O2'], p:['CO2'], t:'соединение', n:'Полное горение углерода', c:''},
   {r:['C','O2'], p:['CO'], t:'соединение', n:'Неполное горение углерода', c:'недостаток O₂'},
   {r:['S','O2'], p:['SO2'], t:'соединение', n:'Горение серы', c:''},
@@ -793,30 +738,30 @@ var REACTIONS = [
   {r:['Cu','O2'], p:['CuO'], t:'соединение', n:'Окисление меди', c:''},
   {r:['Zn','O2'], p:['ZnO'], t:'соединение', n:'Окисление цинка', c:''},
   {r:['H2','Cl2'], p:['HCl'], t:'соединение', n:'Синтез хлороводорода', c:'на свету'},
-  {r:['H2','N2'], p:['NH3'], t:'соединение', n:'Синтез аммиака (обратимая)', c:'кат. Fe, t°, p'},
-  {r:['H2','S'], p:['H2S'], t:'соединение', n:'Образование сероводорода', c:''},
-  {r:['H2','F2'], p:['HF'], t:'соединение', n:'Синтез фтороводорода', c:'взрыв'},
-  {r:['H2','Br2'], p:['HBr'], t:'соединение', n:'Синтез бромоводорода', c:''},
-  {r:['H2','I2'], p:['HI'], t:'соединение', n:'Синтез иодоводорода (обратимая)', c:''},
-  {r:['N2','O2'], p:['NO'], t:'соединение', n:'Образование NO в молнии', c:'очень высокая t°'},
+  {r:['H2','N2'], p:['NH3'], t:'соединение', n:'Синтез аммиака', c:'кат. Fe, t°, p'},
+  {r:['H2','S'], p:['H2S'], t:'соединение', n:'Сероводород', c:''},
+  {r:['H2','F2'], p:['HF'], t:'соединение', n:'Синтез HF', c:'взрыв'},
+  {r:['H2','Br2'], p:['HBr'], t:'соединение', n:'Синтез HBr', c:''},
+  {r:['H2','I2'], p:['HI'], t:'соединение', n:'Синтез HI', c:''},
+  {r:['N2','O2'], p:['NO'], t:'соединение', n:'NO в молнии', c:'очень высокая t°'},
   {r:['NO','O2'], p:['NO2'], t:'соединение', n:'Окисление NO', c:''},
-  {r:['SO2','O2'], p:['SO3'], t:'соединение', n:'Окисление сернистого газа', c:'кат. V₂O₅, t°'},
-  {r:['CO','O2'], p:['CO2'], t:'соединение', n:'Горение угарного газа', c:''},
-  {r:['NO2','O2','H2O'], p:['HNO3'], t:'соединение', n:'Получение азотной кислоты', c:''},
-  {r:['SO3','H2O'], p:['H2SO4'], t:'соединение', n:'Получение серной кислоты', c:''},
-  {r:['SO2','H2O'], p:['H2SO3'], t:'соединение', n:'Образование сернистой кислоты', c:''},
-  {r:['CO2','H2O'], p:['H2CO3'], t:'соединение', n:'Образование угольной кислоты', c:''},
-  {r:['N2O5','H2O'], p:['HNO3'], t:'соединение', n:'Образование азотной кислоты', c:''},
-  {r:['P2O5','H2O'], p:['H3PO4'], t:'соединение', n:'Образование фосфорной кислоты', c:''},
+  {r:['SO2','O2'], p:['SO3'], t:'соединение', n:'Окисление SO₂', c:'кат. V₂O₅'},
+  {r:['CO','O2'], p:['CO2'], t:'соединение', n:'Горение CO', c:''},
+  {r:['NO2','O2','H2O'], p:['HNO3'], t:'соединение', n:'Получение HNO₃', c:''},
+  {r:['SO3','H2O'], p:['H2SO4'], t:'соединение', n:'Получение H₂SO₄', c:''},
+  {r:['SO2','H2O'], p:['H2SO3'], t:'соединение', n:'Сернистая кислота', c:''},
+  {r:['CO2','H2O'], p:['H2CO3'], t:'соединение', n:'Угольная кислота', c:''},
+  {r:['N2O5','H2O'], p:['HNO3'], t:'соединение', n:'Азотная кислота', c:''},
+  {r:['P2O5','H2O'], p:['H3PO4'], t:'соединение', n:'Фосфорная кислота', c:''},
   {r:['CaO','H2O'], p:['Ca(OH)2'], t:'соединение', n:'Гашение извести', c:''},
   {r:['Na2O','H2O'], p:['NaOH'], t:'соединение', n:'Образование щёлочи', c:''},
   {r:['K2O','H2O'], p:['KOH'], t:'соединение', n:'Образование щёлочи', c:''},
   {r:['BaO','H2O'], p:['Ba(OH)2'], t:'соединение', n:'Образование щёлочи', c:''},
-  {r:['BaO','SO3'], p:['BaSO4'], t:'соединение', n:'Образование сульфата бария', c:''},
-  {r:['CaO','CO2'], p:['CaCO3'], t:'соединение', n:'Образование карбоната кальция', c:''},
-  {r:['CaO','SO3'], p:['CaSO4'], t:'соединение', n:'Образование сульфата кальция', c:''},
-  {r:['Na2O','CO2'], p:['Na2CO3'], t:'соединение', n:'Образование карбоната натрия', c:''},
-  {r:['CuO','SO3'], p:['CuSO4'], t:'соединение', n:'Образование сульфата меди', c:''},
+  {r:['BaO','SO3'], p:['BaSO4'], t:'соединение', n:'Сульфат бария', c:''},
+  {r:['CaO','CO2'], p:['CaCO3'], t:'соединение', n:'Карбонат кальция', c:''},
+  {r:['CaO','SO3'], p:['CaSO4'], t:'соединение', n:'Сульфат кальция', c:''},
+  {r:['Na2O','CO2'], p:['Na2CO3'], t:'соединение', n:'Карбонат натрия', c:''},
+  {r:['CuO','SO3'], p:['CuSO4'], t:'соединение', n:'Сульфат меди', c:''},
   {r:['NH3','HCl'], p:['NH4Cl'], t:'соединение', n:'Белый дым (нашатырь)', c:''},
   {r:['NH3','H2O'], p:['NH4OH'], t:'соединение', n:'Нашатырный спирт', c:''},
   {r:['Ca','H2'], p:['CaH2'], t:'соединение', n:'Гидрид кальция', c:''},
@@ -826,61 +771,56 @@ var REACTIONS = [
   {r:['Al','C'], p:['Al4C3'], t:'соединение', n:'Карбид алюминия', c:'t°'},
   {r:['Ca','C'], p:['CaC2'], t:'соединение', n:'Карбид кальция', c:'t°'},
   {r:['Si','O2'], p:['SiO2'], t:'соединение', n:'Окисление кремния', c:'t°'},
-  {r:['N2','H2'], p:['NH3'], t:'соединение', n:'Синтез аммиака', c:'кат. Fe, 500°C, 300 атм'},
 
-  /* ===== РАЗЛОЖЕНИЕ ===== */
-  {r:['H2O2'], p:['H2O','O2'], t:'разложение', n:'Разложение пероксида водорода', c:'кат. MnO₂'},
+  {r:['H2O2'], p:['H2O','O2'], t:'разложение', n:'Разложение пероксида', c:'кат. MnO₂'},
   {r:['H2O'], p:['H2','O2'], t:'разложение', n:'Электролиз воды', c:'эл. ток'},
-  {r:['KClO3'], p:['KCl','O2'], t:'разложение', n:'Разложение бертолетовой соли', c:'кат. MnO₂, t°'},
+  {r:['KClO3'], p:['KCl','O2'], t:'разложение', n:'Бертолетова соль', c:'кат. MnO₂, t°'},
   {r:['KMnO4'], p:['K2MnO4','MnO2','O2'], t:'разложение', n:'Разложение марганцовки', c:'t°'},
   {r:['CaCO3'], p:['CaO','CO2'], t:'разложение', n:'Обжиг известняка', c:'t° ≈ 1000°C'},
-  {r:['MgCO3'], p:['MgO','CO2'], t:'разложение', n:'Разложение карбоната магния', c:'t°'},
-  {r:['Cu(OH)2'], p:['CuO','H2O'], t:'разложение', n:'Разложение гидроксида меди', c:'t°'},
-  {r:['Fe(OH)3'], p:['Fe2O3','H2O'], t:'разложение', n:'Разложение гидроксида железа(III)', c:'t°'},
-  {r:['Fe(OH)2'], p:['FeO','H2O'], t:'разложение', n:'Разложение гидроксида железа(II)', c:'t°'},
-  {r:['Al(OH)3'], p:['Al2O3','H2O'], t:'разложение', n:'Разложение гидроксида алюминия', c:'t°'},
-  {r:['Mg(OH)2'], p:['MgO','H2O'], t:'разложение', n:'Разложение гидроксида магния', c:'t°'},
-  {r:['NH4Cl'], p:['NH3','HCl'], t:'разложение', n:'Разложение хлорида аммония', c:'t°'},
-  {r:['NH4NO3'], p:['N2O','H2O'], t:'разложение', n:'Разложение аммиачной селитры', c:'t°'},
-  {r:['KNO3'], p:['KNO2','O2'], t:'разложение', n:'Разложение нитрата калия', c:'t°'},
-  {r:['NaNO3'], p:['NaNO2','O2'], t:'разложение', n:'Разложение нитрата натрия', c:'t°'},
-  {r:['Cu(NO3)2'], p:['CuO','NO2','O2'], t:'разложение', n:'Разложение нитрата меди', c:'t°'},
-  {r:['HgO'], p:['Hg','O2'], t:'разложение', n:'Разложение оксида ртути', c:'t°'},
-  {r:['Ag2O'], p:['Ag','O2'], t:'разложение', n:'Разложение оксида серебра', c:'t°'},
-  {r:['H2CO3'], p:['H2O','CO2'], t:'разложение', n:'Разложение угольной кислоты', c:''},
-  {r:['H2SO3'], p:['H2O','SO2'], t:'разложение', n:'Разложение сернистой кислоты', c:''},
-  {r:['NH4OH'], p:['NH3','H2O'], t:'разложение', n:'Разложение гидроксида аммония', c:''},
-  {r:['Ca(HCO3)2'], p:['CaCO3','H2O','CO2'], t:'разложение', n:'Разложение гидрокарбоната кальция', c:'t° (кипячение)'},
-  {r:['NaHCO3'], p:['Na2CO3','H2O','CO2'], t:'разложение', n:'Разложение пищевой соды', c:'t°'},
+  {r:['MgCO3'], p:['MgO','CO2'], t:'разложение', n:'Разложение MgCO₃', c:'t°'},
+  {r:['Cu(OH)2'], p:['CuO','H2O'], t:'разложение', n:'Разложение Cu(OH)₂', c:'t°'},
+  {r:['Fe(OH)3'], p:['Fe2O3','H2O'], t:'разложение', n:'Разложение Fe(OH)₃', c:'t°'},
+  {r:['Fe(OH)2'], p:['FeO','H2O'], t:'разложение', n:'Разложение Fe(OH)₂', c:'t°'},
+  {r:['Al(OH)3'], p:['Al2O3','H2O'], t:'разложение', n:'Разложение Al(OH)₃', c:'t°'},
+  {r:['Mg(OH)2'], p:['MgO','H2O'], t:'разложение', n:'Разложение Mg(OH)₂', c:'t°'},
+  {r:['NH4Cl'], p:['NH3','HCl'], t:'разложение', n:'Разложение NH₄Cl', c:'t°'},
+  {r:['NH4NO3'], p:['N2O','H2O'], t:'разложение', n:'Разложение селитры', c:'t°'},
+  {r:['KNO3'], p:['KNO2','O2'], t:'разложение', n:'Разложение KNO₃', c:'t°'},
+  {r:['NaNO3'], p:['NaNO2','O2'], t:'разложение', n:'Разложение NaNO₃', c:'t°'},
+  {r:['Cu(NO3)2'], p:['CuO','NO2','O2'], t:'разложение', n:'Разложение Cu(NO₃)₂', c:'t°'},
+  {r:['HgO'], p:['Hg','O2'], t:'разложение', n:'Разложение HgO', c:'t°'},
+  {r:['Ag2O'], p:['Ag','O2'], t:'разложение', n:'Разложение Ag₂O', c:'t°'},
+  {r:['H2CO3'], p:['H2O','CO2'], t:'разложение', n:'Разложение H₂CO₃', c:''},
+  {r:['H2SO3'], p:['H2O','SO2'], t:'разложение', n:'Разложение H₂SO₃', c:''},
+  {r:['NH4OH'], p:['NH3','H2O'], t:'разложение', n:'Разложение NH₄OH', c:''},
+  {r:['Ca(HCO3)2'], p:['CaCO3','H2O','CO2'], t:'разложение', n:'Разложение Ca(HCO₃)₂', c:'t°'},
+  {r:['NaHCO3'], p:['Na2CO3','H2O','CO2'], t:'разложение', n:'Разложение соды', c:'t°'},
   {r:['CH4'], p:['C','H2'], t:'разложение', n:'Пиролиз метана', c:'t° ≈ 1000°C'},
 
-  /* ===== ЗАМЕЩЕНИЕ: металлы + кислоты ===== */
-  {r:['Zn','HCl'], p:['ZnCl2','H2'], t:'замещение', n:'Цинк + соляная кислота', c:''},
-  {r:['Mg','HCl'], p:['MgCl2','H2'], t:'замещение', n:'Магний + соляная кислота', c:''},
-  {r:['Fe','HCl'], p:['FeCl2','H2'], t:'замещение', n:'Железо + соляная кислота', c:''},
-  {r:['Al','HCl'], p:['AlCl3','H2'], t:'замещение', n:'Алюминий + соляная кислота', c:''},
-  {r:['Ca','HCl'], p:['CaCl2','H2'], t:'замещение', n:'Кальций + соляная кислота', c:''},
-  {r:['Na','HCl'], p:['NaCl','H2'], t:'замещение', n:'Натрий + соляная кислота', c:'бурно'},
-  {r:['K','HCl'], p:['KCl','H2'], t:'замещение', n:'Калий + соляная кислота', c:'бурно'},
-  {r:['Zn','H2SO4'], p:['ZnSO4','H2'], t:'замещение', n:'Цинк + серная кислота (разб.)', c:''},
-  {r:['Fe','H2SO4'], p:['FeSO4','H2'], t:'замещение', n:'Железо + серная кислота (разб.)', c:''},
-  {r:['Mg','H2SO4'], p:['MgSO4','H2'], t:'замещение', n:'Магний + серная кислота', c:''},
-  {r:['Al','H2SO4'], p:['Al2(SO4)3','H2'], t:'замещение', n:'Алюминий + серная кислота', c:''},
-  {r:['Fe','HNO3'], p:['Fe(NO3)3','NO','H2O'], t:'замещение', n:'Железо + азотная кислота (разб.)', c:'не выделяет H₂!'},
-  {r:['Cu','HNO3'], p:['Cu(NO3)2','NO2','H2O'], t:'замещение', n:'Медь + азотная кислота (конц.)', c:'NO₂ — бурый газ'},
-  {r:['Cu','HNO3'], p:['Cu(NO3)2','NO','H2O'], t:'замещение', n:'Медь + азотная кислота (разб.)', c:'NO — бесцветный'},
-  {r:['Ag','HNO3'], p:['AgNO3','NO2','H2O'], t:'замещение', n:'Серебро + азотная кислота', c:''},
+  {r:['Zn','HCl'], p:['ZnCl2','H2'], t:'замещение', n:'Zn + HCl', c:''},
+  {r:['Mg','HCl'], p:['MgCl2','H2'], t:'замещение', n:'Mg + HCl', c:''},
+  {r:['Fe','HCl'], p:['FeCl2','H2'], t:'замещение', n:'Fe + HCl', c:''},
+  {r:['Al','HCl'], p:['AlCl3','H2'], t:'замещение', n:'Al + HCl', c:''},
+  {r:['Ca','HCl'], p:['CaCl2','H2'], t:'замещение', n:'Ca + HCl', c:''},
+  {r:['Na','HCl'], p:['NaCl','H2'], t:'замещение', n:'Na + HCl', c:'бурно'},
+  {r:['K','HCl'], p:['KCl','H2'], t:'замещение', n:'K + HCl', c:'бурно'},
+  {r:['Zn','H2SO4'], p:['ZnSO4','H2'], t:'замещение', n:'Zn + H₂SO₄', c:''},
+  {r:['Fe','H2SO4'], p:['FeSO4','H2'], t:'замещение', n:'Fe + H₂SO₄', c:''},
+  {r:['Mg','H2SO4'], p:['MgSO4','H2'], t:'замещение', n:'Mg + H₂SO₄', c:''},
+  {r:['Al','H2SO4'], p:['Al2(SO4)3','H2'], t:'замещение', n:'Al + H₂SO₄', c:''},
+  {r:['Fe','HNO3'], p:['Fe(NO3)3','NO','H2O'], t:'замещение', n:'Fe + HNO₃ (разб.)', c:'не выделяет H₂!'},
+  {r:['Cu','HNO3'], p:['Cu(NO3)2','NO2','H2O'], t:'замещение', n:'Cu + HNO₃ (конц.)', c:'NO₂ — бурый газ'},
+  {r:['Cu','HNO3'], p:['Cu(NO3)2','NO','H2O'], t:'замещение', n:'Cu + HNO₃ (разб.)', c:'NO — бесцветный'},
+  {r:['Ag','HNO3'], p:['AgNO3','NO2','H2O'], t:'замещение', n:'Ag + HNO₃', c:''},
 
-  /* ===== ЗАМЕЩЕНИЕ: металл + соль ===== */
-  {r:['Fe','CuSO4'], p:['FeSO4','Cu'], t:'замещение', n:'Железо вытесняет медь', c:''},
-  {r:['Zn','CuSO4'], p:['ZnSO4','Cu'], t:'замещение', n:'Цинк вытесняет медь', c:''},
-  {r:['Cu','AgNO3'], p:['Cu(NO3)2','Ag'], t:'замещение', n:'Медь вытесняет серебро', c:''},
-  {r:['Fe','AgNO3'], p:['Fe(NO3)2','Ag'], t:'замещение', n:'Железо вытесняет серебро', c:''},
-  {r:['Mg','CuSO4'], p:['MgSO4','Cu'], t:'замещение', n:'Магний вытесняет медь', c:''},
-  {r:['Zn','FeSO4'], p:['ZnSO4','Fe'], t:'замещение', n:'Цинк вытесняет железо', c:''},
-  {r:['Al','CuSO4'], p:['Al2(SO4)3','Cu'], t:'замещение', n:'Алюминий вытесняет медь', c:''},
+  {r:['Fe','CuSO4'], p:['FeSO4','Cu'], t:'замещение', n:'Fe вытесняет Cu', c:''},
+  {r:['Zn','CuSO4'], p:['ZnSO4','Cu'], t:'замещение', n:'Zn вытесняет Cu', c:''},
+  {r:['Cu','AgNO3'], p:['Cu(NO3)2','Ag'], t:'замещение', n:'Cu вытесняет Ag', c:''},
+  {r:['Fe','AgNO3'], p:['Fe(NO3)2','Ag'], t:'замещение', n:'Fe вытесняет Ag', c:''},
+  {r:['Mg','CuSO4'], p:['MgSO4','Cu'], t:'замещение', n:'Mg вытесняет Cu', c:''},
+  {r:['Zn','FeSO4'], p:['ZnSO4','Fe'], t:'замещение', n:'Zn вытесняет Fe', c:''},
+  {r:['Al','CuSO4'], p:['Al2(SO4)3','Cu'], t:'замещение', n:'Al вытесняет Cu', c:''},
 
-  /* ===== ЗАМЕЩЕНИЕ: металлы + вода ===== */
   {r:['Na','H2O'], p:['NaOH','H2'], t:'замещение', n:'Натрий + вода', c:'бурно'},
   {r:['K','H2O'], p:['KOH','H2'], t:'замещение', n:'Калий + вода', c:'со вспышкой'},
   {r:['Li','H2O'], p:['LiOH','H2'], t:'замещение', n:'Литий + вода', c:''},
@@ -889,17 +829,15 @@ var REACTIONS = [
   {r:['Mg','H2O'], p:['Mg(OH)2','H2'], t:'замещение', n:'Магний + вода', c:'t°'},
   {r:['Fe','H2O'], p:['Fe3O4','H2'], t:'замещение', n:'Железо + вода', c:'t°'},
 
-  /* ===== ЗАМЕЩЕНИЕ: водород/углерод + оксиды ===== */
-  {r:['H2','CuO'], p:['Cu','H2O'], t:'замещение', n:'Водород восстанавливает медь', c:'t°'},
-  {r:['H2','Fe2O3'], p:['Fe','H2O'], t:'замещение', n:'Водород восстанавливает железо', c:'t°'},
-  {r:['C','CuO'], p:['Cu','CO2'], t:'замещение', n:'Углерод восстанавливает медь', c:'t°'},
-  {r:['C','Fe2O3'], p:['Fe','CO2'], t:'замещение', n:'Углерод восстанавливает железо', c:'t°'},
-  {r:['CO','Fe2O3'], p:['Fe','CO2'], t:'замещение', n:'CO восстанавливает железо (домна)', c:'t°'},
-  {r:['CO','CuO'], p:['Cu','CO2'], t:'замещение', n:'CO восстанавливает медь', c:'t°'},
-  {r:['Al','Fe2O3'], p:['Al2O3','Fe'], t:'замещение', n:'Алюминотермия', c:'t° (зажигание)'},
-  {r:['Mg','Fe2O3'], p:['MgO','Fe'], t:'замещение', n:'Магний восстанавливает железо', c:'t°'},
+  {r:['H2','CuO'], p:['Cu','H2O'], t:'замещение', n:'H₂ + CuO', c:'t°'},
+  {r:['H2','Fe2O3'], p:['Fe','H2O'], t:'замещение', n:'H₂ + Fe₂O₃', c:'t°'},
+  {r:['C','CuO'], p:['Cu','CO2'], t:'замещение', n:'C + CuO', c:'t°'},
+  {r:['C','Fe2O3'], p:['Fe','CO2'], t:'замещение', n:'C + Fe₂O₃', c:'t°'},
+  {r:['CO','Fe2O3'], p:['Fe','CO2'], t:'замещение', n:'CO + Fe₂O₃ (домна)', c:'t°'},
+  {r:['CO','CuO'], p:['Cu','CO2'], t:'замещение', n:'CO + CuO', c:'t°'},
+  {r:['Al','Fe2O3'], p:['Al2O3','Fe'], t:'замещение', n:'Алюминотермия', c:'t°'},
+  {r:['Mg','Fe2O3'], p:['MgO','Fe'], t:'замещение', n:'Mg + Fe₂O₃', c:'t°'},
 
-  /* ===== ОБМЕН: нейтрализация ===== */
   {r:['NaOH','HCl'], p:['NaCl','H2O'], t:'обмен', n:'Нейтрализация', c:''},
   {r:['KOH','HCl'], p:['KCl','H2O'], t:'обмен', n:'Нейтрализация', c:''},
   {r:['LiOH','HCl'], p:['LiCl','H2O'], t:'обмен', n:'Нейтрализация', c:''},
@@ -922,86 +860,79 @@ var REACTIONS = [
   {r:['NH3','HNO3'], p:['NH4NO3'], t:'соединение', n:'Аммиачная селитра', c:''},
   {r:['NH3','H3PO4'], p:['(NH4)3PO4'], t:'соединение', n:'Фосфат аммония', c:''},
 
-  /* ===== ОБМЕН: соли + кислоты ===== */
-  {r:['CaCO3','HCl'], p:['CaCl2','H2O','CO2'], t:'обмен', n:'Мрамор + соляная кислота', c:'вскипание'},
-  {r:['Na2CO3','HCl'], p:['NaCl','H2O','CO2'], t:'обмен', n:'Сода + соляная кислота', c:'вскипание'},
-  {r:['K2CO3','HCl'], p:['KCl','H2O','CO2'], t:'обмен', n:'Поташ + соляная кислота', c:''},
-  {r:['NaHCO3','HCl'], p:['NaCl','H2O','CO2'], t:'обмен', n:'Пищевая сода + соляная кислота', c:''},
-  {r:['CaCO3','H2SO4'], p:['CaSO4','H2O','CO2'], t:'обмен', n:'Мрамор + серная кислота', c:''},
-  {r:['Na2CO3','H2SO4'], p:['Na2SO4','H2O','CO2'], t:'обмен', n:'Сода + серная кислота', c:''},
-  {r:['BaCl2','H2SO4'], p:['BaSO4','HCl'], t:'обмен', n:'Белый осадок BaSO₄', c:'качественная на SO₄²⁻'},
-  {r:['Ba(NO3)2','H2SO4'], p:['BaSO4','HNO3'], t:'обмен', n:'Белый осадок BaSO₄', c:''},
-  {r:['AgNO3','HCl'], p:['AgCl','HNO3'], t:'обмен', n:'Белый творожистый осадок', c:'качественная на Cl⁻'},
-  {r:['AgNO3','HBr'], p:['AgBr','HNO3'], t:'обмен', n:'Бледно-жёлтый осадок', c:''},
-  {r:['AgNO3','HI'], p:['AgI','HNO3'], t:'обмен', n:'Жёлтый осадок', c:''},
-  {r:['AgNO3','NaCl'], p:['AgCl','NaNO3'], t:'обмен', n:'Белый осадок AgCl', c:''},
-  {r:['AgNO3','KCl'], p:['AgCl','KNO3'], t:'обмен', n:'Белый осадок AgCl', c:''},
-  {r:['AgNO3','NaBr'], p:['AgBr','NaNO3'], t:'обмен', n:'Бледно-жёлтый осадок', c:''},
-  {r:['AgNO3','NaI'], p:['AgI','NaNO3'], t:'обмен', n:'Жёлтый осадок', c:''},
-  {r:['AgNO3','Na3PO4'], p:['Ag3PO4','NaNO3'], t:'обмен', n:'Жёлтый осадок Ag₃PO₄', c:''},
-  {r:['AgNO3','Na2S'], p:['Ag2S','NaNO3'], t:'обмен', n:'Чёрный осадок Ag₂S', c:''},
+  {r:['CaCO3','HCl'], p:['CaCl2','H2O','CO2'], t:'обмен', n:'Мрамор + HCl', c:'вскипание'},
+  {r:['Na2CO3','HCl'], p:['NaCl','H2O','CO2'], t:'обмен', n:'Сода + HCl', c:'вскипание'},
+  {r:['K2CO3','HCl'], p:['KCl','H2O','CO2'], t:'обмен', n:'Поташ + HCl', c:''},
+  {r:['NaHCO3','HCl'], p:['NaCl','H2O','CO2'], t:'обмен', n:'Сода + HCl', c:''},
+  {r:['CaCO3','H2SO4'], p:['CaSO4','H2O','CO2'], t:'обмен', n:'Мрамор + H₂SO₄', c:''},
+  {r:['Na2CO3','H2SO4'], p:['Na2SO4','H2O','CO2'], t:'обмен', n:'Сода + H₂SO₄', c:''},
+  {r:['BaCl2','H2SO4'], p:['BaSO4','HCl'], t:'обмен', n:'Осадок BaSO₄', c:'кач. на SO₄²⁻'},
+  {r:['Ba(NO3)2','H2SO4'], p:['BaSO4','HNO3'], t:'обмен', n:'Осадок BaSO₄', c:''},
+  {r:['AgNO3','HCl'], p:['AgCl','HNO3'], t:'обмен', n:'Осадок AgCl', c:'кач. на Cl⁻'},
+  {r:['AgNO3','HBr'], p:['AgBr','HNO3'], t:'обмен', n:'Осадок AgBr', c:''},
+  {r:['AgNO3','HI'], p:['AgI','HNO3'], t:'обмен', n:'Осадок AgI', c:''},
+  {r:['AgNO3','NaCl'], p:['AgCl','NaNO3'], t:'обмен', n:'Осадок AgCl', c:''},
+  {r:['AgNO3','KCl'], p:['AgCl','KNO3'], t:'обмен', n:'Осадок AgCl', c:''},
+  {r:['AgNO3','NaBr'], p:['AgBr','NaNO3'], t:'обмен', n:'Осадок AgBr', c:''},
+  {r:['AgNO3','NaI'], p:['AgI','NaNO3'], t:'обмен', n:'Осадок AgI', c:''},
+  {r:['AgNO3','Na3PO4'], p:['Ag3PO4','NaNO3'], t:'обмен', n:'Осадок Ag₃PO₄', c:''},
+  {r:['AgNO3','Na2S'], p:['Ag2S','NaNO3'], t:'обмен', n:'Осадок Ag₂S', c:''},
 
-  /* ===== ОБМЕН: соли + щёлочи ===== */
-  {r:['CuSO4','NaOH'], p:['Cu(OH)2','Na2SO4'], t:'обмен', n:'Голубой осадок Cu(OH)₂', c:''},
+  {r:['CuSO4','NaOH'], p:['Cu(OH)2','Na2SO4'], t:'обмен', n:'Голубой осадок', c:''},
   {r:['CuCl2','NaOH'], p:['Cu(OH)2','NaCl'], t:'обмен', n:'Голубой осадок', c:''},
-  {r:['FeCl3','NaOH'], p:['Fe(OH)3','NaCl'], t:'обмен', n:'Бурый осадок Fe(OH)₃', c:''},
-  {r:['FeCl2','NaOH'], p:['Fe(OH)2','NaCl'], t:'обмен', n:'Зеленоватый осадок Fe(OH)₂', c:''},
+  {r:['FeCl3','NaOH'], p:['Fe(OH)3','NaCl'], t:'обмен', n:'Бурый осадок', c:''},
+  {r:['FeCl2','NaOH'], p:['Fe(OH)2','NaCl'], t:'обмен', n:'Зелёный осадок', c:''},
   {r:['FeSO4','NaOH'], p:['Fe(OH)2','Na2SO4'], t:'обмен', n:'Осадок Fe(OH)₂', c:''},
   {r:['Fe2(SO4)3','NaOH'], p:['Fe(OH)3','Na2SO4'], t:'обмен', n:'Осадок Fe(OH)₃', c:''},
-  {r:['AlCl3','NaOH'], p:['Al(OH)3','NaCl'], t:'обмен', n:'Белый осадок Al(OH)₃', c:''},
-  {r:['MgCl2','NaOH'], p:['Mg(OH)2','NaCl'], t:'обмен', n:'Белый осадок Mg(OH)₂', c:''},
-  {r:['ZnCl2','NaOH'], p:['Zn(OH)2','NaCl'], t:'обмен', n:'Белый осадок Zn(OH)₂', c:''},
-  {r:['NH4Cl','NaOH'], p:['NaCl','NH3','H2O'], t:'обмен', n:'Запах аммиака', c:'качественная на NH₄⁺'},
+  {r:['AlCl3','NaOH'], p:['Al(OH)3','NaCl'], t:'обмен', n:'Белый осадок', c:''},
+  {r:['MgCl2','NaOH'], p:['Mg(OH)2','NaCl'], t:'обмен', n:'Белый осадок', c:''},
+  {r:['ZnCl2','NaOH'], p:['Zn(OH)2','NaCl'], t:'обмен', n:'Белый осадок', c:''},
+  {r:['NH4Cl','NaOH'], p:['NaCl','NH3','H2O'], t:'обмен', n:'Запах аммиака', c:'кач. на NH₄⁺'},
   {r:['(NH4)2SO4','NaOH'], p:['Na2SO4','NH3','H2O'], t:'обмен', n:'Запах аммиака', c:'t°'},
   {r:['CuSO4','KOH'], p:['Cu(OH)2','K2SO4'], t:'обмен', n:'Голубой осадок', c:''},
 
-  /* ===== ОБМЕН: соль + соль ===== */
-  {r:['BaCl2','Na2SO4'], p:['BaSO4','NaCl'], t:'обмен', n:'Белый осадок BaSO₄', c:''},
-  {r:['BaCl2','K2SO4'], p:['BaSO4','KCl'], t:'обмен', n:'Белый осадок', c:''},
-  {r:['Ba(NO3)2','Na2SO4'], p:['BaSO4','NaNO3'], t:'обмен', n:'Белый осадок', c:''},
-  {r:['CaCl2','Na2CO3'], p:['CaCO3','NaCl'], t:'обмен', n:'Белый осадок CaCO₃', c:''},
-  {r:['BaCl2','Na2CO3'], p:['BaCO3','NaCl'], t:'обмен', n:'Белый осадок BaCO₃', c:''},
+  {r:['BaCl2','Na2SO4'], p:['BaSO4','NaCl'], t:'обмен', n:'Осадок BaSO₄', c:''},
+  {r:['BaCl2','K2SO4'], p:['BaSO4','KCl'], t:'обмен', n:'Осадок BaSO₄', c:''},
+  {r:['Ba(NO3)2','Na2SO4'], p:['BaSO4','NaNO3'], t:'обмен', n:'Осадок BaSO₄', c:''},
+  {r:['CaCl2','Na2CO3'], p:['CaCO3','NaCl'], t:'обмен', n:'Осадок CaCO₃', c:''},
+  {r:['BaCl2','Na2CO3'], p:['BaCO3','NaCl'], t:'обмен', n:'Осадок BaCO₃', c:''},
   {r:['CuSO4','Na2S'], p:['CuS','Na2SO4'], t:'обмен', n:'Чёрный осадок CuS', c:''},
   {r:['Pb(NO3)2','Na2S'], p:['PbS','NaNO3'], t:'обмен', n:'Чёрный осадок PbS', c:''},
   {r:['Pb(NO3)2','KI'], p:['PbI2','KNO3'], t:'обмен', n:'Жёлтый осадок PbI₂', c:''},
   {r:['CuSO4','BaCl2'], p:['BaSO4','CuCl2'], t:'обмен', n:'Осадок BaSO₄', c:''},
   {r:['AgNO3','BaCl2'], p:['AgCl','Ba(NO3)2'], t:'обмен', n:'Осадок AgCl', c:''},
 
-  /* ===== ОБМЕН: соли + оксиды (при сплавлении) ===== */
-  {r:['SiO2','CaCO3'], p:['CaSiO3','CO2'], t:'обмен', n:'Силикат кальция (сплавление)', c:'t°'},
-  {r:['SiO2','Na2CO3'], p:['Na2SiO3','CO2'], t:'обмен', n:'Силикат натрия (стекло)', c:'t°'},
+  {r:['SiO2','CaCO3'], p:['CaSiO3','CO2'], t:'обмен', n:'Силикат кальция', c:'t°'},
+  {r:['SiO2','Na2CO3'], p:['Na2SiO3','CO2'], t:'обмен', n:'Силикат натрия', c:'t°'},
   {r:['CaCO3','SiO2'], p:['CaSiO3','CO2'], t:'обмен', n:'Цемент', c:'t°'},
   {r:['Na2CO3','SiO2'], p:['Na2SiO3','CO2'], t:'обмен', n:'Стекло', c:'t°'},
 
-  /* ===== ОБМЕН: оксиды со щелочами ===== */
-  {r:['CO2','NaOH'], p:['Na2CO3','H2O'], t:'обмен', n:'Поглощение CO₂ щёлочью', c:''},
+  {r:['CO2','NaOH'], p:['Na2CO3','H2O'], t:'обмен', n:'Поглощение CO₂', c:''},
   {r:['CO2','KOH'], p:['K2CO3','H2O'], t:'обмен', n:'Поглощение CO₂', c:''},
-  {r:['CO2','Ca(OH)2'], p:['CaCO3','H2O'], t:'обмен', n:'Помутнение известковой воды', c:'качественная на CO₂'},
-  {r:['CO2','Ba(OH)2'], p:['BaCO3','H2O'], t:'обмен', n:'Помутнение баритовой воды', c:''},
+  {r:['CO2','Ca(OH)2'], p:['CaCO3','H2O'], t:'обмен', n:'Помутнение воды', c:'кач. на CO₂'},
+  {r:['CO2','Ba(OH)2'], p:['BaCO3','H2O'], t:'обмен', n:'Помутнение воды', c:''},
   {r:['SO2','NaOH'], p:['Na2SO3','H2O'], t:'обмен', n:'Поглощение SO₂', c:''},
   {r:['SO3','NaOH'], p:['Na2SO4','H2O'], t:'обмен', n:'Поглощение SO₃', c:''},
   {r:['SO3','Ca(OH)2'], p:['CaSO4','H2O'], t:'обмен', n:'Поглощение SO₃', c:''},
   {r:['SO2','Ca(OH)2'], p:['CaSO3','H2O'], t:'обмен', n:'Сульфит кальция', c:''},
-  {r:['SiO2','NaOH'], p:['Na2SiO3','H2O'], t:'обмен', n:'Растворение стекла в щёлочи', c:'t°'},
+  {r:['SiO2','NaOH'], p:['Na2SiO3','H2O'], t:'обмен', n:'Стекло в щёлочи', c:'t°'},
 
-  /* ===== КИСЛОТА + ОКСИД МЕТАЛЛА ===== */
-  {r:['CuO','H2SO4'], p:['CuSO4','H2O'], t:'обмен', n:'Медь + серная кислота', c:''},
-  {r:['CuO','HCl'], p:['CuCl2','H2O'], t:'обмен', n:'Оксид меди + соляная кислота', c:''},
-  {r:['MgO','HCl'], p:['MgCl2','H2O'], t:'обмен', n:'Оксид магния + соляная кислота', c:''},
-  {r:['MgO','H2SO4'], p:['MgSO4','H2O'], t:'обмен', n:'Оксид магния + серная кислота', c:''},
-  {r:['CaO','HCl'], p:['CaCl2','H2O'], t:'обмен', n:'Оксид кальция + соляная кислота', c:''},
-  {r:['CaO','HNO3'], p:['Ca(NO3)2','H2O'], t:'обмен', n:'Оксид кальция + азотная', c:''},
-  {r:['Na2O','HCl'], p:['NaCl','H2O'], t:'обмен', n:'Оксид натрия + соляная', c:''},
-  {r:['Fe2O3','HCl'], p:['FeCl3','H2O'], t:'обмен', n:'Оксид железа(III) + соляная', c:''},
-  {r:['Fe2O3','H2SO4'], p:['Fe2(SO4)3','H2O'], t:'обмен', n:'Оксид железа(III) + серная', c:''},
-  {r:['FeO','HCl'], p:['FeCl2','H2O'], t:'обмен', n:'Оксид железа(II) + соляная', c:''},
-  {r:['ZnO','HCl'], p:['ZnCl2','H2O'], t:'обмен', n:'Оксид цинка + соляная', c:''},
-  {r:['ZnO','H2SO4'], p:['ZnSO4','H2O'], t:'обмен', n:'Оксид цинка + серная', c:''},
-  {r:['Al2O3','HCl'], p:['AlCl3','H2O'], t:'обмен', n:'Оксид алюминия + соляная', c:''},
-  {r:['Al2O3','H2SO4'], p:['Al2(SO4)3','H2O'], t:'обмен', n:'Оксид алюминия + серная', c:''},
-  {r:['Al2O3','NaOH'], p:['NaAlO2','H2O'], t:'обмен', n:'Амфотерность (сплавление)', c:'t°'},
+  {r:['CuO','H2SO4'], p:['CuSO4','H2O'], t:'обмен', n:'CuO + H₂SO₄', c:''},
+  {r:['CuO','HCl'], p:['CuCl2','H2O'], t:'обмен', n:'CuO + HCl', c:''},
+  {r:['MgO','HCl'], p:['MgCl2','H2O'], t:'обмен', n:'MgO + HCl', c:''},
+  {r:['MgO','H2SO4'], p:['MgSO4','H2O'], t:'обмен', n:'MgO + H₂SO₄', c:''},
+  {r:['CaO','HCl'], p:['CaCl2','H2O'], t:'обмен', n:'CaO + HCl', c:''},
+  {r:['CaO','HNO3'], p:['Ca(NO3)2','H2O'], t:'обмен', n:'CaO + HNO₃', c:''},
+  {r:['Na2O','HCl'], p:['NaCl','H2O'], t:'обмен', n:'Na₂O + HCl', c:''},
+  {r:['Fe2O3','HCl'], p:['FeCl3','H2O'], t:'обмен', n:'Fe₂O₃ + HCl', c:''},
+  {r:['Fe2O3','H2SO4'], p:['Fe2(SO4)3','H2O'], t:'обмен', n:'Fe₂O₃ + H₂SO₄', c:''},
+  {r:['FeO','HCl'], p:['FeCl2','H2O'], t:'обмен', n:'FeO + HCl', c:''},
+  {r:['ZnO','HCl'], p:['ZnCl2','H2O'], t:'обмен', n:'ZnO + HCl', c:''},
+  {r:['ZnO','H2SO4'], p:['ZnSO4','H2O'], t:'обмен', n:'ZnO + H₂SO₄', c:''},
+  {r:['Al2O3','HCl'], p:['AlCl3','H2O'], t:'обмен', n:'Al₂O₃ + HCl', c:''},
+  {r:['Al2O3','H2SO4'], p:['Al2(SO4)3','H2O'], t:'обмен', n:'Al₂O₃ + H₂SO₄', c:''},
+  {r:['Al2O3','NaOH'], p:['NaAlO2','H2O'], t:'обмен', n:'Амфотерность', c:'t°'},
 
-  /* ===== РАЗНЫЕ ===== */
   {r:['CaC2','H2O'], p:['Ca(OH)2','C2H2'], t:'обмен', n:'Получение ацетилена', c:''},
   {r:['Al4C3','H2O'], p:['Al(OH)3','CH4'], t:'обмен', n:'Получение метана', c:''},
   {r:['Ca3N2','H2O'], p:['Ca(OH)2','NH3'], t:'обмен', n:'Гидролиз нитрида', c:''},
@@ -1010,14 +941,14 @@ var REACTIONS = [
   {r:['P2O5','NaOH'], p:['Na3PO4','H2O'], t:'обмен', n:'Фосфат натрия', c:''},
   {r:['SO3','Ba(OH)2'], p:['BaSO4','H2O'], t:'обмен', n:'Осадок BaSO₄', c:''},
   {r:['H2S','NaOH'], p:['Na2S','H2O'], t:'обмен', n:'Сульфид натрия', c:''},
-  {r:['H2S','CuSO4'], p:['CuS','H2SO4'], t:'обмен', n:'Чёрный осадок CuS', c:''},
-  {r:['H2S','Pb(NO3)2'], p:['PbS','HNO3'], t:'обмен', n:'Чёрный осадок PbS', c:''},
+  {r:['H2S','CuSO4'], p:['CuS','H2SO4'], t:'обмен', n:'Осадок CuS', c:''},
+  {r:['H2S','Pb(NO3)2'], p:['PbS','HNO3'], t:'обмен', n:'Осадок PbS', c:''},
   {r:['Cl2','NaOH'], p:['NaCl','NaClO','H2O'], t:'обмен', n:'Поглощение хлора', c:'на холоде'},
   {r:['Cl2','KOH'], p:['KCl','KClO','H2O'], t:'обмен', n:'Поглощение хлора', c:'на холоде'},
-  {r:['Cl2','NaBr'], p:['NaCl','Br2'], t:'замещение', n:'Хлор вытесняет бром', c:''},
-  {r:['Cl2','KI'], p:['KCl','I2'], t:'замещение', n:'Хлор вытесняет йод', c:''},
-  {r:['Cl2','KBr'], p:['KCl','Br2'], t:'замещение', n:'Хлор вытесняет бром', c:''},
-  {r:['Br2','KI'], p:['KBr','I2'], t:'замещение', n:'Бром вытесняет йод', c:''},
+  {r:['Cl2','NaBr'], p:['NaCl','Br2'], t:'замещение', n:'Cl₂ вытесняет Br₂', c:''},
+  {r:['Cl2','KI'], p:['KCl','I2'], t:'замещение', n:'Cl₂ вытесняет I₂', c:''},
+  {r:['Cl2','KBr'], p:['KCl','Br2'], t:'замещение', n:'Cl₂ вытесняет Br₂', c:''},
+  {r:['Br2','KI'], p:['KBr','I2'], t:'замещение', n:'Br₂ вытесняет I₂', c:''},
   {r:['I2','H2'], p:['HI'], t:'соединение', n:'Синтез HI', c:'t°'},
   {r:['Fe','Br2'], p:['FeBr3'], t:'соединение', n:'Бромид железа(III)', c:'t°'},
   {r:['Fe','Cl2'], p:['FeCl3'], t:'соединение', n:'Хлорид железа(III)', c:'t°'},
@@ -1027,22 +958,18 @@ var REACTIONS = [
   {r:['Zn','S'], p:['ZnS'], t:'соединение', n:'Сульфид цинка', c:'t°'},
   {r:['Mg','S'], p:['MgS'], t:'соединение', n:'Сульфид магния', c:'t°'},
   {r:['Ca','S'], p:['CaS'], t:'соединение', n:'Сульфид кальция', c:'t°'},
-  {r:['2Na','S'], p:['Na2S'], t:'соединение', n:'Сульфид натрия', c:''},
 
-  /* ===== ДОПОЛНИТЕЛЬНЫЕ 9 класс ===== */
-  {r:['FeS2','O2'], p:['Fe2O3','SO2'], t:'замещение', n:'Обжиг пирита', c:'t° (обжиг)'},
-  {r:['N2','H2'], p:['NH3'], t:'соединение', n:'Синтез аммиака', c:'Fe, 500°C, 300 атм'},
-  {r:['NH3','O2'], p:['NO','H2O'], t:'замещение', n:'Каталитическое окисление аммиака', c:'кат. Pt'},
-  {r:['NH3','O2'], p:['N2','H2O'], t:'замещение', n:'Горение аммиака', c:'без катализатора'},
-  {r:['NH4Cl','Ca(OH)2'], p:['CaCl2','NH3','H2O'], t:'обмен', n:'Лабораторное получение NH₃', c:'t°'},
-  {r:['NH4Cl','CaO'], p:['CaCl2','NH3','H2O'], t:'обмен', n:'Получение аммиака', c:'t°'},
-  {r:['NO2','H2O'], p:['HNO3','NO'], t:'обмен', n:'Поглощение NO₂ водой', c:''},
-  {r:['NO2','NaOH'], p:['NaNO3','NaNO2','H2O'], t:'обмен', n:'Поглощение NO₂ щёлочью', c:''},
-  {r:['SO2','O2','H2O'], p:['H2SO4'], t:'соединение', n:'Промышленное получение H₂SO₄', c:'кат. NO₂'},
-  {r:['KOH','Cl2'], p:['KCl','KClO','H2O'], t:'обмен', n:'Получение жавелевой воды', c:'на холоде'},
-  {r:['Ca','C'], p:['CaC2'], t:'соединение', n:'Карбид кальция', c:'t°'},
-  {r:['CaC2','H2O'], p:['Ca(OH)2','C2H2'], t:'обмен', n:'Ацетилен из карбида', c:''},
-  {r:['C2H2','O2'], p:['CO2','H2O'], t:'горение', n:'Горение ацетилена', c:'t° = 3000°C'},
+  {r:['FeS2','O2'], p:['Fe2O3','SO2'], t:'замещение', n:'Обжиг пирита', c:'t°'},
+  {r:['NH3','O2'], p:['NO','H2O'], t:'замещение', n:'Окисление NH₃ (кат.)', c:'кат. Pt'},
+  {r:['NH3','O2'], p:['N2','H2O'], t:'замещение', n:'Горение NH₃', c:'без кат.'},
+  {r:['NH4Cl','Ca(OH)2'], p:['CaCl2','NH3','H2O'], t:'обмен', n:'Получение NH₃', c:'t°'},
+  {r:['NH4Cl','CaO'], p:['CaCl2','NH3','H2O'], t:'обмен', n:'Получение NH₃', c:'t°'},
+  {r:['NO2','H2O'], p:['HNO3','NO'], t:'обмен', n:'Поглощение NO₂', c:''},
+  {r:['NO2','NaOH'], p:['NaNO3','NaNO2','H2O'], t:'обмен', n:'Поглощение NO₂', c:''},
+  {r:['SO2','O2','H2O'], p:['H2SO4'], t:'соединение', n:'Получение H₂SO₄', c:'кат. NO₂'},
+  {r:['KOH','Cl2'], p:['KCl','KClO','H2O'], t:'обмен', n:'Жавелева вода', c:'на холоде'},
+  {r:['CaC2','H2O'], p:['Ca(OH)2','C2H2'], t:'обмен', n:'Ацетилен', c:''},
+  {r:['C2H2','O2'], p:['CO2','H2O'], t:'горение', n:'Горение ацетилена', c:'t° 3000°C'},
   {r:['CH4','O2'], p:['CO2','H2O'], t:'горение', n:'Горение метана', c:''},
   {r:['C2H6','O2'], p:['CO2','H2O'], t:'горение', n:'Горение этана', c:''},
   {r:['C3H8','O2'], p:['CO2','H2O'], t:'горение', n:'Горение пропана', c:''},
@@ -1050,279 +977,157 @@ var REACTIONS = [
   {r:['C2H5OH','O2'], p:['CO2','H2O'], t:'горение', n:'Горение этанола', c:''},
   {r:['CH3OH','O2'], p:['CO2','H2O'], t:'горение', n:'Горение метанола', c:''},
   {r:['C2H4','O2'], p:['CO2','H2O'], t:'горение', n:'Горение этилена', c:''},
-  {r:['C2H4','Br2'], p:['C2H4Br2'], t:'соединение', n:'Обесцвечивание бромной воды', c:''},
+  {r:['C2H4','Br2'], p:['C2H4Br2'], t:'соединение', n:'Обесцвечивание Br₂', c:''},
   {r:['C2H4','H2'], p:['C2H6'], t:'соединение', n:'Гидрирование этилена', c:'кат. Ni'},
   {r:['C2H4','H2O'], p:['C2H5OH'], t:'соединение', n:'Гидратация этилена', c:'кат., t°'},
-  {r:['C2H2','Br2'], p:['C2H2Br4'], t:'соединение', n:'Присоединение брома', c:''},
+  {r:['C2H2','Br2'], p:['C2H2Br4'], t:'соединение', n:'Присоединение Br₂', c:''},
   {r:['C2H5OH','Na'], p:['C2H5ONa','H2'], t:'замещение', n:'Этилат натрия', c:''},
   {r:['CH3COOH','NaOH'], p:['CH3COONa','H2O'], t:'обмен', n:'Ацетат натрия', c:''},
   {r:['CH3COOH','Mg'], p:['(CH3COO)2Mg','H2'], t:'замещение', n:'Ацетат магния', c:''},
   {r:['CH3COOH','Na2CO3'], p:['CH3COONa','H2O','CO2'], t:'обмен', n:'Уксус + сода', c:''},
-  {r:['CH3COOH','NaHCO3'], p:['CH3COONa','H2O','CO2'], t:'обмен', n:'Уксус + пищевая сода', c:''}
+  {r:['CH3COOH','NaHCO3'], p:['CH3COONa','H2O','CO2'], t:'обмен', n:'Уксус + сода', c:''}
 ];
 
-/* ---------- нормализация формул ---------- */
 function canonFormula(f){
-  /* Убираем пробелы, заменяем индексы на нормальные, приводим к виду H2O */
-  f = f.trim().replace(/\s+/g,'');
-  /* юникодные индексы → обычные цифры */
-  var subs = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
-  f = f.replace(/[₀₁₂₃₄₅₆₇₈₉]/g, function(m){ return subs[m]; });
-  /* Первая буква заглавная, остальные строчные у элементов */
-  f = f.replace(/([A-Za-z]+)/g, function(el){
-    return el.charAt(0).toUpperCase() + el.slice(1).toLowerCase();
-  });
+  f=f.trim().replace(/\s+/g,'');
+  var subs={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
+  f=f.replace(/[₀₁₂₃₄₅₆₇₈₉]/g,function(m){return subs[m];});
+  f=f.replace(/([A-Za-z]+)/g,function(el){return el.charAt(0).toUpperCase()+el.slice(1).toLowerCase();});
   return f;
 }
-
 function splitInput(str){
-  /* Пользователь может ввести реакцию как "H2 + O2 → H2O" или "H2 + O2" */
-  str = str.replace(/->|→|=>|=+/g, '|');
-  var parts = str.split('|');
-  if (parts.length >= 2) {
-    return {
-      left: parts[0].split('+').map(canonFormula).filter(Boolean),
-      right: parts[1].split('+').map(canonFormula).filter(Boolean)
-    };
+  str=str.replace(/->|→|=>|=+/g,'|');
+  var parts=str.split('|');
+  if(parts.length>=2){
+    return{left:parts[0].split('+').map(canonFormula).filter(Boolean),right:parts[1].split('+').map(canonFormula).filter(Boolean)};
   }
-  return {
-    left: str.split('+').map(canonFormula).filter(Boolean),
-    right: []
-  };
+  return{left:str.split('+').map(canonFormula).filter(Boolean),right:[]};
 }
-
-/* ---------- поиск реакции в базе ---------- */
-function findReaction(left, right){
-  /* Сравниваем множества реагентов */
-  function sameSet(a, b){
-    if (a.length !== b.length) return false;
-    var sa = a.slice().sort(), sb = b.slice().sort();
-    for (var i=0; i<sa.length; i++) if (sa[i] !== sb[i]) return false;
-    return true;
-  }
-  for (var i=0; i<REACTIONS.length; i++){
-    var r = REACTIONS[i];
-    /* Точное совпадение реагентов (если справа ничего) */
-    if (right.length === 0){
-      if (sameSet(r.r, left)) return r;
-    } else {
-      /* Совпадение и левой, и правой части */
-      if (sameSet(r.r, left) && sameSet(r.p, right)) return r;
-      /* Или только левая часть — тогда возвращаем первую найденную */
-      if (sameSet(r.r, left)) return r;
+function sameSet(a,b){
+  if(a.length!==b.length) return false;
+  var sa=a.slice().sort(),sb=b.slice().sort();
+  for(var i=0;i<sa.length;i++) if(sa[i]!==sb[i]) return false;
+  return true;
+}
+function findReaction(left,right){
+  for(var i=0;i<REACTIONS.length;i++){
+    var r=REACTIONS[i];
+    if(right.length===0){ if(sameSet(r.r,left)) return r; }
+    else {
+      if(sameSet(r.r,left)&&sameSet(r.p,right)) return r;
+      if(sameSet(r.r,left)) return r;
     }
   }
   return null;
 }
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a||1;}
 
-/* ---------- подбор коэффициентов (метод перебора) ---------- */
-function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a || 1; }
-function lcm(a,b){ return Math.abs(a*b) / gcd(a,b); }
+/* ⚙️ ИСПРАВЛЕННЫЙ подбор коэффициентов */
+function balanceEquation(leftFormulas,rightFormulas){
+  var allElements={};
+  leftFormulas.forEach(function(f){var c=parseFormula(f);Object.keys(c).forEach(function(e){allElements[e]=1;});});
+  rightFormulas.forEach(function(f){var c=parseFormula(f);Object.keys(c).forEach(function(e){allElements[e]=1;});});
+  var elements=Object.keys(allElements);
+  if(elements.length===0) return null;
 
-function countAtoms(formula){
-  var comp = parseFormula(formula);
-  return comp;
-}
+  var leftComp=leftFormulas.map(function(f){return parseFormula(f);});
+  var rightComp=rightFormulas.map(function(f){return parseFormula(f);});
 
-function balanceEquation(leftFormulas, rightFormulas){
-  var allElements = {};
-  leftFormulas.forEach(function(f){ var c = parseFormula(f); Object.keys(c).forEach(function(e){ allElements[e]=1; }); });
-  rightFormulas.forEach(function(f){ var c = parseFormula(f); Object.keys(c).forEach(function(e){ allElements[e]=1; }); });
-  var elements = Object.keys(allElements);
-  if (elements.length === 0) return null;
+  var n=leftFormulas.length+rightFormulas.length;
+  var coef=[];
+  for(var i=0;i<n;i++) coef.push(1);
 
-  var leftComp  = leftFormulas.map(function(f){ return parseFormula(f); });
-  var rightComp = rightFormulas.map(function(f){ return parseFormula(f); });
-
-  var n = leftFormulas.length + rightFormulas.length;
-  var coef = [];
-  for (var i=0; i<n; i++) coef.push(1);
-
-  var maxCoef = 20;
-  var found = null;
+  var maxCoef=20;
+  var found=null;
 
   function checkBalance(){
-    for (var k=0; k<elements.length; k++){
-      var el = elements[k];
-      var leftSum = 0, rightSum = 0;
-      for (var i=0; i<leftComp.length; i++)  leftSum  += (leftComp[i][el]||0)  * coef[i];
-      for (var j=0; j<rightComp.length; j++) rightSum += (rightComp[j][el]||0) * coef[leftComp.length + j];
-      if (leftSum !== rightSum) return false;
+    for(var k=0;k<elements.length;k++){
+      var el=elements[k];
+      var leftSum=0,rightSum=0;
+      for(var i=0;i<leftComp.length;i++) leftSum+=(leftComp[i][el]||0)*coef[i];
+      for(var j=0;j<rightComp.length;j++) rightSum+=(rightComp[j][el]||0)*coef[leftComp.length+j];
+      if(leftSum!==rightSum) return false;
     }
     return true;
   }
 
-  function recurse(idx, usedOne){
-    if (found) return;
-    if (idx === n){
-      if (checkBalance()) found = coef.slice();
+  function recurse(idx,usedOne){
+    if(found) return;
+    if(idx===n){
+      if(checkBalance()) found=coef.slice();
       return;
     }
-    for (var v=1; v<=maxCoef; v++){
-      if (!usedOne && v > 1 && idx < n - 1) continue;
-      coef[idx] = v;
-      recurse(idx + 1, usedOne || v === 1);
-      if (found) return;
+    for(var v=1;v<=maxCoef;v++){
+      if(!usedOne && v>1 && idx<n-1) continue;
+      coef[idx]=v;
+      recurse(idx+1,usedOne||v===1);
+      if(found) return;
     }
   }
-  recurse(0, false);
+  recurse(0,false);
 
-  if (!found) return null;
-  var g = found.reduce(function(a,b){ return gcd(a,b); });
-  if (g > 1) found = found.map(function(x){ return x/g; });
-  return found;
-}
-  }
-  recurse(0, false);
-
-  if (!found) return null;
-  var g = found.reduce(function(a,b){ return gcd(a,b); });
-  if (g > 1) found = found.map(function(x){ return x/g; });
-  return found;
-}
-      return true;
-    }
-    return false;
-  }
-
-  /* Рекурсивный перебор */
-  function recurse(idx){
-    if (found) return;
-    if (idx === n){
-      if (tryCombination(0)) found = coef.slice();
-      return;
-    }
-    for (var v=1; v<=maxCoef; v++){
-      coef[idx] = v;
-      recurse(idx+1);
-      if (found) return;
-    }
-  }
-  recurse(0);
-
-  if (!found) return null;
-  /* Проверяем на НОД */
-  var g = found.reduce(function(a,b){ return gcd(a,b); });
-  if (g > 1) found = found.map(function(x){ return x/g; });
+  if(!found) return null;
+  var g=found.reduce(function(a,b){return gcd(a,b);});
+  if(g>1) found=found.map(function(x){return x/g;});
   return found;
 }
 
-/* ---------- форматирование ---------- */
+/* 🎨 ФОРМАТИРОВАНИЕ: индексы → <sub>, коэффициенты → большие */
 function formatFormula(f){
-  return String(f).replace(/([A-Za-z\)])(\d+)/g, '$1<sub>$2</sub>');
+  return String(f).replace(/([A-Za-z\)])(\d+)/g,'$1<sub>$2</sub>');
 }
-
-function formatEquation(left, right, coefs, arrow){
-  function fmtList(formulas, coefs){
-    return formulas.map(function(f, i){
-      var c = coefs ? coefs[i] : 1;
-      var coefStr = (c === 1 ? '' : '<span class="coef">' + c + '</span>');
-      return coefStr + formatFormula(f);
+function formatEquation(left,right,coefs,arrow){
+  function fmtList(formulas,coefs){
+    return formulas.map(function(f,i){
+      var c=coefs?coefs[i]:1;
+      var coefStr=(c===1?'':'<span class="coef">'+c+'</span>');
+      return coefStr+formatFormula(f);
     }).join(' + ');
   }
-  var leftCoefs  = coefs ? coefs.slice(0, left.length) : null;
-  var rightCoefs = coefs ? coefs.slice(left.length) : null;
-  return fmtList(left, leftCoefs) +
-    ' <span class="arrow">' + (arrow || '→') + '</span> ' +
-    fmtList(right, rightCoefs);
+  var leftCoefs=coefs?coefs.slice(0,left.length):null;
+  var rightCoefs=coefs?coefs.slice(left.length):null;
+  return fmtList(left,leftCoefs)+' <span class="arrow">'+(arrow||'→')+'</span> '+fmtList(right,rightCoefs);
 }
-/* ---------- основной обработчик ---------- */
+function checkOVR(left,right){
+  var simpleLeft=left.some(function(f){return Object.keys(parseFormula(f)).length===1;});
+  var simpleRight=right.some(function(f){return Object.keys(parseFormula(f)).length===1;});
+  var hasEl=left.some(function(f){return ['O2','H2','Cl2','N2','S','C','Fe','Cu','Zn','Mg','Al','Na','K'].indexOf(f)!==-1;});
+  return simpleLeft||simpleRight||hasEl;
+}
 function handleEquation(){
-  var input = document.getElementById('eqInput').value.trim();
-  var result = document.getElementById('eqResult');
-  result.style.display = 'block';
-  result.innerHTML = '';
-
-  if (!input){
-    result.innerHTML = '<div class="not-found">⚠ Введи реакцию или реагенты.</div>';
-    return;
-  }
-
-  var parsed = splitInput(input);
-  if (parsed.left.length === 0){
-    result.innerHTML = '<div class="not-found">⚠ Не удалось разобрать ввод.</div>';
-    return;
-  }
-
-  /* Ищем в базе */
-  var reaction = findReaction(parsed.left, parsed.right);
-  var leftFormulas, rightFormulas, type, name, cond;
-
-  if (reaction){
-    leftFormulas = reaction.r;
-    rightFormulas = reaction.p;
-    type = reaction.t;
-    name = reaction.n;
-    cond = reaction.c || '';
-  } else if (parsed.right.length > 0){
-    leftFormulas = parsed.left;
-    rightFormulas = parsed.right;
-    type = 'неизвестный';
-    name = 'Реакция не найдена в базе, но коэффициенты подобраны автоматически';
-    cond = '';
+  var input=document.getElementById('eqInput').value.trim();
+  var result=document.getElementById('eqResult');
+  result.style.display='block';
+  result.innerHTML='';
+  if(!input){result.innerHTML='<div class="not-found">⚠ Введи реакцию или реагенты.</div>';return;}
+  var parsed=splitInput(input);
+  if(parsed.left.length===0){result.innerHTML='<div class="not-found">⚠ Не удалось разобрать ввод.</div>';return;}
+  var reaction=findReaction(parsed.left,parsed.right);
+  var leftFormulas,rightFormulas,type,name,cond;
+  if(reaction){
+    leftFormulas=reaction.r;rightFormulas=reaction.p;type=reaction.t;name=reaction.n;cond=reaction.c||'';
+  } else if(parsed.right.length>0){
+    leftFormulas=parsed.left;rightFormulas=parsed.right;type='неизвестный';
+    name='Реакция не найдена в базе, но коэффициенты подобраны автоматически';cond='';
   } else {
-    result.innerHTML = '<div class="not-found">❌ Эта реакция не найдена в базе.<br><small>Попробуй ввести продукты вручную: ' +
-      parsed.left.join(' + ') + ' → ...</small></div>';
+    result.innerHTML='<div class="not-found">❌ Эта реакция не найдена в базе.<br><small>Введи продукты вручную: '+parsed.left.join(' + ')+' → ...</small></div>';
     return;
   }
-
-  /* Подбираем коэффициенты */
-  var coefs = balanceEquation(leftFormulas, rightFormulas);
-
-  /* Формируем вывод */
-  var arrow = '→';
-  var equationHTML;
-  if (coefs){
-    equationHTML = formatEquation(leftFormulas, rightFormulas, coefs, arrow);
-  } else {
-    equationHTML = formatEquation(leftFormulas, rightFormulas, null, arrow);
-  }
-
-  /* Анализ реакции */
-  var isOVR = checkOVR(leftFormulas, rightFormulas);
-
-  var html = '<div class="eq-output">' + equationHTML + '</div>';
-
-  html += '<div class="eq-info">';
-  html += '<div class="lbl">📌 Тип реакции</div>';
-  html += 'По числу веществ: <b>' + type + '</b><br>';
-  if (cond) html += 'Условия: <b>' + cond + '</b><br>';
-  html += 'Окислительно-восстановительная: <b>' + (isOVR ? 'да' : 'нет') + '</b>';
-  html += '</div>';
-
-  if (name){
-    html += '<div class="eq-info" style="background:#fef3c7;border-color:#fcd34d;">';
-    html += '<div class="lbl" style="color:#92400e;">💡 Пояснение</div>';
-    html += name;
-    html += '</div>';
-  }
-
-  if (!coefs){
-    html += '<div class="eq-info" style="background:#fee2e2;border-color:#fca5a5;">';
-    html += '<div class="lbl" style="color:#991b1b;">⚠ Коэффициенты не подобраны</div>';
-    html += 'Автоматический подбор не удался. Попробуй проверить формулу.';
-    html += '</div>';
-  }
-
-  result.innerHTML = html;
+  var coefs=balanceEquation(leftFormulas,rightFormulas);
+  var equationHTML=formatEquation(leftFormulas,rightFormulas,coefs,'→');
+  var isOVR=checkOVR(leftFormulas,rightFormulas);
+  var html='<div class="eq-output">'+equationHTML+'</div>';
+  html+='<div class="eq-info"><div class="lbl">📌 Тип реакции</div>';
+  html+='По числу веществ: <b>'+type+'</b><br>';
+  if(cond) html+='Условия: <b>'+cond+'</b><br>';
+  html+='Окислительно-восстановительная: <b>'+(isOVR?'да':'нет')+'</b></div>';
+  if(name){html+='<div class="eq-info" style="background:#fef3c7;border-color:#fcd34d;"><div class="lbl" style="color:#92400e;">💡 Пояснение</div>'+name+'</div>';}
+  if(!coefs){html+='<div class="eq-info" style="background:#fee2e2;border-color:#fca5a5;"><div class="lbl" style="color:#991b1b;">⚠ Коэффициенты не подобраны</div>Проверь формулы.</div>';}
+  result.innerHTML=html;
 }
-
-/* Проверка: ОВР или нет (по металлам в левой части) */
-function checkOVR(left, right){
-  /* Простая эвристика: если в реакции есть простое вещество + сложное → вероятно ОВР */
-  var simpleLeft = left.some(function(f){ return Object.keys(parseFormula(f)).length === 1; });
-  var simpleRight = right.some(function(f){ return Object.keys(parseFormula(f)).length === 1; });
-  var hasO2H2Hal = left.some(function(f){
-    return f === 'O2' || f === 'H2' || f === 'Cl2' || f === 'N2' || f === 'S' || f === 'C' || f === 'Fe' || f === 'Cu' || f === 'Zn' || f === 'Mg' || f === 'Al' || f === 'Na' || f === 'K';
-  });
-  return simpleLeft || simpleRight || hasO2H2Hal;
-}
-
-document.getElementById('eqBtn').addEventListener('click', handleEquation);
-document.getElementById('eqInput').addEventListener('keydown', function(e){
-  if (e.key === 'Enter') handleEquation();
-});
-  /* ============================================================
+document.getElementById('eqBtn').addEventListener('click',handleEquation);
+document.getElementById('eqInput').addEventListener('keydown',function(e){if(e.key==='Enter')handleEquation();});
+/* ============================================================
    9 КЛАСС — ГЛАВА 1 (§1-§3)
    ============================================================ */
 PAGES['ch9-1-1'] = {
@@ -1521,7 +1326,6 @@ PAGES['ch9-1-3'] = {
   </div>
 </div>`
 };
-
 /* ============================================================
    9 КЛАСС — ГЛАВА 2 (§1-§6)
    ============================================================ */
@@ -1804,8 +1608,8 @@ PAGES['ch9-2-6'] = {
   </div>
 </div>`
 };
-  /* ============================================================
-   9 КЛАСС — ГЛАВА 3 (§1-§11)
+/* ============================================================
+   9 КЛАСС — ГЛАВА 3 (§1-§21)
    ============================================================ */
 PAGES['ch9-3-1'] = {
   title: '§1. Общая характеристика неметаллов',
@@ -2225,9 +2029,7 @@ PAGES['ch9-3-11'] = {
   </div>
 </div>`
 };
-  /* ============================================================
-   9 КЛАСС — ГЛАВА 3 (§12-§21)
-   ============================================================ */
+
 PAGES['ch9-3-12'] = {
   title: '§12. Кислородные соединения азота',
   sub: 'Оксиды азота, HNO₃, нитраты',
@@ -2616,7 +2418,7 @@ PAGES['ch9-3-21'] = {
   </div>
 </div>`
 };
-  /* ============================================================
+/* ============================================================
    9 КЛАСС — ГЛАВА 4 (§1-§9)
    ============================================================ */
 PAGES['ch9-4-1'] = {
@@ -3190,7 +2992,7 @@ PAGES['ch9-6-5'] = {
   <p class="paragraph"><b>Э:</b> электролит, электролитическая диссоциация, электроотрицательность.</p>
 </div>`
 };
-  /* ============================================================
+/* ============================================================
    8 КЛАСС — ГЛАВА 1 (§1-§12)
    ============================================================ */
 PAGES['ch8-1-1'] = {
@@ -4202,7 +4004,7 @@ PAGES['ch8-2-11'] = {
   </div>
 </div>`
 };
-  /* ============================================================
+/* ============================================================
    8 КЛАСС — ГЛАВА 3 (§1-§5)
    ============================================================ */
 PAGES['ch8-3-1'] = {
@@ -4848,8 +4650,11 @@ PAGES['ch8-5-6'] = {
   </div>
 </div>`
 };
-renderContents('toc9', CHAPTERS9, '9');
-  </script>
 
+/* ============ ИНИЦИАЛИЗАЦИЯ ============ */
+renderContents('toc8', CHAPTERS8);
+renderContents('toc9', CHAPTERS9);
+</script>
 </body>
 </html>
+  
