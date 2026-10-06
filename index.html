@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Химия 8–9 класс — Помощник и Теория</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>🧪 Химия 8–9 класс</h1>
+      <div class="header-buttons">
+        <button id="theoryBtn" class="header-btn">📚 Теория</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="chat-section">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            <div class="bubble">
+              Привет! Я помогу с химией за 8–9 класс.
+              Попробуй написать:
+              • «уравняй H2 + O2 = H2O»
+              • «тип реакции 2H2 + O2 = 2H2O»
+              • «связь в NaCl»
+              • «покажи решётку NaCl»
+              • «объясни валентность»
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-buttons">
+          <button data-cmd="уравняй H2 + O2 = H2O">Уравнять</button>
+          <button data-cmd="тип реакции 2H2 + O2 = 2H2O">Тип реакции</button>
+          <button data-cmd="связь в NaCl">Тип связи</button>
+          <button data-cmd="покажи решётку NaCl">Решётка</button>
+          <button data-cmd="объясни валентность">Объяснить</button>
+        </div>
+
+        <form class="chat-input" id="chatForm">
+          <input type="text" id="userInput" placeholder="Напиши вопрос или формулу..." autocomplete="off">
+          <button type="submit">Отправить</button>
+        </form>
+      </section>
+
+      <section class="crystal-section">
+        <div class="crystal-header">
+          <h3 id="crystalTitle">Кристаллическая решётка</h3>
+          <p id="crystalDesc">Спроси: «покажи решётку NaCl» или «покажи алмаз»</p>
+        </div>
+        <div id="crystalContainer"></div>
+        <div class="crystal-legend" id="crystalLegend"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Модальное окно теории -->
+  <div id="theoryModal" class="modal">
+    <div class="modal-content">
+      <button id="theoryClose" class="modal-close">×</button>
+      <div class="grade-tabs">
+        <button class="grade-btn active" data-grade="8">8 класс</button>
+        <button class="grade-btn" data-grade="9">9 класс</button>
+      </div>
+      <div id="theoryContent"></div>
+    </div>
+  </div>
+
+  <script type="module" src="assistant.js"></script>
+</body>
+</html>
