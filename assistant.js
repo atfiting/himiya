@@ -8,6 +8,7 @@ import {
   KNOWLEDGE
 } from './chem.js';
 import { THEORY } from './theory-data.js';
+import { CHAPTERS } from './theory-chapters.js';
 
 const chatMessages = document.getElementById('chatMessages');
 const chatForm = document.getElementById('chatForm');
@@ -196,21 +197,33 @@ gradeBtns.forEach(btn => {
 });
 
 function renderTheoryList(grade) {
-  const paragraphs = Object.entries(THEORY).filter(([key, val]) => val.grade === grade);
+  const chapters = CHAPTERS[grade];
+  if (!chapters) return;
 
-  let html = `<h2>${grade} класс — выберите параграф</h2><div class="theory-list">`;
-  paragraphs.forEach(([key, val]) => {
-    html += `
-      <div class="theory-item">
-        <div class="theory-item-title">${val.title}</div>
-        <div class="theory-item-actions">
-          <button class="theory-open-btn" data-key="${key}">📖 Теория</button>
-          ${val.video ? `<a href="${val.video}" target="_blank" class="video-btn">🎬 Видео Урок</a>` : ''}
+  let html = `<h2 style="font-family:'Times New Roman';color:#3d2914;margin-bottom:16px;">${grade} класс</h2>`;
+
+  chapters.forEach(chapter => {
+    html += `<div class="chapter">`;
+    html += `<div class="chapter-title">${chapter.title}</div>`;
+    html += `<div class="chapter-body">`;
+
+    chapter.paragraphs.forEach(key => {
+      const item = THEORY[key];
+      if (!item) return;
+      html += `
+        <div class="theory-item">
+          <div class="theory-item-title">${item.title}</div>
+          <div class="theory-item-actions">
+            <button class="theory-open-btn" data-key="${key}">📖 Теория</button>
+            ${item.video ? `<a href="${item.video}" target="_blank" class="video-btn">🎬 Видео</a>` : ''}
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    });
+
+    html += `</div></div>`;
   });
-  html += '</div>';
+
   theoryContent.innerHTML = html;
 
   document.querySelectorAll('.theory-open-btn').forEach(btn => {
@@ -219,7 +232,7 @@ function renderTheoryList(grade) {
       const item = THEORY[key];
       theoryContent.innerHTML = `
         <button class="theory-back-btn">← Назад к списку</button>
-        <h2>${item.title}</h2>
+        <h2 style="font-family:'Times New Roman';color:#3d2914;margin-bottom:8px;">${item.title}</h2>
         <div class="theory-body">${item.text}</div>
         ${item.video ? `<a href="${item.video}" target="_blank" class="video-btn large">🎬 Видео Урок по теме</a>` : '<p class="no-video">Видеоурок пока не добавлен</p>'}
       `;
