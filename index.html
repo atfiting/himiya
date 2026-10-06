@@ -21,7 +21,6 @@
   </div>
 </div>
 
-<!-- ============ ГЛАВНАЯ ============ -->
 <section class="page active" id="page-home">
   <div class="wrap">
     <div class="page-head">
@@ -32,16 +31,15 @@
     <div class="card">
       <div class="card-title"><span class="num">📖</span> Что тут есть</div>
       <ul class="theory-list">
-        <li><b>8 класс</b> — все главы и параграфы с теорией.</li>
-        <li><b>9 класс</b> — все главы и параграфы с теорией.</li>
-        <li><b>Анализатор</b> — введи формулу, узнаешь состав, тип связи, решётку.</li>
+        <li><b>8 класс</b> — все главы и параграфы.</li>
+        <li><b>9 класс</b> — все главы и параграфы.</li>
+        <li><b>Анализатор</b> — формула, состав, тип связи, решётка.</li>
         <li><b>Помощник</b> — уравнивает реакции, строит 3D-решётки.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- ============ ОГЛАВЛЕНИЕ 8 ============ -->
 <section class="page" id="page-contents8">
   <div class="wrap">
     <div class="page-head">
@@ -53,7 +51,6 @@
   </div>
 </section>
 
-<!-- ============ ОГЛАВЛЕНИЕ 9 ============ -->
 <section class="page" id="page-contents9">
   <div class="wrap">
     <div class="page-head">
@@ -65,7 +62,6 @@
   </div>
 </section>
 
-<!-- ============ ПРОСМОТР ПАРАГРАФА ============ -->
 <section class="page" id="page-viewer">
   <div class="wrap">
     <button class="back-btn" onclick="backFromViewer()">← Назад к содержанию</button>
@@ -73,27 +69,24 @@
   </div>
 </section>
 
-<!-- ============ АНАЛИЗАТОР ============ -->
 <section class="page" id="page-analyzer">
   <div class="wrap">
     <div class="page-head">
       <h1>Анализатор веществ</h1>
-      <p>Введи формулу или название вещества</p>
+      <p>Введи формулу или название</p>
       <div class="accent-line"></div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="num">🔍</span> Введи формулу</div>
+      <div class="card-title"><span class="num">🔍</span> Формула или название</div>
       <div class="input-group">
         <input type="text" id="analyzerInput" placeholder="Например: NaCl, H2SO4, вода, сода">
         <button class="go-btn" onclick="runAnalyzer()">Анализировать</button>
       </div>
-      <div class="hint">Можно писать формулу или тривиальное название</div>
     </div>
     <div id="analyzerResult"></div>
   </div>
 </section>
 
-<!-- ============ ПОМОЩНИК ============ -->
 <section class="page" id="page-assistant">
   <div class="wrap">
     <div class="page-head">
@@ -101,18 +94,15 @@
       <p>Уравниваю реакции, строю кристаллические решётки</p>
       <div class="accent-line"></div>
     </div>
-
     <div class="card">
-      <div class="card-title"><span class="num">1</span> Что нужно сделать?</div>
+      <div class="card-title"><span class="num">1</span> Введи задачу</div>
       <div class="input-group">
         <input type="text" id="assistantInput" placeholder="Al + O2 = Al2O3   или   покажи NaCl">
         <button class="go-btn" onclick="assistantRun()">Выполнить</button>
       </div>
       <div class="hint">Примеры: «H2 + O2 = H2O», «покажи решётку NaCl», «решётка алмаз»</div>
     </div>
-
     <div id="assistantResult"></div>
-
     <div class="card" id="assistantLatticeCard" style="display:none">
       <div class="card-title" id="assistantLatticeTitle"><span class="num">💎</span> Кристаллическая решётка</div>
       <div id="assistantLatticeCanvas" style="height:420px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#f8fafc,#dbe4f5);border:1px solid var(--border);position:relative"></div>
