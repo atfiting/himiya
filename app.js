@@ -134,19 +134,17 @@ var SUBSTANCES = [
   {formula:"C2H4",name:"Этилен",composition:{C:2,H:4},aliases:[],note:"Молекулярная."},
   {formula:"C2H2",name:"Ацетилен",composition:{C:2,H:2},aliases:[],note:"Молекулярная."},
   {formula:"C6H6",name:"Бензол",composition:{C:6,H:6},aliases:[],note:"Молекулярная."},
-  {formula:"C2H5OH",name:"Этанол",composition:{C:2,H:6,O:1},aliases:["спирт","этиловый спирт"],note:"Молекулярная."},
+  {formula:"C2H5OH",name:"Этанол",composition:{C:2,H:6,O:1},aliases:["спирт"],note:"Молекулярная."},
   {formula:"CH3OH",name:"Метанол",composition:{C:1,H:4,O:1},aliases:["метиловый спирт"],note:"Молекулярная."},
   {formula:"C3H8O3",name:"Глицерин",composition:{C:3,H:8,O:3},aliases:[],note:"Молекулярная."},
   {formula:"C3H6O",name:"Ацетон",composition:{C:3,H:6,O:1},aliases:[],note:"Молекулярная."},
-  {formula:"CH2O",name:"Формальдегид",composition:{C:1,H:2,O:1},aliases:["формалин"],note:"Молекулярная."},
-  {formula:"CO(NH2)2",name:"Мочевина",composition:{C:1,O:1,N:2,H:4},aliases:["карбамид"],note:"Молекулярная."},
   {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная."},
   {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная."},
   {formula:"SiC",name:"Карбид кремния",composition:{Si:1,C:1},aliases:["карборунд"],note:"Атомная решётка."},
   {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
 ];
 
-/* ==================== УТИЛИТЫ ==================== */
+/* ==================== ПАРСЕР ==================== */
 function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
 function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
 
@@ -343,7 +341,7 @@ var CHAPTERS9 = [
     {id:'ch9-3-13', num:'13', title:'Фосфор и его соединения'},
     {id:'ch9-3-14', num:'14', title:'Углерод'},
     {id:'ch9-3-15', num:'15', title:'Кислородные соединения углерода'},
-    {id:'ch9-3-16', num:'16', title:'Получение CO₂'},
+    {id:'ch9-3-16', num:'16', title:'Получение CO2'},
     {id:'ch9-3-17', num:'17', title:'Углеводороды'},
     {id:'ch9-3-18', num:'18', title:'Кислородсодержащие органические'},
     {id:'ch9-3-19', num:'19', title:'Кремний и его соединения'},
@@ -381,8 +379,6 @@ function renderContents(containerId, chapters){
   document.getElementById(containerId).innerHTML = html;
 }
 
-document.getElementById('contents8List').innerHTML = '';
-document.getElementById('contents9List').innerHTML = '';
 renderContents('contents8List', CHAPTERS8);
 renderContents('contents9List', CHAPTERS9);
 
@@ -397,37 +393,19 @@ function openPage(id){
     document.getElementById('viewerContainer').innerHTML =
       '<div class="para-title">Параграф</div>' +
       '<div class="para-sub">Теория для этого параграфа ещё не добавлена</div>' +
-      '<div class="note">Ты можешь добавить текст в объект PAGES в app.js</div>';
+      '<div class="note">Добавь текст в объект PAGES в app.js</div>';
     lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
     showPage('viewer');
     return;
   }
-  var container = document.getElementById('viewerContainer');
-  container.innerHTML = '<div class="para-title">' + page.title + '</div>' +
+  document.getElementById('viewerContainer').innerHTML =
+    '<div class="para-title">' + page.title + '</div>' +
     (page.sub ? '<div class="para-sub">' + page.sub + '</div>' : '') + page.html;
   lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
   showPage('viewer');
 }
 
 /* ==================== УРАВНИВАНИЕ ==================== */
-var ELEMENTS_LIST = ['Ac','Ag','Al','Am','Ar','As','At','Au','B','Ba','Be','Bh','Bi','Bk','Br','C','Ca','Cd','Ce','Cf','Cl','Cm','Cn','Co','Cr','Cs','Cu','Db','Ds','Dy','Er','Es','Eu','F','Fe','Fl','Fm','Fr','Ga','Gd','Ge','H','He','Hf','Hg','Ho','Hs','I','In','Ir','K','Kr','La','Li','Lr','Lu','Lv','Mc','Md','Mg','Mn','Mo','Mt','N','Na','Nb','Nd','Ne','Nh','Ni','No','Np','O','Og','Os','P','Pa','Pb','Pd','Pm','Po','Pr','Pt','Pu','Ra','Rb','Re','Rf','Rg','Rh','Rn','Ru','S','Sb','Sc','Se','Sg','Si','Sm','Sn','Sr','Ta','Tb','Tc','Te','Th','Ti','Tl','Tm','Ts','U','V','W','Xe','Y','Yb','Zn','Zr'];
-
-function parseAtoms(formula){
-  var f = formula.replace(/\s/g,'');
-  if(!f) return {};
-  var parts = f.split(/[·*]/);
-  var total = {};
-  for(var p=0;p<parts.length;p++){
-    var part = parts[p];
-    var m = part.match(/^(\d+)(.*)$/);
-    var mult = 1, body = part;
-    if(m){ mult = parseInt(m[1]); body = m[2]; }
-    var group = parseGroup(body);
-    for(var el in group) total[el] = (total[el]||0) + group[el]*mult;
-  }
-  return total;
-}
-
 function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a; }
 
 function balanceEquation(equation){
@@ -447,7 +425,7 @@ function balanceEquation(equation){
       var m = p.match(/^(\d*)\s*(.+)$/);
       var coef = m[1] ? parseInt(m[1]) : 1;
       var formula = m[2].trim();
-      return { coef: coef, formula: formula, atoms: parseAtoms(formula) };
+      return { coef: coef, formula: formula, atoms: parseFormula(formula) };
     }
     var leftParsed = leftParts.map(parsePart);
     var rightParsed = rightParts.map(parsePart);
@@ -490,8 +468,7 @@ function balanceEquation(equation){
       success: true,
       left: buildSide(leftParsed, 0),
       right: buildSide(rightParsed, leftParsed.length),
-      coefs: finalCoefs,
-      elements: elements
+      coefs: finalCoefs
     };
   }catch(err){
     return {error:'Ошибка: '+err.message};
@@ -542,9 +519,9 @@ function nullSpace(matrix, nCols){
 var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
 
 var LATTICE_DB = {
-  'NaCl':{name:'Хлорид натрия (NaCl)',type:'Ионная',system:'ГЦК',desc:'Каждый Na⁺ окружён 6 Cl⁻. Координационное число 6.',
+  'NaCl':{name:'Хлорид натрия (NaCl)',type:'Ионная',system:'ГЦК',desc:'Каждый Na+ окружён 6 Cl-. Координационное число 6.',
     ions:[{el:'Na',charge:'+',color:0x4f46e5,radius:0.28,pos:'fcc'},{el:'Cl',charge:'-',color:0x10b981,radius:0.42,pos:'octa'}]},
-  'CsCl':{name:'Хлорид цезия (CsCl)',type:'Ионная',system:'Примитивная кубическая',desc:'Cs⁺ в центре куба, 8 Cl⁻ по вершинам.',
+  'CsCl':{name:'Хлорид цезия (CsCl)',type:'Ионная',system:'Примитивная кубическая',desc:'Cs+ в центре куба, 8 Cl- по вершинам.',
     ions:[{el:'Cs',charge:'+',color:0xf59e0b,radius:0.38,pos:[[0.5,0.5,0.5]]},{el:'Cl',charge:'-',color:0x10b981,radius:0.4,pos:'corners'}]},
   'diamond':{name:'Алмаз (C)',type:'Атомная',system:'Тетраэдрическая',desc:'Каждый атом C связан с 4 другими.',
     ions:[{el:'C',charge:'',color:0x334155,radius:0.22,pos:'diamond'}]},
@@ -668,11 +645,11 @@ function buildLattice(containerId, substance){
         var dx=allAtoms[a][0]-allAtoms[b][0], dy=allAtoms[a][1]-allAtoms[b][1], dz=allAtoms[a][2]-allAtoms[b][2];
         var dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
         if(dist < 1.1 && dist > 0.05){
-          var g = new THREE.BufferGeometry().setFromPoints([
+          var g2 = new THREE.BufferGeometry().setFromPoints([
             new THREE.Vector3(allAtoms[a][0], allAtoms[a][1], allAtoms[a][2]),
             new THREE.Vector3(allAtoms[b][0], allAtoms[b][1], allAtoms[b][2])
           ]);
-          var line = new THREE.Line(g, lineMat);
+          var line = new THREE.Line(g2, lineMat);
           _latticeScene.add(line);
           _latticeMeshes.push(line);
         }
@@ -735,7 +712,7 @@ function assistantRun(){
       var color = '#' + ion.color.toString(16).padStart(6,'0');
       latticeLegend.innerHTML += '<div class="legend-item"><span class="legend-dot" style="background:'+color+'"></span><span>'+ion.el+ion.charge+'</span></div>';
     });
-    setTimeout(function(){ buildLattice('assistantLatticeCanvas', sub); }, 50);
+    setTimeout(function(){ buildLattice('assistantLatticeCanvas', sub); }, 80);
     return;
   }
 
