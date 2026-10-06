@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Химия 8–9 класс</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
@@ -31,8 +31,8 @@
     <div class="card">
       <div class="card-title"><span class="num">📖</span> Что тут есть</div>
       <ul class="theory-list">
-        <li><b>8 класс</b> — все главы и параграфы.</li>
-        <li><b>9 класс</b> — все главы и параграфы.</li>
+        <li><b>8 класс</b> — все главы и параграфы с теорией.</li>
+        <li><b>9 класс</b> — все главы и параграфы с теорией.</li>
         <li><b>Анализатор</b> — формула, состав, тип связи, решётка.</li>
         <li><b>Помощник</b> — уравнивает реакции, строит 3D-решётки.</li>
       </ul>
@@ -97,10 +97,10 @@
     <div class="card">
       <div class="card-title"><span class="num">1</span> Введи задачу</div>
       <div class="input-group">
-        <input type="text" id="assistantInput" placeholder="Al + O2 = Al2O3   или   покажи NaCl">
+        <input type="text" id="assistantInput" placeholder="Al + O2 = Al2O3   или   NaCl">
         <button class="go-btn" onclick="assistantRun()">Выполнить</button>
       </div>
-      <div class="hint">Примеры: «H2 + O2 = H2O», «покажи решётку NaCl», «решётка алмаз»</div>
+      <div class="hint">Примеры: «H2 + O2 = H2O», «NaCl», «алмаз», «графит»</div>
     </div>
     <div id="assistantResult"></div>
     <div class="card" id="assistantLatticeCard" style="display:none">
