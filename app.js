@@ -385,7 +385,407 @@ renderContents('contents9List', CHAPTERS9);
 var lastContentsPage = 'contents9';
 function backFromViewer(){ showPage(lastContentsPage); }
 
-var PAGES = {};
+var PAGES = {
+
+  /* ==================== 8 КЛАСС · ГЛАВА 1 ==================== */
+  'ch8-1-1': {
+    title: '§ 1. Предмет химии. Роль химии в жизни человека',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition">
+        <span class="term">Химия</span>
+        — наука о веществах, их свойствах, превращениях и явлениях, которые сопровождают эти превращения.
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">📖</span> Что изучает химия</div>
+        <ul class="theory-list">
+          <li><b>Вещества</b> — то, из чего состоят физические тела.</li>
+          <li><b>Свойства веществ</b> — признаки, по которым одни вещества отличаются от других.</li>
+          <li><b>Химические реакции</b> — превращения одних веществ в другие.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">⚛️</span> Основные понятия</div>
+        <div class="definition"><span class="term">Атом</span> — мельчайшая химически неделимая частица вещества.</div>
+        <div class="definition"><span class="term">Молекула</span> — мельчайшая частица вещества, обладающая его химическими свойствами.</div>
+        <div class="definition"><span class="term">Химический элемент</span> — вид атомов с одинаковым зарядом ядра.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🌍</span> Роль химии в жизни</div>
+        <p class="paragraph">Химия окружает нас повсюду: лекарства, продукты питания, строительные материалы, топливо, одежда, моющие средства. Без химии невозможно представить современную медицину, сельское хозяйство, промышленность.</p>
+        <div class="example-box">
+          <div class="lbl">Примеры</div>
+          <b>H₂O</b> — вода · <b>O₂</b> — кислород · <b>CO₂</b> — углекислый газ · <b>NaCl</b> — поваренная соль.
+        </div>
+      </div>
+
+      <div class="task-box">
+        <div class="lbl">Проверь себя</div>
+        1. Что такое химия?<br>
+        2. Чем отличается атом от молекулы?<br>
+        3. Что такое химический элемент?
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-2': {
+    title: '§ 2. Методы изучения химии',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="card">
+        <div class="card-title"><span class="num">🔬</span> Основные методы</div>
+        <div class="definition"><span class="term">Наблюдение</span> — целенаправленное восприятие предметов и явлений с помощью органов чувств.</div>
+        <div class="definition"><span class="term">Эксперимент</span> — метод познания, при котором явление изучают в специально созданных условиях.</div>
+        <div class="definition"><span class="term">Моделирование</span> — метод познания, при котором изучают не сам объект, а его модель.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">⚠️</span> Правила безопасности в лаборатории</div>
+        <ul class="theory-list">
+          <li>Работать в халате и перчатках.</li>
+          <li>Не пробовать вещества на вкус.</li>
+          <li>Не наклоняться над сосудом с жидкостью.</li>
+          <li>Тушить огонь песком или одеялом.</li>
+          <li>Работать с кислотами и щелочами осторожно.</li>
+        </ul>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Пример эксперимента</div>
+        Взаимодействие соды с уксусом: выделяется углекислый газ — наблюдаем пузырьки.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-3': {
+    title: '§ 3. Агрегатные состояния веществ',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="paragraph">Одно и то же вещество может находиться в трёх агрегатных состояниях — в зависимости от температуры и давления.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">❄️</span> Твёрдое состояние</div>
+        <p class="paragraph">Сохраняет форму и объём. Частицы расположены упорядоченно, в узлах кристаллической решётки. Пример: лёд, NaCl, Fe.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">💧</span> Жидкое состояние</div>
+        <p class="paragraph">Сохраняет объём, но не форму. Частицы расположены близко, но беспорядочно. Пример: вода, спирт, ртуть.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">💨</span> Газообразное состояние</div>
+        <p class="paragraph">Не сохраняет ни форму, ни объём. Расстояния между частицами во много раз больше самих частиц. Пример: O₂, CO₂, N₂.</p>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Переходы</div>
+        <b>Плавление</b> — твёрдое → жидкое · <b>Кристаллизация</b> — жидкое → твёрдое<br>
+        <b>Парообразование</b> — жидкое → газ · <b>Конденсация</b> — газ → жидкое
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-4': {
+    title: '§ 4. Физические явления — основа разделения смесей',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Физические явления</span> — явления, при которых изменяются агрегатное состояние, форма или размеры тела, но состав вещества остаётся неизменным.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">⚗️</span> Способы разделения смесей</div>
+        <ul class="theory-list">
+          <li><b>Отстаивание</b> — для разделения нерастворимых веществ.</li>
+          <li><b>Фильтрование</b> — для разделения жидкости и нерастворимого твёрдого вещества.</li>
+          <li><b>Выпаривание</b> — для выделения растворённого вещества из раствора.</li>
+          <li><b>Дистилляция</b> — для разделения жидкостей с разной температурой кипения.</li>
+          <li><b>Магнит</b> — для отделения железа от других веществ.</li>
+        </ul>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Пример</div>
+        Разделение смеси воды и речного песка: сначала отстаиваем, потом фильтруем. Песок остаётся на фильтре, вода проходит.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-5': {
+    title: '§ 5. Атомно-молекулярное учение. Химические элементы',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="card">
+        <div class="card-title"><span class="num">📚</span> Основные положения</div>
+        <ol class="theory-list" style="list-style:decimal;padding-left:26px">
+          <li>Все вещества состоят из молекул, а молекулы — из атомов.</li>
+          <li>Атомы одного вида одинаковы, а разных видов — различны.</li>
+          <li>При химических реакциях атомы не исчезают и не появляются, а только перегруппировываются.</li>
+        </ol>
+      </div>
+
+      <div class="definition"><span class="term">Химический элемент</span> — вид атомов с одинаковым зарядом ядра.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🌐</span> Простые и сложные вещества</div>
+        <ul class="theory-list">
+          <li><b>Простое вещество</b> — состоит из атомов одного элемента: O₂, H₂, Fe, S.</li>
+          <li><b>Сложное вещество</b> — состоит из атомов разных элементов: H₂O, CO₂, NaCl.</li>
+        </ul>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Пример</div>
+        Вода H₂O — сложное вещество (H и O). Кислород O₂ — простое (только O).
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-6': {
+    title: '§ 6. Знаки химических элементов',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="paragraph">Каждый химический элемент имеет свой символ — знак. Он состоит из одной или двух букв латинского названия.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🔤</span> Примеры знаков</div>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Знак</th><th>Название</th><th>Латинское название</th></tr>
+            <tr><td>H</td><td>Водород</td><td>Hydrogenium</td></tr>
+            <tr><td>O</td><td>Кислород</td><td>Oxygenium</td></tr>
+            <tr><td>C</td><td>Углерод</td><td>Carboneum</td></tr>
+            <tr><td>Fe</td><td>Железо</td><td>Ferrum</td></tr>
+            <tr><td>Au</td><td>Золото</td><td>Aurum</td></tr>
+            <tr><td>Na</td><td>Натрий</td><td>Natrium</td></tr>
+            <tr><td>Cu</td><td>Медь</td><td>Cuprum</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="note">Если элемент впервые открыт — его название происходит от латинского или греческого слова. Например, «аурум» — «золото».</div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-7': {
+    title: '§ 7. Периодическая таблица',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Периодическая система</span> — графическое выражение периодического закона Д. И. Менделеева.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">📊</span> Структура таблицы</div>
+        <ul class="theory-list">
+          <li><b>Периоды</b> — горизонтальные ряды (всего 7).</li>
+          <li><b>Группы</b> — вертикальные столбцы (всего 8, делятся на A и B подгруппы).</li>
+          <li><b>Порядковый номер</b> = заряд ядра = число протонов = число электронов.</li>
+        </ul>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Пример</div>
+        Натрий <b>Na</b>: порядковый номер 11, 3-й период, I-A группа.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-8': {
+    title: '§ 8. Химические формулы',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Химическая формула</span> — условная запись состава вещества с помощью химических знаков и индексов.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🔢</span> Что показывает формула</div>
+        <p class="paragraph"><b>Индекс</b> (маленькая цифра снизу) показывает число атомов данного элемента в молекуле.</p>
+        <div class="formula-box">H<sub>2</sub>O — 2 атома водорода и 1 атом кислорода</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">⚖️</span> Относительная молекулярная масса</div>
+        <p class="paragraph">Mr = сумма относительных атомных масс всех атомов в молекуле.</p>
+        <div class="formula-box">Mr(H<sub>2</sub>O) = 2·1 + 16 = <span class="eq">18</span></div>
+        <div class="formula-box">Mr(H<sub>2</sub>SO<sub>4</sub>) = 2·1 + 32 + 4·16 = <span class="eq">98</span></div>
+      </div>
+
+      <div class="task-box">
+        <div class="lbl">Задача</div>
+        Найдите Mr(CO₂) и Mr(NaCl).<br>
+        <b>Решение:</b> Mr(CO₂) = 12 + 2·16 = 44. Mr(NaCl) = 23 + 35,5 = 58,5.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-9': {
+    title: '§ 9. Валентность',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Валентность</span> — свойство атома присоединять или замещать определённое число атомов другого элемента. Обозначается римскими цифрами I–V.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">📌</span> Постоянная валентность</div>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Валентность</th><th>Элементы</th></tr>
+            <tr><td>I</td><td>H, Na, K, Li, F, Ag</td></tr>
+            <tr><td>II</td><td>O, Mg, Ca, Ba, Zn</td></tr>
+            <tr><td>III</td><td>Al, B</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🔍</span> Как определить по формуле</div>
+        <p class="paragraph">Если известна валентность одного элемента, вторую находят через НОК:</p>
+        <div class="formula-box">Al<sub>2</sub>O<sub>3</sub> → O(II) → НОК(2,3)=6 → Al = 6:2 = <span class="eq">III</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🎯</span> Переменная валентность</div>
+        <ul class="theory-list">
+          <li><b>Fe</b>: II (FeO), III (Fe₂O₃)</li>
+          <li><b>Cu</b>: I (Cu₂O), II (CuO)</li>
+          <li><b>S</b>: II (H₂S), IV (SO₂), VI (SO₃)</li>
+        </ul>
+      </div>
+
+      <div class="task-box">
+        <div class="lbl">Задача</div>
+        Составьте формулу оксида серы(VI).<br>
+        <b>Решение:</b> S(VI) O(II) → НОК=6 → S = 6:6=1, O = 6:2=3 → <b>SO₃</b>.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-10': {
+    title: '§ 10. Химические реакции',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Химическая реакция</span> — процесс превращения одних веществ в другие, при котором изменяется состав и свойства веществ.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🎨</span> Признаки химических реакций</div>
+        <ul class="theory-list">
+          <li>Изменение цвета</li>
+          <li>Выделение газа (пузырьки)</li>
+          <li>Выпадение осадка</li>
+          <li>Выделение или поглощение теплоты</li>
+          <li>Появление запаха</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">🔥</span> Условия протекания</div>
+        <ul class="theory-list">
+          <li>Соприкосновение веществ</li>
+          <li>Нагревание</li>
+          <li>Свет</li>
+          <li>Электрический ток</li>
+          <li>Катализатор</li>
+        </ul>
+      </div>
+
+      <div class="example-box">
+        <div class="lbl">Пример</div>
+        Горение магния: <b>2Mg + O₂ → 2MgO</b> — яркое белое пламя, образование белого порошка.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-11': {
+    title: '§ 11. Химические уравнения',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="definition"><span class="term">Химическое уравнение</span> — условная запись химической реакции с помощью формул и коэффициентов.</div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">⚖️</span> Закон сохранения массы</div>
+        <p class="paragraph">Масса веществ, вступивших в реакцию, равна массе веществ, образовавшихся в результате реакции (М. В. Ломоносов, 1748).</p>
+        <div class="note">Поэтому в уравнениях нужно расставлять коэффициенты — чтобы число атомов каждого элемента слева и справа совпадало.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">✏️</span> Как составлять уравнения</div>
+        <ol class="theory-list" style="list-style:decimal;padding-left:26px">
+          <li>Записать формулы исходных веществ и продуктов.</li>
+          <li>Подобрать коэффициенты.</li>
+          <li>Проверить по каждому элементу.</li>
+        </ol>
+        <div class="formula-box">H<sub>2</sub> + O<sub>2</sub> → H<sub>2</sub>O (не уравнено)</div>
+        <div class="formula-box">2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O <span class="eq">✓</span></div>
+      </div>
+
+      <div class="task-box">
+        <div class="lbl">Задача</div>
+        Уравняйте: Al + O₂ → Al₂O₃.<br>
+        <b>Решение:</b> 4Al + 3O₂ → 2Al₂O₃.
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  },
+
+  'ch8-1-12': {
+    title: '§ 12. Типы химических реакций',
+    sub: 'Глава 1. Первоначальные химические понятия',
+    html: `
+      <div class="card">
+        <div class="card-title"><span class="num">1️⃣</span> Реакция соединения</div>
+        <p class="paragraph">Из нескольких веществ образуется одно.</p>
+        <div class="formula-box">A + B → AB</div>
+        <div class="formula-box">2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">2️⃣</span> Реакция разложения</div>
+        <p class="paragraph">Из одного вещества образуется несколько.</p>
+        <div class="formula-box">AB → A + B</div>
+        <div class="formula-box">2H<sub>2</sub>O → 2H<sub>2</sub> + O<sub>2</sub></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">3️⃣</span> Реакция замещения</div>
+        <p class="paragraph">Простое вещество замещает атом в сложном.</p>
+        <div class="formula-box">A + BC → AC + B</div>
+        <div class="formula-box">Fe + CuSO<sub>4</sub> → FeSO<sub>4</sub> + Cu</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="num">4️⃣</span> Реакция обмена</div>
+        <p class="paragraph">Два сложных вещества обмениваются частями.</p>
+        <div class="formula-box">AB + CD → AD + CB</div>
+        <div class="formula-box">NaOH + HCl → NaCl + H<sub>2</sub>O</div>
+      </div>
+
+      <a href="https://rutube.ru/plst/1266533/" target="_blank" class="go-btn" style="display:inline-block;margin-top:16px;text-decoration:none">🎬 Видеоурок по теме</a>
+    `
+  }
+
+  /* ==================== ДАЛЬШЕ БУДЕМ ДОБАВЛЯТЬ ГЛАВЫ 2-5 ==================== */
+
+};
 
 function openPage(id){
   var page = PAGES[id];
