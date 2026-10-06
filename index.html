@@ -1051,27 +1051,25 @@ function balanceEquation(leftFormulas,rightFormulas){
     return true;
   }
 
-  function recurse(idx,usedOne){
+  function recurse(idx){
     if(found) return;
     if(idx===n){
       if(checkBalance()) found=coef.slice();
       return;
     }
     for(var v=1;v<=maxCoef;v++){
-      if(!usedOne && v>1 && idx<n-1) continue;
       coef[idx]=v;
-      recurse(idx+1,usedOne||v===1);
+      recurse(idx+1);
       if(found) return;
     }
   }
-  recurse(0,false);
+  recurse(0);
 
   if(!found) return null;
   var g=found.reduce(function(a,b){return gcd(a,b);});
   if(g>1) found=found.map(function(x){return x/g;});
   return found;
 }
-
 /* 🎨 ФОРМАТИРОВАНИЕ: индексы → <sub>, коэффициенты → большие */
 function formatFormula(f){
   return String(f).replace(/([A-Za-z\)])(\d+)/g,'$1<sub>$2</sub>');
