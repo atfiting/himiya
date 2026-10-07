@@ -17,6 +17,8 @@
     <button class="nav-btn" data-page="contents8">8 класс</button>
     <button class="nav-btn" data-page="contents9">9 класс</button>
     <button class="nav-btn" data-page="analyzer">Анализатор</button>
+    <button class="nav-btn" data-page="crystal">🧊 Кристаллы</button>
+    <button class="nav-btn" data-page="balancer">⚖️ Реакции</button>
   </div>
 </div>
 
@@ -24,7 +26,7 @@
   <div class="wrap">
     <div class="page-head">
       <h1>Химия 8–9 класс</h1>
-      <p>Учебник Габриеляна · полная теория · анализатор веществ</p>
+      <p>Учебник Габриеляна · теория · анализатор · помощники</p>
       <div class="accent-line"></div>
     </div>
     <div class="card">
@@ -32,7 +34,9 @@
       <ul class="theory-list">
         <li><b>8 класс</b> — 5 глав, 39 параграфов с полной теорией.</li>
         <li><b>9 класс</b> — 6 глав, 41 параграф с полной теорией.</li>
-        <li><b>Анализатор</b> — состав, тип связи, решётка, 3D-модель.</li>
+        <li><b>Анализатор</b> — состав вещества, тип связи, решётка.</li>
+        <li><b>🧊 Кристаллы</b> — 3D-модели кристаллических решёток.</li>
+        <li><b>⚖️ Реакции</b> — уравниватель химических уравнений.</li>
       </ul>
     </div>
   </div>
@@ -71,7 +75,7 @@
   <div class="wrap">
     <div class="page-head">
       <h1>Анализатор веществ</h1>
-      <p>Состав, тип связи, кристаллическая решётка и 3D-модель молекулы</p>
+      <p>Введи формулу или название — узнаешь состав и тип связи</p>
       <div class="accent-line"></div>
     </div>
     <div class="card">
@@ -83,6 +87,73 @@
       <div class="hint">Можно писать формулу или тривиальное название</div>
     </div>
     <div id="analyzerResult"></div>
+  </div>
+</section>
+
+<section class="page" id="page-crystal">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>🧊 Помощник по кристаллическим решёткам</h1>
+      <p>Введи название или формулу вещества — увидишь 3D-модель решётки</p>
+      <div class="accent-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="num">💎</span> Вещество</div>
+      <div class="input-group">
+        <input type="text" id="crystalInput" placeholder="Например: NaCl, CsCl, алмаз, графит, Cu, Fe, SiO2, CO2">
+        <button class="go-btn" onclick="runCrystalAssistant()">Показать решётку</button>
+      </div>
+      <div class="hint">Доступно: NaCl, CsCl, алмаз, графит, Cu, Fe, SiO₂, CO₂</div>
+    </div>
+    <div class="card">
+      <div class="quick-buttons" style="padding:0;background:transparent;border:none;justify-content:center">
+        <button onclick="quickCrystal('NaCl')">NaCl</button>
+        <button onclick="quickCrystal('CsCl')">CsCl</button>
+        <button onclick="quickCrystal('алмаз')">Алмаз</button>
+        <button onclick="quickCrystal('графит')">Графит</button>
+        <button onclick="quickCrystal('Cu')">Медь</button>
+        <button onclick="quickCrystal('Fe')">Железо</button>
+        <button onclick="quickCrystal('SiO2')">SiO₂</button>
+        <button onclick="quickCrystal('CO2')">CO₂</button>
+      </div>
+    </div>
+    <div id="crystalResult"></div>
+    <div class="card" id="crystalCanvasCard" style="display:none">
+      <div class="card-title" id="crystalCanvasTitle"><span class="num">💎</span> Кристаллическая решётка</div>
+      <div id="crystalCanvas" style="height:460px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#f8fafc,#dbe4f5);border:1px solid var(--border);position:relative"></div>
+      <div class="legend" id="crystalLegend"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-balancer">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>⚖️ Помощник по уравнениям</h1>
+      <p>Введи уравнение реакции — я расставлю коэффициенты</p>
+      <div class="accent-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="num">⚖️</span> Уравнение</div>
+      <div class="input-group">
+        <input type="text" id="balanceInput" placeholder="Например: Al + O2 = Al2O3">
+        <button class="go-btn" onclick="runBalancer()">Уравнять</button>
+      </div>
+      <div class="hint">Знак равенства: «=», «→», «->», «=>». Можно не расставлять коэффициенты — я сам</div>
+    </div>
+    <div class="card">
+      <div class="quick-buttons" style="padding:0;background:transparent;border:none;justify-content:center">
+        <button onclick="quickBalance('H2 + O2 = H2O')">H₂ + O₂</button>
+        <button onclick="quickBalance('Al + O2 = Al2O3')">Al + O₂</button>
+        <button onclick="quickBalance('Fe + O2 = Fe2O3')">Fe + O₂</button>
+        <button onclick="quickBalance('KMnO4 = K2MnO4 + MnO2 + O2')">KMnO₄</button>
+        <button onclick="quickBalance('CaCO3 = CaO + CO2')">CaCO₃</button>
+        <button onclick="quickBalance('NaOH + HCl = NaCl + H2O')">NaOH + HCl</button>
+        <button onclick="quickBalance('Ca(OH)2 + H3PO4 = Ca3(PO4)2 + H2O')">Ca(OH)₂ + H₃PO₄</button>
+        <button onclick="quickBalance('Fe + CuSO4 = FeSO4 + Cu')">Fe + CuSO₄</button>
+      </div>
+    </div>
+    <div id="balanceResult"></div>
   </div>
 </section>
 
