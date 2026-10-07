@@ -15,12 +15,14 @@ document.addEventListener('DOMContentLoaded', function(){
   renderContents('contents8List', CHAPTERS8);
   renderContents('contents9List', CHAPTERS9);
 
-  var inp = document.getElementById('analyzerInput');
-  if (inp) {
-    inp.addEventListener('keydown', function(e){
-      if(e.key === 'Enter') runAnalyzer();
-    });
-  }
+  var ai = document.getElementById('analyzerInput');
+  if (ai) ai.addEventListener('keydown', function(e){ if(e.key === 'Enter') runAnalyzer(); });
+
+  var ci = document.getElementById('crystalInput');
+  if (ci) ci.addEventListener('keydown', function(e){ if(e.key === 'Enter') runCrystalAssistant(); });
+
+  var bi = document.getElementById('balanceInput');
+  if (bi) bi.addEventListener('keydown', function(e){ if(e.key === 'Enter') runBalancer(); });
 });
 
 /* ==================== БАЗА ВЕЩЕСТВ ==================== */
@@ -154,12 +156,10 @@ var SUBSTANCES = [
   {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная."},
   {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная."},
   {formula:"SiC",name:"Карбид кремния",composition:{Si:1,C:1},aliases:["карборунд"],note:"Атомная решётка."},
-  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."},
-  {formula:"PbS",name:"Сульфид свинца",composition:{Pb:1,S:1},aliases:["галенит"],note:"Ионная решётка."},
-  {formula:"HgS",name:"Сульфид ртути",composition:{Hg:1,S:1},aliases:["киноварь"],note:"Ионная решётка."}
+  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
 ];
 
-/* ==================== ПАРСЕР ФОРМУЛ ==================== */
+/* ==================== ПАРСЕР ==================== */
 function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
 function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
 
@@ -209,10 +209,11 @@ function buildNameIndex(){
   if(NAME_INDEX) return NAME_INDEX;
   NAME_INDEX={};
   for(var i=0;i<SUBSTANCES.length;i++){
-    var s=SUBSTANCES[i],k=normalize(s.name); if(!NAME_INDEX[k])NAME_INDEX[k]=s;
+    var s=SUBSTANCES[i],k=normalize(s.name);
+    if(!NAME_INDEX[k]) NAME_INDEX[k]=s;
     if(s.aliases) for(var j=0;j<s.aliases.length;j++){
       var k2=normalize(s.aliases[j]);
-      if(!NAME_INDEX[k2])NAME_INDEX[k2]=s;
+      if(!NAME_INDEX[k2]) NAME_INDEX[k2]=s;
     }
   }
   return NAME_INDEX;
@@ -223,7 +224,7 @@ function buildFormulaIndex(){
   FORMULA_INDEX={};
   for(var i=0;i<SUBSTANCES.length;i++){
     var k=cleanFormula(SUBSTANCES[i].formula);
-    if(!FORMULA_INDEX[k])FORMULA_INDEX[k]=SUBSTANCES[i];
+    if(!FORMULA_INDEX[k]) FORMULA_INDEX[k]=SUBSTANCES[i];
   }
   return FORMULA_INDEX;
 }
@@ -266,12 +267,12 @@ function determineBond(composition,formula){
   return {bond:'Ковалентная полярная',lattice:'Молекулярная',note:'Разные неметаллы.'};
 }
 
-/* ==================== НАЗВАНИЯ АТОМОВ И ЦВЕТА ==================== */
+/* ==================== НАЗВАНИЯ И ЦВЕТА ==================== */
 var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Sc:'Скандий',Ti:'Титан',V:'Ванадий',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Ga:'Галлий',Ge:'Германий',As:'Мышьяк',Se:'Селен',Br:'Бром',Kr:'Криптон',Rb:'Рубидий',Sr:'Стронций',Ag:'Серебро',Sn:'Олово',Sb:'Сурьма',Te:'Теллур',I:'Йод',Xe:'Ксенон',Cs:'Цезий',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец',Bi:'Висмут'};
 
 var ATOM_COLORS={
-  H:'#e2e8f0', He:'#c7d2fe', Li:'#c4b5fd', Be:'#a7f3d0', B:'#fde68a',
-  C:'#334155', N:'#3b82f6', O:'#ef4444', F:'#22d3ee', Ne:'#67e8f9',
+  H:'#94a3b8', He:'#c7d2fe', Li:'#a78bfa', Be:'#6ee7b7', B:'#fbbf24',
+  C:'#1e293b', N:'#3b82f6', O:'#ef4444', F:'#22d3ee', Ne:'#67e8f9',
   Na:'#f59e0b', Mg:'#84cc16', Al:'#94a3b8', Si:'#d4a373', P:'#f97316',
   S:'#eab308', Cl:'#22c55e', Ar:'#a5b4fc', K:'#8b5cf6', Ca:'#a3e635',
   Sc:'#facc15', Ti:'#a1a1aa', V:'#7c3aed', Cr:'#0891b2', Mn:'#a855f7',
@@ -323,157 +324,440 @@ function runAnalyzer(){
       '<div class="note">'+bond.note+(s.note?' '+s.note:'')+'</div>'+
       '<div class="card-title" style="margin-top:16px"><span class="num">⚛️</span> Состав</div>'+
       '<div class="composition">'+cards+'</div>'+
-      '<div class="card-title" style="margin-top:20px"><span class="num">🧊</span> 3D-модель молекулы</div>'+
-      '<canvas id="molecule3D"></canvas>'+
-      '<div class="legend" id="moleculeLegend"></div>'+
     '</div>';
-
-  renderMolecule(s.composition);
 }
 
-/* ==================== 3D МОЛЕКУЛА ==================== */
-var _molScene=null,_molCamera=null,_molRenderer=null,_molControls=null,_molAnimId=null;
+/* ==================== УРАВНИВАНИЕ ==================== */
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ var t=b; b=a%b; a=t; } return a; }
 
-function destroyMolecule(){
-  if(_molAnimId){ cancelAnimationFrame(_molAnimId); _molAnimId=null; }
-  if(_molRenderer){ _molRenderer.dispose(); _molRenderer=null; }
-  _molScene=null; _molCamera=null; _molControls=null;
-}
+function balanceEquation(equation){
+  try{
+    var eq = equation.replace(/[→➔➜➝]|->|=>/g,'=').replace(/\s+/g,' ').trim();
+    if(eq.indexOf('=')===-1) return {error:'Нужен знак «=» между частями'};
+    var sides = eq.split('=');
+    if(sides.length !== 2) return {error:'Должно быть ровно одно «=»'};
+    var leftRaw = sides[0].trim(), rightRaw = sides[1].trim();
+    if(!leftRaw || !rightRaw) return {error:'Одна из частей пустая'};
 
-function renderMolecule(composition){
-  destroyMolecule();
-  var canvas = document.getElementById('molecule3D');
-  if(!canvas) return;
-  var THREE = window.THREE;
-  if(!THREE){
-    canvas.parentNode.insertAdjacentHTML('beforeend','<div class="not-found">Three.js не загружен</div>');
-    return;
+    var leftParts = leftRaw.split('+').map(function(s){return s.trim();}).filter(Boolean);
+    var rightParts = rightRaw.split('+').map(function(s){return s.trim();}).filter(Boolean);
+    if(leftParts.length===0 || rightParts.length===0) return {error:'Не удалось разбить вещества'};
+
+    function parsePart(p){
+      var m = p.match(/^(\d*)\s*(.+)$/);
+      var coef = m[1] ? parseInt(m[1]) : 1;
+      var formula = m[2].trim();
+      return { coef: coef, formula: formula, atoms: parseFormula(formula) };
+    }
+    var leftParsed = leftParts.map(parsePart);
+    var rightParsed = rightParts.map(parsePart);
+    for(var i=0;i<leftParsed.length;i++) if(Object.keys(leftParsed[i].atoms).length===0) return {error:'Не разобрал: '+leftParsed[i].formula};
+    for(var j=0;j<rightParsed.length;j++) if(Object.keys(rightParsed[j].atoms).length===0) return {error:'Не разобрал: '+rightParsed[j].formula};
+
+    var elSet = {};
+    leftParsed.concat(rightParsed).forEach(function(p){ for(var e in p.atoms) elSet[e]=1; });
+    var elements = Object.keys(elSet);
+    if(elements.length===0) return {error:'Не нашёл элементов'};
+
+    var n = leftParsed.length + rightParsed.length;
+    var mat = [];
+    for(var e=0;e<elements.length;e++){
+      var row = new Array(n).fill(0);
+      for(var li=0; li<leftParsed.length; li++) row[li] = leftParsed[li].atoms[elements[e]] || 0;
+      for(var ri=0; ri<rightParsed.length; ri++) row[leftParsed.length + ri] = -(rightParsed[ri].atoms[elements[e]] || 0);
+      mat.push(row);
+    }
+
+    var solution = nullSpace(mat, n);
+    if(!solution) return {error:'Не удалось уравнять. Проверь формулы'};
+
+    var maxAbs = 0;
+    for(var k=0;k<solution.length;k++) maxAbs = Math.max(maxAbs, Math.abs(solution[k]));
+    if(maxAbs < 1e-9) return {error:'Нулевое решение'};
+    var ints = solution.map(function(v){ return Math.round(v / maxAbs * 1000000); });
+    var g = ints[0];
+    for(var q=1;q<ints.length;q++) g = gcd(g, ints[q]);
+    if(g===0) return {error:'Не привёл к целым'};
+    var finalCoefs = ints.map(function(v){ return Math.abs(v/g); });
+
+    function buildSide(parsed, startIdx){
+      return parsed.map(function(p, i){
+        var c = finalCoefs[startIdx + i];
+        return (c===1 ? '' : c) + p.formula;
+      }).join(' + ');
+    }
+    return {
+      success: true,
+      left: buildSide(leftParsed, 0),
+      right: buildSide(rightParsed, leftParsed.length),
+      coefs: finalCoefs
+    };
+  }catch(err){
+    return {error:'Ошибка: '+err.message};
   }
+}
 
-  var w = canvas.parentNode.clientWidth || 500;
-  var h = 420;
+function nullSpace(matrix, nCols){
+  var rows = matrix.length;
+  if(rows===0 || nCols===0) return null;
+  var A = matrix.map(function(r){return r.slice();});
+  var pivotRow = 0;
+  var pivots = [];
+  for(var col=0; col<nCols && pivotRow<rows; col++){
+    var sel = -1;
+    for(var r=pivotRow; r<rows; r++) if(Math.abs(A[r][col]) > 1e-9){ sel = r; break; }
+    if(sel === -1) continue;
+    var tmp = A[pivotRow]; A[pivotRow] = A[sel]; A[sel] = tmp;
+    var div = A[pivotRow][col];
+    for(var c=col; c<nCols; c++) A[pivotRow][c] /= div;
+    for(var r2=0; r2<rows; r2++){
+      if(r2===pivotRow) continue;
+      var f = A[r2][col];
+      if(Math.abs(f)<1e-9) continue;
+      for(var c2=col; c2<nCols; c2++) A[r2][c2] -= f * A[pivotRow][c2];
+    }
+    pivots.push(col);
+    pivotRow++;
+  }
+  var freeCols = [];
+  for(var c3=0; c3<nCols; c3++) if(pivots.indexOf(c3)===-1) freeCols.push(c3);
+  if(freeCols.length===0) return null;
+  var x = new Array(nCols).fill(0);
+  x[freeCols[0]] = 1;
+  for(var pi=pivots.length-1; pi>=0; pi--){
+    var pc = pivots[pi];
+    var sum = 0;
+    for(var fi=0; fi<freeCols.length; fi++) sum += A[pi][freeCols[fi]] * x[freeCols[fi]];
+    x[pc] = -sum;
+  }
+  var signs = [];
+  for(var z=0; z<x.length; z++) if(Math.abs(x[z])>1e-6) signs.push(Math.sign(x[z]));
+  if(signs.length===0) return null;
+  for(var s=1; s<signs.length; s++) if(signs[s] !== signs[0]) return null;
+  return x;
+}
 
-  _molRenderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
-  _molRenderer.setSize(w, h);
-  _molRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+/* ==================== РЕШЁТКИ ==================== */
+var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
 
-  _molScene = new THREE.Scene();
-  _molCamera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000);
-  _molCamera.position.set(0, 0, 7);
+var LATTICE_DB = {
+  'NaCl':{
+    name:'Хлорид натрия (NaCl)', type:'Ионная', system:'ГЦК',
+    desc:'Ионная кристаллическая решётка. Каждый ион Na⁺ окружён 6 ионами Cl⁻ и наоборот. Координационное число = 6.',
+    ions:[
+      {el:'Na',charge:'+',color:0xa78bfa,radius:0.30,pos:'fcc'},
+      {el:'Cl',charge:'-',color:0x22c55e,radius:0.45,pos:'octa'}
+    ]
+  },
+  'CsCl':{
+    name:'Хлорид цезия (CsCl)', type:'Ионная', system:'Примитивная кубическая',
+    desc:'Cs⁺ находится в центре куба, 8 Cl⁻ — по вершинам. Координационное число = 8.',
+    ions:[
+      {el:'Cs',charge:'+',color:0xf59e0b,radius:0.40,pos:[[0.5,0.5,0.5]]},
+      {el:'Cl',charge:'-',color:0x22c55e,radius:0.42,pos:'corners'}
+    ]
+  },
+  'diamond':{
+    name:'Алмаз (C)', type:'Атомная', system:'Тетраэдрическая',
+    desc:'Каждый атом углерода связан с 4 другими ковалентными связями. Прочная, высокая температура плавления.',
+    ions:[{el:'C',charge:'',color:0x1e293b,radius:0.25,pos:'diamond'}]
+  },
+  'graphite':{
+    name:'Графит (C)', type:'Атомная (слоистая)', system:'Гексагональная слоистая',
+    desc:'Слоистая структура. В слое — ковалентные связи, между слоями — слабые силы. Поэтому графит мягкий и проводит ток.',
+    ions:[{el:'C',charge:'',color:0x475569,radius:0.20,pos:'graphite'}]
+  },
+  'Cu':{
+    name:'Медь (Cu)', type:'Металлическая', system:'ГЦК',
+    desc:'Металлическая решётка. Атомы в узлах ГЦК, валентные электроны обобществлены. Ковкая, пластичная, проводит ток.',
+    ions:[{el:'Cu',charge:'',color:0xea580c,radius:0.35,pos:'fcc'}]
+  },
+  'Fe':{
+    name:'Железо (Fe)', type:'Металлическая', system:'ОЦК',
+    desc:'Металлическая решётка. Атомы в вершинах куба и один в центре. Прочное, магнитное.',
+    ions:[{el:'Fe',charge:'',color:0x71717a,radius:0.35,pos:'bcc'}]
+  },
+  'SiO2':{
+    name:'Оксид кремния (SiO2)', type:'Атомная', system:'Тетраэдрическая',
+    desc:'Атомная решётка. Каждый атом Si связан с 4 атомами O. Кварц, песок, горный хрусталь.',
+    ions:[
+      {el:'Si',charge:'',color:0xd4a373,radius:0.32,pos:'silica-si'},
+      {el:'O', charge:'',color:0xef4444,radius:0.22,pos:'silica-o'}
+    ]
+  },
+  'CO2':{
+    name:'Углекислый газ (CO2)', type:'Молекулярная', system:'Молекулярная',
+    desc:'Молекулярная решётка. Слабые межмолекулярные силы, легко плавится и испаряется.',
+    ions:[{el:'CO2',charge:'',color:0x64748b,radius:0.35,pos:'simple'}]
+  }
+};
 
-  _molControls = new THREE.OrbitControls(_molCamera, _molRenderer.domElement);
-  _molControls.enableDamping = true;
-  _molControls.dampingFactor = 0.08;
-  _molControls.autoRotate = true;
-  _molControls.autoRotateSpeed = 2;
+function posFCC(){
+  var p=[];
+  for(var x=0;x<=1;x++)for(var y=0;y<=1;y++)for(var z=0;z<=1;z++)p.push([x,y,z]);
+  p.push([0.5,0.5,0],[0.5,0.5,1],[0.5,0,0.5],[0.5,1,0.5],[0,0.5,0.5],[1,0.5,0.5]);
+  return p;
+}
+function posOcta(){
+  return [[0.5,0,0],[0.5,1,0],[0.5,0,1],[0.5,1,1],[0,0.5,0],[1,0.5,0],[0,0.5,1],[1,0.5,1],[0,0,0.5],[1,0,0.5],[0,1,0.5],[1,1,0.5],[0.5,0.5,0.5]];
+}
+function posCorners(){
+  var p=[];for(var x=0;x<=1;x++)for(var y=0;y<=1;y++)for(var z=0;z<=1;z++)p.push([x,y,z]);
+  return p;
+}
+function posBCC(){var p=posCorners();p.push([0.5,0.5,0.5]);return p;}
+function posDiamond(){
+  var p=posFCC();var off=[0.25,0.25,0.25];
+  posFCC().forEach(function(q){p.push([q[0]+off[0],q[1]+off[1],q[2]+off[2]]);});
+  return p;
+}
+function posGraphite(){
+  var p=[],a=0.6;
+  for(var i=0;i<3;i++)for(var j=0;j<3;j++){
+    var x=i*a+(j%2)*(a/2);var y=j*a*0.866;
+    p.push([x,y,0]);p.push([x+a/2,y+a*0.288,0]);
+  }
+  for(var i2=0;i2<3;i2++)for(var j2=0;j2<3;j2++){
+    var x2=i2*a+(j2%2)*(a/2)+a/2;var y2=j2*a*0.866;
+    p.push([x2,y2,0.8]);
+  }
+  return p;
+}
+function posSimple(){
+  var p=[];
+  for(var x=0;x<2;x++)for(var y=0;y<2;y++)for(var z=0;z<2;z++)p.push([x*1.5,y*1.5,z*1.5]);
+  return p;
+}
+function posSilicaSi(){return [[0,0,0],[1,0.5,0.5],[0.5,1,0.5],[0.5,0.5,1]];}
+function posSilicaO(){
+  var si=posSilicaSi(),o=[];
+  si.forEach(function(s){
+    o.push([s[0]+0.32,s[1]+0.32,s[2]+0.32]);
+    o.push([s[0]-0.32,s[1]-0.32,s[2]+0.32]);
+    o.push([s[0]+0.32,s[1]-0.32,s[2]-0.32]);
+    o.push([s[0]-0.32,s[1]+0.32,s[2]-0.32]);
+  });
+  return o;
+}
 
-  _molScene.add(new THREE.AmbientLight(0xffffff, 0.8));
-  var d1 = new THREE.DirectionalLight(0xffffff, 1);
-  d1.position.set(5, 10, 7);
-  _molScene.add(d1);
-  var d2 = new THREE.PointLight(0x06b6d4, 0.6);
-  d2.position.set(-5, -3, -5);
-  _molScene.add(d2);
+function getLatticePositions(name){
+  switch(name){
+    case 'fcc': return posFCC();
+    case 'octa': return posOcta();
+    case 'corners': return posCorners();
+    case 'bcc': return posBCC();
+    case 'diamond': return posDiamond();
+    case 'graphite': return posGraphite();
+    case 'simple': return posSimple();
+    case 'silica-si': return posSilicaSi();
+    case 'silica-o': return posSilicaO();
+  }
+  return [];
+}
 
-  // Собираем все атомы как плоский список
-  var atoms = [];
-  var els = Object.keys(composition);
-  els.forEach(function(el){
-    for(var i=0;i<composition[el];i++) atoms.push(el);
+function findLattice(query){
+  var q = query.trim().toLowerCase();
+  if(LATTICE_DB[query]) return LATTICE_DB[query];
+  for(var key in LATTICE_DB){
+    if(key.toLowerCase() === q) return LATTICE_DB[key];
+    if(LATTICE_DB[key].name.toLowerCase().indexOf(q) !== -1) return LATTICE_DB[key];
+  }
+  if(q.indexOf('nacl')!==-1 || q.indexOf('поварен')!==-1 || q === 'соль') return LATTICE_DB['NaCl'];
+  if(q.indexOf('cscl')!==-1) return LATTICE_DB['CsCl'];
+  if(q.indexOf('алмаз')!==-1 || q.indexOf('diamond')!==-1) return LATTICE_DB['diamond'];
+  if(q.indexOf('графит')!==-1) return LATTICE_DB['graphite'];
+  if(q.indexOf('медь')!==-1 || q === 'cu') return LATTICE_DB['Cu'];
+  if(q.indexOf('желез')!==-1 || q === 'fe') return LATTICE_DB['Fe'];
+  if(q.indexOf('кварц')!==-1 || q.indexOf('кремнез')!==-1 || q === 'sio2') return LATTICE_DB['SiO2'];
+  if(q === 'co2' || q.indexOf('углекисл')!==-1) return LATTICE_DB['CO2'];
+  return null;
+}
+
+function buildLattice(containerId, substance){
+  var data = findLattice(substance);
+  if(!data) return {error:'Не нашёл решётку для «'+substance+'». Доступно: NaCl, CsCl, алмаз, графит, Cu, Fe, SiO2, CO2'};
+  var container = document.getElementById(containerId);
+  if(!container) return {error:'Не найден контейнер '+containerId};
+
+  destroyLattice();
+  container.innerHTML = '';
+
+  var THREE = window.THREE;
+  if(!THREE) return {error:'Three.js не загружен'};
+
+  var w = container.clientWidth || 600;
+  var h = container.clientHeight || 460;
+
+  _latticeScene = new THREE.Scene();
+  _latticeScene.background = new THREE.Color(0xf8fafc);
+
+  _latticeCamera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000);
+  _latticeCamera.position.set(3.8, 3, 4.5);
+
+  _latticeRenderer = new THREE.WebGLRenderer({antialias:true});
+  _latticeRenderer.setSize(w, h);
+  _latticeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(_latticeRenderer.domElement);
+
+  _latticeControls = new THREE.OrbitControls(_latticeCamera, _latticeRenderer.domElement);
+  _latticeControls.enableDamping = true;
+  _latticeControls.dampingFactor = 0.08;
+  _latticeControls.autoRotate = true;
+  _latticeControls.autoRotateSpeed = 1.5;
+
+  _latticeScene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  var d1 = new THREE.DirectionalLight(0xffffff, 1.1);
+  d1.position.set(5,10,7);
+  _latticeScene.add(d1);
+  var d2 = new THREE.PointLight(0x06b6d4, 0.5);
+  d2.position.set(-5,-3,-5);
+  _latticeScene.add(d2);
+
+  var allPos = [];
+  data.ions.forEach(function(ion){
+    var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
+    allPos = allPos.concat(positions);
+  });
+  var cx=0,cy=0,cz=0;
+  allPos.forEach(function(p){cx+=p[0];cy+=p[1];cz+=p[2];});
+  cx/=allPos.length;cy/=allPos.length;cz/=allPos.length;
+
+  data.ions.forEach(function(ion){
+    var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
+    positions.forEach(function(pos){
+      var geo = new THREE.SphereGeometry(ion.radius, 32, 32);
+      var mat = new THREE.MeshStandardMaterial({
+        color: ion.color, roughness: 0.4, metalness: 0.15,
+        emissive: ion.color, emissiveIntensity: 0.08
+      });
+      var sphere = new THREE.Mesh(geo, mat);
+      sphere.position.set(pos[0]-cx, pos[1]-cy, pos[2]-cz);
+      _latticeScene.add(sphere);
+      _latticeMeshes.push(sphere);
+    });
   });
 
-  // Позиционируем атомы: если есть центральный — в центре, остальные вокруг
-  // Простая схема: если один атом — центр; иначе по кругу
-  var positions = [];
-  var n = atoms.length;
-  if(n===1){
-    positions.push([0,0,0]);
-  } else if(n===2){
-    positions.push([-1,0,0]); positions.push([1,0,0]);
-  } else {
-    // Выбираем самый «тяжёлый» элемент (обычно центральный)
-    var centerIdx = 0;
-    var maxZ = 0;
-    for(var i=0;i<n;i++){
-      var el = atoms[i];
-      // Ищем: углерод/азот/сера/фосфор обычно в центре
-      if(['C','N','S','P','Si','Cl'].indexOf(el)!==-1 && maxZ < 10){ centerIdx = i; maxZ = 10; }
-    }
-    // Остальные — по кругу в 3D-спирали
-    var r = 1.8;
-    var rest = n - 1;
-    for(var i=0;i<n;i++){
-      if(i===centerIdx){
-        positions.push([0,0,0]);
-      } else {
-        var idx = i < centerIdx ? i : i - 1;
-        var angle = (idx / rest) * Math.PI * 2;
-        var y = (idx % 2 === 0 ? 0.6 : -0.6);
-        positions.push([r*Math.cos(angle), y, r*Math.sin(angle)]);
-      }
-    }
-  }
-
-  var spheres = [];
-  // Радиусы атомов
-  var RADII = {H:0.35, C:0.55, N:0.5, O:0.5, F:0.4, Cl:0.6, Br:0.65, I:0.7, S:0.65, P:0.65, Si:0.65};
-  function getRadius(el){ return RADII[el] || 0.55; }
-
-  for(var i=0;i<n;i++){
-    var el = atoms[i];
-    var radius = getRadius(el);
-    var geo = new THREE.SphereGeometry(radius, 32, 32);
-    var mat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(getAtomColor(el)),
-      roughness: 0.4,
-      metalness: 0.1,
-      emissive: new THREE.Color(getAtomColor(el)),
-      emissiveIntensity: 0.1
+  if(data.type !== 'Ионная'){
+    var allAtoms = [];
+    data.ions.forEach(function(ion){
+      var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
+      positions.forEach(function(p){ allAtoms.push([p[0]-cx, p[1]-cy, p[2]-cz]); });
     });
-    var sphere = new THREE.Mesh(geo, mat);
-    sphere.position.set(positions[i][0], positions[i][1], positions[i][2]);
-    _molScene.add(sphere);
-    spheres.push(sphere);
-  }
-
-  // Связи между атомами (если 2+ атомов)
-  if(n > 1){
-    // Соединяем все пары ближайших друг к другу
-    var lineMat = new THREE.LineBasicMaterial({color: 0x64748b, transparent:true, opacity:0.7});
-    for(var i=0;i<n;i++){
-      for(var j=i+1;j<n;j++){
-        var dx = positions[i][0]-positions[j][0];
-        var dy = positions[i][1]-positions[j][1];
-        var dz = positions[i][2]-positions[j][2];
+    var lineMat = new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.6});
+    for(var a=0;a<allAtoms.length;a++){
+      for(var b=a+1;b<allAtoms.length;b++){
+        var dx=allAtoms[a][0]-allAtoms[b][0], dy=allAtoms[a][1]-allAtoms[b][1], dz=allAtoms[a][2]-allAtoms[b][2];
         var dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
-        if(dist < 3.0){
-          var g = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(positions[i][0], positions[i][1], positions[i][2]),
-            new THREE.Vector3(positions[j][0], positions[j][1], positions[j][2])
+        if(dist < 1.15 && dist > 0.05){
+          var g2 = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(allAtoms[a][0], allAtoms[a][1], allAtoms[a][2]),
+            new THREE.Vector3(allAtoms[b][0], allAtoms[b][1], allAtoms[b][2])
           ]);
-          var line = new THREE.Line(g, lineMat);
-          _molScene.add(line);
+          var line = new THREE.Line(g2, lineMat);
+          _latticeScene.add(line);
+          _latticeMeshes.push(line);
         }
       }
     }
   }
 
-  // Легенда
-  var legend = document.getElementById('moleculeLegend');
-  if(legend){
-    legend.innerHTML = '';
-    els.forEach(function(el){
-      var color = getAtomColor(el);
-      legend.innerHTML += '<div class="legend-item"><span class="legend-dot" style="background:'+color+'"></span><span>'+el+' — '+(ATOM_NAMES[el]||'')+'</span></div>';
-    });
-  }
+  var boxGeo = new THREE.BoxGeometry(2,2,2);
+  var edges = new THREE.EdgesGeometry(boxGeo);
+  var boxLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.35}));
+  boxLine.position.set(-cx+0.5, -cy+0.5, -cz+0.5);
+  _latticeScene.add(boxLine);
+  _latticeMeshes.push(boxLine);
 
   function animate(){
-    _molAnimId = requestAnimationFrame(animate);
-    if(_molControls) _molControls.update();
-    if(_molRenderer && _molScene && _molCamera) _molRenderer.render(_molScene, _molCamera);
+    _latticeAnimId = requestAnimationFrame(animate);
+    if(_latticeControls) _latticeControls.update();
+    if(_latticeRenderer && _latticeScene && _latticeCamera) _latticeRenderer.render(_latticeScene, _latticeCamera);
   }
   animate();
+  return {success:true, data:data};
+}
+
+function destroyLattice(){
+  if(_latticeAnimId){ cancelAnimationFrame(_latticeAnimId); _latticeAnimId = null; }
+  _latticeMeshes.forEach(function(m){
+    if(m.geometry) m.geometry.dispose();
+    if(m.material) m.material.dispose();
+  });
+  _latticeMeshes = [];
+  if(_latticeRenderer){ _latticeRenderer.dispose(); _latticeRenderer = null; }
+  _latticeScene = null; _latticeCamera = null; _latticeControls = null;
+}
+
+/* ==================== ПОМОЩНИК 1: КРИСТАЛЛЫ ==================== */
+function runCrystalAssistant(){
+  var input = document.getElementById('crystalInput');
+  var text = input.value.trim();
+  if(!text) return;
+
+  var resultBox = document.getElementById('crystalResult');
+  var cardEl = document.getElementById('crystalCanvasCard');
+  var titleEl = document.getElementById('crystalCanvasTitle');
+  var legendEl = document.getElementById('crystalLegend');
+
+  legendEl.innerHTML = '';
+  destroyLattice();
+
+  var res = buildLattice('crystalCanvas', text);
+  if(res.error){
+    cardEl.style.display = 'none';
+    resultBox.innerHTML = '<div class="card"><div class="not-found">'+res.error+'</div></div>';
+    return;
+  }
+
+  cardEl.style.display = 'block';
+  titleEl.innerHTML = '<span class="num">💎</span> ' + res.data.name;
+
+  resultBox.innerHTML = '<div class="card"><div class="definition">'+
+    '<span class="term">'+res.data.name+'</span>'+
+    res.data.desc +
+    '<br><b>Тип:</b> '+res.data.type+' · <b>Сингония:</b> '+res.data.system+
+    '</div></div>';
+
+  res.data.ions.forEach(function(ion){
+    var color = '#' + ion.color.toString(16).padStart(6,'0');
+    legendEl.innerHTML += '<div class="legend-item"><span class="legend-dot" style="background:'+color+'"></span><span>'+ion.el+ion.charge+'</span></div>';
+  });
+
+  setTimeout(function(){ buildLattice('crystalCanvas', text); }, 80);
+}
+
+function quickCrystal(name){
+  document.getElementById('crystalInput').value = name;
+  runCrystalAssistant();
+}
+
+/* ==================== ПОМОЩНИК 2: УРАВНИВАНИЕ ==================== */
+function runBalancer(){
+  var input = document.getElementById('balanceInput');
+  var text = input.value.trim();
+  var box = document.getElementById('balanceResult');
+  if(!text){
+    box.innerHTML = '<div class="card"><div class="not-found">Введи уравнение</div></div>';
+    return;
+  }
+
+  var r = balanceEquation(text);
+  if(r.error){
+    box.innerHTML = '<div class="card"><div class="not-found">'+r.error+'</div></div>';
+    return;
+  }
+
+  box.innerHTML =
+    '<div class="card">' +
+      '<div class="card-title"><span class="num">⚖️</span> Уравненное уравнение</div>' +
+      '<div class="eq-output">' + r.left + ' <span class="arrow">→</span> ' + r.right + '</div>' +
+      '<div class="eq-info"><div class="lbl">Коэффициенты</div>' + r.coefs.join(' : ') + '</div>' +
+    '</div>';
+}
+
+function quickBalance(eq){
+  document.getElementById('balanceInput').value = eq;
+  runBalancer();
 }
 
 /* ==================== ОГЛАВЛЕНИЯ ==================== */
@@ -604,7 +888,7 @@ function openPage(id){
     document.getElementById('viewerContainer').innerHTML =
       '<div class="para-title">Параграф</div>' +
       '<div class="para-sub">Теория для этого параграфа ещё не добавлена</div>' +
-      '<div class="note">Обратитесь к учителю или попросите дополнить сайт.</div>';
+      '<div class="note">Попроси дополнить сайт.</div>';
     lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
     showPage('viewer');
     return;
