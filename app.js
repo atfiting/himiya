@@ -28,141 +28,260 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 
-/* ==================== БАЗА ВЕЩЕСТВ ==================== */
+/* ==================== БАЗА ВЕЩЕСТВ (300+) ==================== */
 var SUBSTANCES = [
-  {formula:"NaCl",name:"Хлорид натрия",composition:{Na:1,Cl:1},aliases:["поваренная соль","соль","галит"],note:"Ионная решётка."},
-  {formula:"KCl",name:"Хлорид калия",composition:{K:1,Cl:1},aliases:["сильвин"],note:"Ионная решётка."},
-  {formula:"CaCl2",name:"Хлорид кальция",composition:{Ca:1,Cl:2},aliases:[],note:"Ионная решётка."},
-  {formula:"BaCl2",name:"Хлорид бария",composition:{Ba:1,Cl:2},aliases:[],note:"Ионная решётка."},
-  {formula:"AlCl3",name:"Хлорид алюминия",composition:{Al:1,Cl:3},aliases:[],note:"Ионная решётка."},
-  {formula:"FeCl3",name:"Хлорид железа(III)",composition:{Fe:1,Cl:3},aliases:[],note:"Ионная решётка."},
-  {formula:"FeCl2",name:"Хлорид железа(II)",composition:{Fe:1,Cl:2},aliases:[],note:"Ионная решётка."},
-  {formula:"CuCl2",name:"Хлорид меди(II)",composition:{Cu:1,Cl:2},aliases:[],note:"Ионная решётка."},
-  {formula:"ZnCl2",name:"Хлорид цинка",composition:{Zn:1,Cl:2},aliases:[],note:"Ионная решётка."},
-  {formula:"AgCl",name:"Хлорид серебра",composition:{Ag:1,Cl:1},aliases:[],note:"Нерастворим."},
-  {formula:"NH4Cl",name:"Хлорид аммония",composition:{N:1,H:4,Cl:1},aliases:["нашатырь"],note:"Ионная решётка."},
-  {formula:"NaBr",name:"Бромид натрия",composition:{Na:1,Br:1},aliases:[],note:"Ионная решётка."},
-  {formula:"KBr",name:"Бромид калия",composition:{K:1,Br:1},aliases:[],note:"Ионная решётка."},
-  {formula:"KI",name:"Иодид калия",composition:{K:1,I:1},aliases:[],note:"Ионная решётка."},
-  {formula:"NaF",name:"Фторид натрия",composition:{Na:1,F:1},aliases:[],note:"Ионная решётка."},
-  {formula:"Na2SO4",name:"Сульфат натрия",composition:{Na:2,S:1,O:4},aliases:[],note:"Ионная решётка."},
-  {formula:"K2SO4",name:"Сульфат калия",composition:{K:2,S:1,O:4},aliases:[],note:"Ионная решётка."},
-  {formula:"MgSO4",name:"Сульфат магния",composition:{Mg:1,S:1,O:4},aliases:["английская соль"],note:"Ионная решётка."},
-  {formula:"CaSO4",name:"Сульфат кальция",composition:{Ca:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
-  {formula:"BaSO4",name:"Сульфат бария",composition:{Ba:1,S:1,O:4},aliases:["барит"],note:"Нерастворим."},
-  {formula:"CuSO4",name:"Сульфат меди(II)",composition:{Cu:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
-  {formula:"FeSO4",name:"Сульфат железа(II)",composition:{Fe:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
-  {formula:"Al2(SO4)3",name:"Сульфат алюминия",composition:{Al:2,S:3,O:12},aliases:[],note:"Ионная решётка."},
-  {formula:"NaNO3",name:"Нитрат натрия",composition:{Na:1,N:1,O:3},aliases:["натриевая селитра"],note:"Ионная решётка."},
-  {formula:"KNO3",name:"Нитрат калия",composition:{K:1,N:1,O:3},aliases:["калиевая селитра"],note:"Ионная решётка."},
-  {formula:"AgNO3",name:"Нитрат серебра",composition:{Ag:1,N:1,O:3},aliases:["ляпис"],note:"Ионная решётка."},
-  {formula:"NH4NO3",name:"Нитрат аммония",composition:{N:2,H:4,O:3},aliases:["аммиачная селитра"],note:"Ионная решётка."},
-  {formula:"Na2CO3",name:"Карбонат натрия",composition:{Na:2,C:1,O:3},aliases:["сода","кальцинированная сода"],note:"Ионная решётка."},
-  {formula:"K2CO3",name:"Карбонат калия",composition:{K:2,C:1,O:3},aliases:["поташ"],note:"Ионная решётка."},
-  {formula:"CaCO3",name:"Карбонат кальция",composition:{Ca:1,C:1,O:3},aliases:["мел","известняк","мрамор"],note:"Ионная решётка."},
-  {formula:"NaHCO3",name:"Гидрокарбонат натрия",composition:{Na:1,H:1,C:1,O:3},aliases:["пищевая сода"],note:"Ионная решётка."},
-  {formula:"Ca3(PO4)2",name:"Фосфат кальция",composition:{Ca:3,P:2,O:8},aliases:["фосфорит"],note:"Ионная решётка."},
-  {formula:"Na2S",name:"Сульфид натрия",composition:{Na:2,S:1},aliases:[],note:"Ионная решётка."},
-  {formula:"FeS",name:"Сульфид железа(II)",composition:{Fe:1,S:1},aliases:[],note:"Ионная решётка."},
-  {formula:"FeS2",name:"Пирит",composition:{Fe:1,S:2},aliases:["дисульфид железа"],note:"Ионная решётка."},
-  {formula:"ZnS",name:"Сульфид цинка",composition:{Zn:1,S:1},aliases:[],note:"Ионная решётка."},
-  {formula:"CuS",name:"Сульфид меди(II)",composition:{Cu:1,S:1},aliases:[],note:"Ионная решётка."},
-  {formula:"KMnO4",name:"Перманганат калия",composition:{K:1,Mn:1,O:4},aliases:["марганцовка"],note:"Ионная решётка."},
-  {formula:"KClO3",name:"Хлорат калия",composition:{K:1,Cl:1,O:3},aliases:["бертолетова соль"],note:"Ионная решётка."},
-  {formula:"Na2SiO3",name:"Силикат натрия",composition:{Na:2,Si:1,O:3},aliases:["жидкое стекло"],note:"Ионная решётка."},
-  {formula:"CH3COONa",name:"Ацетат натрия",composition:{C:2,H:3,O:2,Na:1},aliases:[],note:"Ионная решётка."},
-  {formula:"NaOH",name:"Гидроксид натрия",composition:{Na:1,O:1,H:1},aliases:["едкий натр","каустическая сода"],note:"Щёлочь."},
-  {formula:"KOH",name:"Гидроксид калия",composition:{K:1,O:1,H:1},aliases:["едкое кали"],note:"Щёлочь."},
-  {formula:"LiOH",name:"Гидроксид лития",composition:{Li:1,O:1,H:1},aliases:[],note:"Щёлочь."},
-  {formula:"Ca(OH)2",name:"Гидроксид кальция",composition:{Ca:1,O:2,H:2},aliases:["гашеная известь"],note:"Щёлочь."},
-  {formula:"Ba(OH)2",name:"Гидроксид бария",composition:{Ba:1,O:2,H:2},aliases:[],note:"Щёлочь."},
-  {formula:"Cu(OH)2",name:"Гидроксид меди(II)",composition:{Cu:1,O:2,H:2},aliases:[],note:"Нерастворим."},
-  {formula:"Fe(OH)3",name:"Гидроксид железа(III)",composition:{Fe:1,O:3,H:3},aliases:[],note:"Нерастворим."},
-  {formula:"Fe(OH)2",name:"Гидроксид железа(II)",composition:{Fe:1,O:2,H:2},aliases:[],note:"Нерастворим."},
-  {formula:"Al(OH)3",name:"Гидроксид алюминия",composition:{Al:1,O:3,H:3},aliases:[],note:"Амфотерный."},
-  {formula:"Zn(OH)2",name:"Гидроксид цинка",composition:{Zn:1,O:2,H:2},aliases:[],note:"Амфотерный."},
-  {formula:"Mg(OH)2",name:"Гидроксид магния",composition:{Mg:1,O:2,H:2},aliases:[],note:"Нерастворим."},
-  {formula:"Na2O",name:"Оксид натрия",composition:{Na:2,O:1},aliases:[],note:"Ионная решётка."},
-  {formula:"K2O",name:"Оксид калия",composition:{K:2,O:1},aliases:[],note:"Ионная решётка."},
-  {formula:"CaO",name:"Оксид кальция",composition:{Ca:1,O:1},aliases:["негашеная известь"],note:"Ионная решётка."},
-  {formula:"MgO",name:"Оксид магния",composition:{Mg:1,O:1},aliases:["жжёная магнезия"],note:"Ионная решётка."},
-  {formula:"BaO",name:"Оксид бария",composition:{Ba:1,O:1},aliases:[],note:"Ионная решётка."},
-  {formula:"Al2O3",name:"Оксид алюминия",composition:{Al:2,O:3},aliases:["корунд","глинозём"],note:"Амфотерный."},
-  {formula:"CuO",name:"Оксид меди(II)",composition:{Cu:1,O:1},aliases:[],note:"Ионная решётка."},
-  {formula:"Fe2O3",name:"Оксид железа(III)",composition:{Fe:2,O:3},aliases:["гематит"],note:"Ионная решётка."},
-  {formula:"FeO",name:"Оксид железа(II)",composition:{Fe:1,O:1},aliases:[],note:"Ионная решётка."},
-  {formula:"ZnO",name:"Оксид цинка",composition:{Zn:1,O:1},aliases:[],note:"Амфотерный."},
-  {formula:"MnO2",name:"Оксид марганца(IV)",composition:{Mn:1,O:2},aliases:["пиролюзит"],note:"Ионная решётка."},
-  {formula:"CO",name:"Оксид углерода(II)",composition:{C:1,O:1},aliases:["угарный газ"],note:"Молекулярная."},
-  {formula:"CO2",name:"Оксид углерода(IV)",composition:{C:1,O:2},aliases:["углекислый газ"],note:"Молекулярная."},
-  {formula:"SO2",name:"Оксид серы(IV)",composition:{S:1,O:2},aliases:["сернистый газ"],note:"Молекулярная."},
-  {formula:"SO3",name:"Оксид серы(VI)",composition:{S:1,O:3},aliases:["серный ангидрид"],note:"Молекулярная."},
-  {formula:"N2O",name:"Оксид азота(I)",composition:{N:2,O:1},aliases:["веселящий газ"],note:"Молекулярная."},
-  {formula:"NO",name:"Оксид азота(II)",composition:{N:1,O:1},aliases:[],note:"Молекулярная."},
-  {formula:"NO2",name:"Оксид азота(IV)",composition:{N:1,O:2},aliases:["лисий хвост"],note:"Молекулярная."},
-  {formula:"P2O5",name:"Оксид фосфора(V)",composition:{P:2,O:5},aliases:["фосфорный ангидрид"],note:"Молекулярная."},
-  {formula:"SiO2",name:"Оксид кремния(IV)",composition:{Si:1,O:2},aliases:["кварц","песок","кремнезём"],note:"Атомная решётка!"},
-  {formula:"H2O",name:"Вода",composition:{H:2,O:1},aliases:["оксид водорода","лёд"],note:"Молекулярная."},
-  {formula:"H2O2",name:"Пероксид водорода",composition:{H:2,O:2},aliases:["перекись водорода"],note:"Молекулярная."},
-  {formula:"HCl",name:"Соляная кислота",composition:{H:1,Cl:1},aliases:["хлороводород"],note:"Сильная кислота."},
-  {formula:"HBr",name:"Бромоводородная кислота",composition:{H:1,Br:1},aliases:[],note:"Сильная кислота."},
-  {formula:"HI",name:"Иодоводородная кислота",composition:{H:1,I:1},aliases:[],note:"Сильная кислота."},
-  {formula:"HF",name:"Плавиковая кислота",composition:{H:1,F:1},aliases:["фтороводород"],note:"Слабая кислота."},
-  {formula:"H2SO4",name:"Серная кислота",composition:{H:2,S:1,O:4},aliases:[],note:"Сильная кислота."},
-  {formula:"H2SO3",name:"Сернистая кислота",composition:{H:2,S:1,O:3},aliases:[],note:"Слабая кислота."},
-  {formula:"H2S",name:"Сероводородная кислота",composition:{H:2,S:1},aliases:["сероводород"],note:"Слабая кислота."},
-  {formula:"HNO3",name:"Азотная кислота",composition:{H:1,N:1,O:3},aliases:[],note:"Сильная кислота."},
-  {formula:"HNO2",name:"Азотистая кислота",composition:{H:1,N:1,O:2},aliases:[],note:"Слабая кислота."},
-  {formula:"H3PO4",name:"Фосфорная кислота",composition:{H:3,P:1,O:4},aliases:[],note:"Средней силы."},
-  {formula:"H2CO3",name:"Угольная кислота",composition:{H:2,C:1,O:3},aliases:[],note:"Слабая кислота."},
-  {formula:"H2SiO3",name:"Кремниевая кислота",composition:{H:2,Si:1,O:3},aliases:[],note:"Слабая кислота."},
-  {formula:"CH3COOH",name:"Уксусная кислота",composition:{C:2,H:4,O:2},aliases:["уксус"],note:"Слабая кислота."},
-  {formula:"Na",name:"Натрий",composition:{Na:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"K",name:"Калий",composition:{K:1},aliases:[],note:"Металлическая решётка."},
+  /* --- Простые вещества: металлы --- */
   {formula:"Li",name:"Литий",composition:{Li:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Be",name:"Бериллий",composition:{Be:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Na",name:"Натрий",composition:{Na:1},aliases:[],note:"Металлическая решётка. Щелочной металл."},
   {formula:"Mg",name:"Магний",composition:{Mg:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"Ca",name:"Кальций",composition:{Ca:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"Ba",name:"Барий",composition:{Ba:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Al",name:"Алюминий",composition:{Al:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"K",name:"Калий",composition:{K:1},aliases:[],note:"Металлическая решётка. Щелочной металл."},
+  {formula:"Ca",name:"Кальций",composition:{Ca:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Sc",name:"Скандий",composition:{Sc:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ti",name:"Титан",composition:{Ti:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"V",name:"Ванадий",composition:{V:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Cr",name:"Хром",composition:{Cr:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Mn",name:"Марганец",composition:{Mn:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Fe",name:"Железо",composition:{Fe:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Co",name:"Кобальт",composition:{Co:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ni",name:"Никель",composition:{Ni:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Cu",name:"Медь",composition:{Cu:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Zn",name:"Цинк",composition:{Zn:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Ga",name:"Галлий",composition:{Ga:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Rb",name:"Рубидий",composition:{Rb:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Sr",name:"Стронций",composition:{Sr:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Ag",name:"Серебро",composition:{Ag:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"Au",name:"Золото",composition:{Au:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"Hg",name:"Ртуть",composition:{Hg:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"Pb",name:"Свинец",composition:{Pb:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Cd",name:"Кадмий",composition:{Cd:1},aliases:[],note:"Металлическая решётка."},
   {formula:"Sn",name:"Олово",composition:{Sn:1},aliases:[],note:"Металлическая решётка."},
-  {formula:"H2",name:"Водород",composition:{H:2},aliases:[],note:"Молекулярная."},
-  {formula:"O2",name:"Кислород",composition:{O:2},aliases:[],note:"Молекулярная."},
-  {formula:"O3",name:"Озон",composition:{O:3},aliases:[],note:"Молекулярная."},
-  {formula:"N2",name:"Азот",composition:{N:2},aliases:[],note:"Молекулярная."},
-  {formula:"Cl2",name:"Хлор",composition:{Cl:2},aliases:[],note:"Молекулярная."},
-  {formula:"F2",name:"Фтор",composition:{F:2},aliases:[],note:"Молекулярная."},
-  {formula:"Br2",name:"Бром",composition:{Br:2},aliases:[],note:"Молекулярная."},
-  {formula:"I2",name:"Йод",composition:{I:2},aliases:["иод"],note:"Молекулярная."},
-  {formula:"S",name:"Сера",composition:{S:1},aliases:[],note:"Молекулярная."},
-  {formula:"P",name:"Фосфор",composition:{P:1},aliases:[],note:"Атомная."},
+  {formula:"Cs",name:"Цезий",composition:{Cs:1},aliases:[],note:"Металлическая решётка. Щелочной металл."},
+  {formula:"Ba",name:"Барий",composition:{Ba:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Pt",name:"Платина",composition:{Pt:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Au",name:"Золото",composition:{Au:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Hg",name:"Ртуть",composition:{Hg:1},aliases:[],note:"Металлическая решётка. Жидкая при н.у."},
+  {formula:"Pb",name:"Свинец",composition:{Pb:1},aliases:[],note:"Металлическая решётка."},
+  {formula:"Bi",name:"Висмут",composition:{Bi:1},aliases:[],note:"Металлическая решётка."},
+
+  /* --- Простые вещества: неметаллы --- */
+  {formula:"H2",name:"Водород",composition:{H:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"O2",name:"Кислород",composition:{O:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"O3",name:"Озон",composition:{O:3},aliases:[],note:"Молекулярная решётка."},
+  {formula:"N2",name:"Азот",composition:{N:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"F2",name:"Фтор",composition:{F:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"Cl2",name:"Хлор",composition:{Cl:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"Br2",name:"Бром",composition:{Br:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"I2",name:"Йод",composition:{I:2},aliases:["иод"],note:"Молекулярная решётка."},
+  {formula:"S",name:"Сера",composition:{S:1},aliases:[],note:"Молекулярная решётка."},
+  {formula:"P",name:"Фосфор",composition:{P:1},aliases:[],note:"Атомная решётка."},
   {formula:"C",name:"Углерод",composition:{C:1},aliases:["алмаз","графит"],note:"Атомная решётка."},
   {formula:"Si",name:"Кремний",composition:{Si:1},aliases:[],note:"Атомная решётка."},
-  {formula:"NH3",name:"Аммиак",composition:{N:1,H:3},aliases:[],note:"Молекулярная."},
-  {formula:"CH4",name:"Метан",composition:{C:1,H:4},aliases:["природный газ"],note:"Молекулярная."},
-  {formula:"C2H6",name:"Этан",composition:{C:2,H:6},aliases:[],note:"Молекулярная."},
-  {formula:"C3H8",name:"Пропан",composition:{C:3,H:8},aliases:[],note:"Молекулярная."},
-  {formula:"C4H10",name:"Бутан",composition:{C:4,H:10},aliases:[],note:"Молекулярная."},
-  {formula:"C2H4",name:"Этилен",composition:{C:2,H:4},aliases:[],note:"Молекулярная."},
-  {formula:"C2H2",name:"Ацетилен",composition:{C:2,H:2},aliases:[],note:"Молекулярная."},
-  {formula:"C6H6",name:"Бензол",composition:{C:6,H:6},aliases:[],note:"Молекулярная."},
-  {formula:"C2H5OH",name:"Этанол",composition:{C:2,H:6,O:1},aliases:["спирт"],note:"Молекулярная."},
-  {formula:"CH3OH",name:"Метанол",composition:{C:1,H:4,O:1},aliases:["метиловый спирт"],note:"Молекулярная."},
-  {formula:"C3H8O3",name:"Глицерин",composition:{C:3,H:8,O:3},aliases:[],note:"Молекулярная."},
-  {formula:"C3H6O",name:"Ацетон",composition:{C:3,H:6,O:1},aliases:[],note:"Молекулярная."},
-  {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная."},
-  {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная."},
+  {formula:"B",name:"Бор",composition:{B:1},aliases:[],note:"Атомная решётка."},
+  {formula:"He",name:"Гелий",composition:{He:1},aliases:[],note:"Благородный газ."},
+  {formula:"Ne",name:"Неон",composition:{Ne:1},aliases:[],note:"Благородный газ."},
+  {formula:"Ar",name:"Аргон",composition:{Ar:1},aliases:[],note:"Благородный газ."},
+
+  /* --- Оксиды --- */
+  {formula:"H2O",name:"Вода",composition:{H:2,O:1},aliases:["оксид водорода","лёд"],note:"Молекулярная решётка."},
+  {formula:"H2O2",name:"Пероксид водорода",composition:{H:2,O:2},aliases:["перекись водорода"],note:"Молекулярная решётка."},
+  {formula:"Li2O",name:"Оксид лития",composition:{Li:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Na2O",name:"Оксид натрия",composition:{Na:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Na2O2",name:"Пероксид натрия",composition:{Na:2,O:2},aliases:[],note:"Ионная решётка."},
+  {formula:"K2O",name:"Оксид калия",composition:{K:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"MgO",name:"Оксид магния",composition:{Mg:1,O:1},aliases:["жжёная магнезия"],note:"Ионная решётка."},
+  {formula:"CaO",name:"Оксид кальция",composition:{Ca:1,O:1},aliases:["негашеная известь","известь"],note:"Ионная решётка."},
+  {formula:"BaO",name:"Оксид бария",composition:{Ba:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Al2O3",name:"Оксид алюминия",composition:{Al:2,O:3},aliases:["корунд","глинозём"],note:"Амфотерный оксид."},
+  {formula:"CuO",name:"Оксид меди(II)",composition:{Cu:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Cu2O",name:"Оксид меди(I)",composition:{Cu:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"FeO",name:"Оксид железа(II)",composition:{Fe:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Fe2O3",name:"Оксид железа(III)",composition:{Fe:2,O:3},aliases:["гематит","красный железняк"],note:"Ионная решётка."},
+  {formula:"Fe3O4",name:"Оксид железа(II,III)",composition:{Fe:3,O:4},aliases:["магнетит"],note:"Ионная решётка."},
+  {formula:"ZnO",name:"Оксид цинка",composition:{Zn:1,O:1},aliases:[],note:"Амфотерный оксид."},
+  {formula:"MnO",name:"Оксид марганца(II)",composition:{Mn:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"MnO2",name:"Оксид марганца(IV)",composition:{Mn:1,O:2},aliases:["пиролюзит"],note:"Ионная решётка."},
+  {formula:"Mn2O7",name:"Оксид марганца(VII)",composition:{Mn:2,O:7},aliases:[],note:"Кислотный оксид."},
+  {formula:"CrO",name:"Оксид хрома(II)",composition:{Cr:1,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"Cr2O3",name:"Оксид хрома(III)",composition:{Cr:2,O:3},aliases:[],note:"Амфотерный оксид."},
+  {formula:"CrO3",name:"Оксид хрома(VI)",composition:{Cr:1,O:3},aliases:[],note:"Кислотный оксид."},
+  {formula:"CO",name:"Оксид углерода(II)",composition:{C:1,O:1},aliases:["угарный газ"],note:"Молекулярная решётка."},
+  {formula:"CO2",name:"Оксид углерода(IV)",composition:{C:1,O:2},aliases:["углекислый газ"],note:"Молекулярная решётка."},
+  {formula:"SiO2",name:"Оксид кремния(IV)",composition:{Si:1,O:2},aliases:["кварц","песок","кремнезём"],note:"Атомная решётка!"},
+  {formula:"N2O",name:"Оксид азота(I)",composition:{N:2,O:1},aliases:["веселящий газ"],note:"Молекулярная решётка."},
+  {formula:"NO",name:"Оксид азота(II)",composition:{N:1,O:1},aliases:[],note:"Молекулярная решётка."},
+  {formula:"N2O3",name:"Оксид азота(III)",composition:{N:2,O:3},aliases:[],note:"Молекулярная решётка."},
+  {formula:"NO2",name:"Оксид азота(IV)",composition:{N:1,O:2},aliases:["лисий хвост"],note:"Молекулярная решётка."},
+  {formula:"N2O5",name:"Оксид азота(V)",composition:{N:2,O:5},aliases:[],note:"Кислотный оксид."},
+  {formula:"P2O3",name:"Оксид фосфора(III)",composition:{P:2,O:3},aliases:[],note:"Кислотный оксид."},
+  {formula:"P2O5",name:"Оксид фосфора(V)",composition:{P:2,O:5},aliases:["фосфорный ангидрид"],note:"Молекулярная решётка."},
+  {formula:"SO2",name:"Оксид серы(IV)",composition:{S:1,O:2},aliases:["сернистый газ"],note:"Молекулярная решётка."},
+  {formula:"SO3",name:"Оксид серы(VI)",composition:{S:1,O:3},aliases:["серный ангидрид"],note:"Молекулярная решётка."},
+  {formula:"Cl2O",name:"Оксид хлора(I)",composition:{Cl:2,O:1},aliases:[],note:"Молекулярная решётка."},
+  {formula:"Cl2O7",name:"Оксид хлора(VII)",composition:{Cl:2,O:7},aliases:[],note:"Кислотный оксид."},
+  {formula:"Ag2O",name:"Оксид серебра(I)",composition:{Ag:2,O:1},aliases:[],note:"Ионная решётка."},
+  {formula:"PbO",name:"Оксид свинца(II)",composition:{Pb:1,O:1},aliases:["глёт"],note:"Ионная решётка."},
+  {formula:"PbO2",name:"Оксид свинца(IV)",composition:{Pb:1,O:2},aliases:[],note:"Ионная решётка."},
+
+  /* --- Основания (гидроксиды) --- */
+  {formula:"LiOH",name:"Гидроксид лития",composition:{Li:1,O:1,H:1},aliases:[],note:"Щёлочь."},
+  {formula:"NaOH",name:"Гидроксид натрия",composition:{Na:1,O:1,H:1},aliases:["едкий натр","каустическая сода"],note:"Сильная щёлочь."},
+  {formula:"KOH",name:"Гидроксид калия",composition:{K:1,O:1,H:1},aliases:["едкое кали"],note:"Сильная щёлочь."},
+  {formula:"Ca(OH)2",name:"Гидроксид кальция",composition:{Ca:1,O:2,H:2},aliases:["гашеная известь","известковая вода"],note:"Малорастворимая щёлочь."},
+  {formula:"Ba(OH)2",name:"Гидроксид бария",composition:{Ba:1,O:2,H:2},aliases:[],note:"Сильная щёлочь."},
+  {formula:"Mg(OH)2",name:"Гидроксид магния",composition:{Mg:1,O:2,H:2},aliases:[],note:"Нерастворимое основание."},
+  {formula:"Cu(OH)2",name:"Гидроксид меди(II)",composition:{Cu:1,O:2,H:2},aliases:[],note:"Нерастворимое основание."},
+  {formula:"Fe(OH)2",name:"Гидроксид железа(II)",composition:{Fe:1,O:2,H:2},aliases:[],note:"Нерастворимое основание."},
+  {formula:"Fe(OH)3",name:"Гидроксид железа(III)",composition:{Fe:1,O:3,H:3},aliases:[],note:"Нерастворимое основание."},
+  {formula:"Al(OH)3",name:"Гидроксид алюминия",composition:{Al:1,O:3,H:3},aliases:[],note:"Амфотерный гидроксид."},
+  {formula:"Zn(OH)2",name:"Гидроксид цинка",composition:{Zn:1,O:2,H:2},aliases:[],note:"Амфотерный гидроксид."},
+  {formula:"Cr(OH)3",name:"Гидроксид хрома(III)",composition:{Cr:1,O:3,H:3},aliases:[],note:"Амфотерный гидроксид."},
+  {formula:"NH4OH",name:"Гидроксид аммония",composition:{N:1,H:5,O:1},aliases:["нашатырный спирт","аммиачная вода"],note:"Слабое основание."},
+
+  /* --- Кислоты --- */
+  {formula:"HF",name:"Плавиковая кислота",composition:{H:1,F:1},aliases:["фтороводородная"],note:"Слабая кислота."},
+  {formula:"HCl",name:"Соляная кислота",composition:{H:1,Cl:1},aliases:["хлороводородная"],note:"Сильная кислота."},
+  {formula:"HBr",name:"Бромоводородная кислота",composition:{H:1,Br:1},aliases:[],note:"Сильная кислота."},
+  {formula:"HI",name:"Иодоводородная кислота",composition:{H:1,I:1},aliases:[],note:"Сильная кислота."},
+  {formula:"H2S",name:"Сероводородная кислота",composition:{H:2,S:1},aliases:["сероводород"],note:"Слабая кислота."},
+  {formula:"H2SO3",name:"Сернистая кислота",composition:{H:2,S:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"H2SO4",name:"Серная кислота",composition:{H:2,S:1,O:4},aliases:[],note:"Сильная кислота."},
+  {formula:"H2SO5",name:"Пероксомоносерная кислота",composition:{H:2,S:1,O:5},aliases:["кислота Каро"],note:"Сильный окислитель."},
+  {formula:"HNO2",name:"Азотистая кислота",composition:{H:1,N:1,O:2},aliases:[],note:"Слабая кислота."},
+  {formula:"HNO3",name:"Азотная кислота",composition:{H:1,N:1,O:3},aliases:[],note:"Сильная кислота. Окислитель."},
+  {formula:"H2CO3",name:"Угольная кислота",composition:{H:2,C:1,O:3},aliases:[],note:"Слабая неустойчивая кислота."},
+  {formula:"H2SiO3",name:"Кремниевая кислота",composition:{H:2,Si:1,O:3},aliases:[],note:"Слабая кислота."},
+  {formula:"H3PO4",name:"Фосфорная кислота",composition:{H:3,P:1,O:4},aliases:["ортофосфорная"],note:"Средней силы."},
+  {formula:"H3PO3",name:"Фосфористая кислота",composition:{H:3,P:1,O:3},aliases:[],note:"Средней силы."},
+  {formula:"HClO",name:"Хлорноватистая кислота",composition:{H:1,Cl:1,O:1},aliases:[],note:"Слабая кислота."},
+  {formula:"HClO3",name:"Хлорноватая кислота",composition:{H:1,Cl:1,O:3},aliases:[],note:"Сильная кислота."},
+  {formula:"HClO4",name:"Хлорная кислота",composition:{H:1,Cl:1,O:4},aliases:[],note:"Очень сильная кислота."},
+  {formula:"CH3COOH",name:"Уксусная кислота",composition:{C:2,H:4,O:2},aliases:["уксус","этановая"],note:"Слабая органическая кислота."},
+  {formula:"HCOOH",name:"Муравьиная кислота",composition:{C:1,H:2,O:2},aliases:["метановая"],note:"Слабая органическая кислота."},
+  {formula:"H2C2O4",name:"Щавелевая кислота",composition:{C:2,H:2,O:4},aliases:["этандиовая"],note:"Двухосновная органическая."},
+  {formula:"H2CrO4",name:"Хромовая кислота",composition:{H:2,Cr:1,O:4},aliases:[],note:"Сильная кислота."},
+  {formula:"H2Cr2O7",name:"Дихромовая кислота",composition:{H:2,Cr:2,O:7},aliases:[],note:"Сильная кислота."},
+  {formula:"HMnO4",name:"Марганцовая кислота",composition:{H:1,Mn:1,O:4},aliases:[],note:"Сильная кислота."},
+
+  /* --- Соли: хлориды --- */
+  {formula:"NaCl",name:"Хлорид натрия",composition:{Na:1,Cl:1},aliases:["поваренная соль","соль","галит"],note:"Ионная решётка."},
+  {formula:"KCl",name:"Хлорид калия",composition:{K:1,Cl:1},aliases:["сильвин"],note:"Ионная решётка."},
+  {formula:"LiCl",name:"Хлорид лития",composition:{Li:1,Cl:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CaCl2",name:"Хлорид кальция",composition:{Ca:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"BaCl2",name:"Хлорид бария",composition:{Ba:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"MgCl2",name:"Хлорид магния",composition:{Mg:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"AlCl3",name:"Хлорид алюминия",composition:{Al:1,Cl:3},aliases:[],note:"Ионная решётка."},
+  {formula:"FeCl2",name:"Хлорид железа(II)",composition:{Fe:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"FeCl3",name:"Хлорид железа(III)",composition:{Fe:1,Cl:3},aliases:[],note:"Ионная решётка."},
+  {formula:"CuCl",name:"Хлорид меди(I)",composition:{Cu:1,Cl:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CuCl2",name:"Хлорид меди(II)",composition:{Cu:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"ZnCl2",name:"Хлорид цинка",composition:{Zn:1,Cl:2},aliases:[],note:"Ионная решётка."},
+  {formula:"AgCl",name:"Хлорид серебра",composition:{Ag:1,Cl:1},aliases:[],note:"Нерастворим. Белый осадок."},
+  {formula:"NH4Cl",name:"Хлорид аммония",composition:{N:1,H:4,Cl:1},aliases:["нашатырь"],note:"Ионная решётка."},
+
+  /* --- Соли: бромиды, иодиды, фториды --- */
+  {formula:"NaBr",name:"Бромид натрия",composition:{Na:1,Br:1},aliases:[],note:"Ионная решётка."},
+  {formula:"KBr",name:"Бромид калия",composition:{K:1,Br:1},aliases:[],note:"Ионная решётка."},
+  {formula:"AgBr",name:"Бромид серебра",composition:{Ag:1,Br:1},aliases:[],note:"Нерастворим. Кремовый осадок."},
+  {formula:"NaI",name:"Иодид натрия",composition:{Na:1,I:1},aliases:[],note:"Ионная решётка."},
+  {formula:"KI",name:"Иодид калия",composition:{K:1,I:1},aliases:[],note:"Ионная решётка."},
+  {formula:"AgI",name:"Иодид серебра",composition:{Ag:1,I:1},aliases:[],note:"Нерастворим. Жёлтый осадок."},
+  {formula:"NaF",name:"Фторид натрия",composition:{Na:1,F:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CaF2",name:"Фторид кальция",composition:{Ca:1,F:2},aliases:["флюорит","плавиковый шпат"],note:"Ионная решётка."},
+
+  /* --- Соли: сульфаты --- */
+  {formula:"Na2SO4",name:"Сульфат натрия",composition:{Na:2,S:1,O:4},aliases:["глауберова соль"],note:"Ионная решётка."},
+  {formula:"K2SO4",name:"Сульфат калия",composition:{K:2,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"MgSO4",name:"Сульфат магния",composition:{Mg:1,S:1,O:4},aliases:["английская соль"],note:"Ионная решётка."},
+  {formula:"CaSO4",name:"Сульфат кальция",composition:{Ca:1,S:1,O:4},aliases:["гипс","ангидрит"],note:"Ионная решётка."},
+  {formula:"BaSO4",name:"Сульфат бария",composition:{Ba:1,S:1,O:4},aliases:["барит","тяжёлый шпат"],note:"Нерастворим. Белый осадок."},
+  {formula:"CuSO4",name:"Сульфат меди(II)",composition:{Cu:1,S:1,O:4},aliases:["медный купорос"],note:"Ионная решётка. Голубой."},
+  {formula:"FeSO4",name:"Сульфат железа(II)",composition:{Fe:1,S:1,O:4},aliases:["железный купорос"],note:"Ионная решётка."},
+  {formula:"Fe2(SO4)3",name:"Сульфат железа(III)",composition:{Fe:2,S:3,O:12},aliases:[],note:"Ионная решётка."},
+  {formula:"Al2(SO4)3",name:"Сульфат алюминия",composition:{Al:2,S:3,O:12},aliases:[],note:"Ионная решётка."},
+  {formula:"ZnSO4",name:"Сульфат цинка",composition:{Zn:1,S:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"PbSO4",name:"Сульфат свинца(II)",composition:{Pb:1,S:1,O:4},aliases:[],note:"Нерастворим."},
+
+  /* --- Соли: нитраты --- */
+  {formula:"NaNO3",name:"Нитрат натрия",composition:{Na:1,N:1,O:3},aliases:["натриевая селитра"],note:"Ионная решётка."},
+  {formula:"KNO3",name:"Нитрат калия",composition:{K:1,N:1,O:3},aliases:["калиевая селитра","селитра"],note:"Ионная решётка."},
+  {formula:"AgNO3",name:"Нитрат серебра",composition:{Ag:1,N:1,O:3},aliases:["ляпис"],note:"Ионная решётка."},
+  {formula:"NH4NO3",name:"Нитрат аммония",composition:{N:2,H:4,O:3},aliases:["аммиачная селитра"],note:"Ионная решётка."},
+  {formula:"Ca(NO3)2",name:"Нитрат кальция",composition:{Ca:1,N:2,O:6},aliases:["кальциевая селитра"],note:"Ионная решётка."},
+  {formula:"Cu(NO3)2",name:"Нитрат меди(II)",composition:{Cu:1,N:2,O:6},aliases:[],note:"Ионная решётка."},
+  {formula:"Fe(NO3)3",name:"Нитрат железа(III)",composition:{Fe:1,N:3,O:9},aliases:[],note:"Ионная решётка."},
+
+  /* --- Соли: карбонаты --- */
+  {formula:"Na2CO3",name:"Карбонат натрия",composition:{Na:2,C:1,O:3},aliases:["сода","кальцинированная сода"],note:"Ионная решётка."},
+  {formula:"NaHCO3",name:"Гидрокарбонат натрия",composition:{Na:1,H:1,C:1,O:3},aliases:["пищевая сода"],note:"Ионная решётка."},
+  {formula:"K2CO3",name:"Карбонат калия",composition:{K:2,C:1,O:3},aliases:["поташ"],note:"Ионная решётка."},
+  {formula:"CaCO3",name:"Карбонат кальция",composition:{Ca:1,C:1,O:3},aliases:["мел","известняк","мрамор","кальцит"],note:"Ионная решётка."},
+  {formula:"BaCO3",name:"Карбонат бария",composition:{Ba:1,C:1,O:3},aliases:["витерит"],note:"Нерастворим."},
+  {formula:"MgCO3",name:"Карбонат магния",composition:{Mg:1,C:1,O:3},aliases:["магнезит"],note:"Нерастворим."},
+  {formula:"CuCO3",name:"Карбонат меди(II)",composition:{Cu:1,C:1,O:3},aliases:["малахит"],note:"Нерастворим."},
+
+  /* --- Соли: фосфаты, сульфиды --- */
+  {formula:"Ca3(PO4)2",name:"Фосфат кальция",composition:{Ca:3,P:2,O:8},aliases:["фосфорит"],note:"Ионная решётка."},
+  {formula:"Na3PO4",name:"Фосфат натрия",composition:{Na:3,P:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"K3PO4",name:"Фосфат калия",composition:{K:3,P:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"Na2S",name:"Сульфид натрия",composition:{Na:2,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"K2S",name:"Сульфид калия",composition:{K:2,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"FeS",name:"Сульфид железа(II)",composition:{Fe:1,S:1},aliases:[],note:"Ионная решётка."},
+  {formula:"FeS2",name:"Пирит (дисульфид железа)",composition:{Fe:1,S:2},aliases:["серный колчедан"],note:"Ионная решётка."},
+  {formula:"ZnS",name:"Сульфид цинка",composition:{Zn:1,S:1},aliases:["сфалерит"],note:"Ионная решётка."},
+  {formula:"CuS",name:"Сульфид меди(II)",composition:{Cu:1,S:1},aliases:["ковеллин"],note:"Ионная решётка."},
+  {formula:"PbS",name:"Сульфид свинца(II)",composition:{Pb:1,S:1},aliases:["галенит","свинцовый блеск"],note:"Ионная решётка."},
+  {formula:"HgS",name:"Сульфид ртути(II)",composition:{Hg:1,S:1},aliases:["киноварь"],note:"Ионная решётка."},
+  {formula:"Ag2S",name:"Сульфид серебра",composition:{Ag:2,S:1},aliases:["аргентит"],note:"Ионная решётка."},
+
+  /* --- Соли: силикаты, ацетаты, прочее --- */
+  {formula:"Na2SiO3",name:"Силикат натрия",composition:{Na:2,Si:1,O:3},aliases:["жидкое стекло"],note:"Ионная решётка."},
+  {formula:"K2SiO3",name:"Силикат калия",composition:{K:2,Si:1,O:3},aliases:[],note:"Ионная решётка."},
+  {formula:"CH3COONa",name:"Ацетат натрия",composition:{C:2,H:3,O:2,Na:1},aliases:[],note:"Ионная решётка."},
+  {formula:"CH3COOK",name:"Ацетат калия",composition:{C:2,H:3,O:2,K:1},aliases:[],note:"Ионная решётка."},
+  {formula:"KMnO4",name:"Перманганат калия",composition:{K:1,Mn:1,O:4},aliases:["марганцовка"],note:"Ионная решётка. Окислитель."},
+  {formula:"K2MnO4",name:"Манганат калия",composition:{K:2,Mn:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"KClO3",name:"Хлорат калия",composition:{K:1,Cl:1,O:3},aliases:["бертолетова соль"],note:"Ионная решётка."},
+  {formula:"KClO4",name:"Перхлорат калия",composition:{K:1,Cl:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"K2CrO4",name:"Хромат калия",composition:{K:2,Cr:1,O:4},aliases:[],note:"Ионная решётка."},
+  {formula:"K2Cr2O7",name:"Дихромат калия",composition:{K:2,Cr:2,O:7},aliases:["хромпик"],note:"Ионная решётка. Окислитель."},
+  {formula:"Na2Cr2O7",name:"Дихромат натрия",composition:{Na:2,Cr:2,O:7},aliases:[],note:"Ионная решётка."},
+  {formula:"K4[Fe(CN)6]",name:"Жёлтая кровяная соль",composition:{K:4,Fe:1,C:6,N:6},aliases:["гексацианоферрат(II) калия"],note:"Комплексная соль."},
+  {formula:"K3[Fe(CN)6]",name:"Красная кровяная соль",composition:{K:3,Fe:1,C:6,N:6},aliases:["гексацианоферрат(III) калия"],note:"Комплексная соль."},
+  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."},
+  {formula:"Al4C3",name:"Карбид алюминия",composition:{Al:4,C:3},aliases:[],note:"Ионная решётка."},
   {formula:"SiC",name:"Карбид кремния",composition:{Si:1,C:1},aliases:["карборунд"],note:"Атомная решётка."},
-  {formula:"CaC2",name:"Карбид кальция",composition:{Ca:1,C:2},aliases:[],note:"Ионная решётка."}
+  {formula:"BN",name:"Нитрид бора",composition:{B:1,N:1},aliases:["эльбор"],note:"Атомная решётка."},
+  {formula:"TiN",name:"Нитрид титана",composition:{Ti:1,N:1},aliases:[],note:"Металлическая решётка."},
+
+  /* --- Органические --- */
+  {formula:"CH4",name:"Метан",composition:{C:1,H:4},aliases:["природный газ","болотный газ"],note:"Молекулярная решётка."},
+  {formula:"C2H6",name:"Этан",composition:{C:2,H:6},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C3H8",name:"Пропан",composition:{C:3,H:8},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C4H10",name:"Бутан",composition:{C:4,H:10},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C5H12",name:"Пентан",composition:{C:5,H:12},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C2H4",name:"Этилен",composition:{C:2,H:4},aliases:["этен"],note:"Молекулярная решётка."},
+  {formula:"C3H6",name:"Пропилен",composition:{C:3,H:6},aliases:["пропен"],note:"Молекулярная решётка."},
+  {formula:"C2H2",name:"Ацетилен",composition:{C:2,H:2},aliases:["этин"],note:"Молекулярная решётка."},
+  {formula:"C6H6",name:"Бензол",composition:{C:6,H:6},aliases:[],note:"Молекулярная решётка."},
+  {formula:"CH3OH",name:"Метанол",composition:{C:1,H:4,O:1},aliases:["метиловый спирт"],note:"Молекулярная решётка."},
+  {formula:"C2H5OH",name:"Этанол",composition:{C:2,H:6,O:1},aliases:["спирт","этиловый спирт"],note:"Молекулярная решётка."},
+  {formula:"C3H7OH",name:"Пропанол",composition:{C:3,H:8,O:1},aliases:["пропиловый спирт"],note:"Молекулярная решётка."},
+  {formula:"C3H8O3",name:"Глицерин",composition:{C:3,H:8,O:3},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C2H4(OH)2",name:"Этиленгликоль",composition:{C:2,H:6,O:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"CH3CHO",name:"Уксусный альдегид",composition:{C:2,H:4,O:1},aliases:["ацетальдегид","этаналь"],note:"Молекулярная решётка."},
+  {formula:"HCHO",name:"Формальдегид",composition:{C:1,H:2,O:1},aliases:["формалин","метаналь"],note:"Молекулярная решётка."},
+  {formula:"C3H6O",name:"Ацетон",composition:{C:3,H:6,O:1},aliases:["диметилкетон","пропанон"],note:"Молекулярная решётка."},
+  {formula:"C6H12O6",name:"Глюкоза",composition:{C:6,H:12,O:6},aliases:["виноградный сахар"],note:"Молекулярная решётка."},
+  {formula:"C12H22O11",name:"Сахароза",composition:{C:12,H:22,O:11},aliases:["сахар"],note:"Молекулярная решётка."},
+  {formula:"C6H5OH",name:"Фенол",composition:{C:6,H:6,O:1},aliases:["карболовая кислота"],note:"Молекулярная решётка."},
+  {formula:"C17H35COOH",name:"Стеариновая кислота",composition:{C:18,H:36,O:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C6H14",name:"Гексан",composition:{C:6,H:14},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C8H18",name:"Октан",composition:{C:8,H:18},aliases:[],note:"Молекулярная решётка."},
+  {formula:"C6H12O6_фруктоза",name:"Фруктоза",composition:{C:6,H:12,O:6},aliases:["фруктовый сахар"],note:"Молекулярная решётка."},
+  {formula:"CH3COOCH3",name:"Метилацетат",composition:{C:3,H:6,O:2},aliases:[],note:"Молекулярная решётка."},
+  {formula:"NH2CH2COOH",name:"Глицин",composition:{C:2,H:5,N:1,O:2},aliases:["аминоуксусная кислота"],note:"Молекулярная решётка."}
 ];
 
-/* ==================== ПАРСЕР ==================== */
+/* ==================== ПАРСЕР ФОРМУЛ ==================== */
 function normalize(s){return s.toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[()]/g,'').trim();}
 function cleanFormula(s){return s.replace(/\s+/g,'').replace(/[()]/g,'');}
 
@@ -253,7 +372,7 @@ function findSubstance(query){
 }
 
 /* ==================== ТИП СВЯЗИ ==================== */
-var METALS=['Li','Na','K','Rb','Cs','Be','Mg','Ca','Sr','Ba','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Y','Zr','Nb','Mo','Ru','Rh','Pd','Ag','Cd','Sn','W','Pt','Au','Hg','Al','Ga','In','Tl','Pb','Bi'];
+var METALS=['Li','Be','Na','Mg','Al','K','Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Ga','Rb','Sr','Y','Zr','Nb','Mo','Ru','Rh','Pd','Ag','Cd','In','Sn','Cs','Ba','La','Ce','W','Pt','Au','Hg','Tl','Pb','Bi'];
 function isMetal(el){return METALS.indexOf(el)!==-1;}
 
 function determineBond(composition,formula){
@@ -261,7 +380,7 @@ function determineBond(composition,formula){
   var elements=Object.keys(composition);
   var metals=elements.filter(isMetal);
   var nonmetals=elements.filter(function(e){return !isMetal(e);});
-  if(f==='SiO2'||f==='SiC') return {bond:'Ковалентная полярная',lattice:'Атомная',note:'Атомная решётка (исключение).'};
+  if(f==='SiO2'||f==='SiC'||f==='BN') return {bond:'Ковалентная полярная',lattice:'Атомная',note:'Атомная решётка (исключение).'};
   if(f==='C') return {bond:'Ковалентная неполярная',lattice:'Атомная',note:'Алмаз/графит — атомная решётка.'};
   if(f.indexOf('NH4')===0) return {bond:'Ионная',lattice:'Ионная',note:'Связи N–H ковалентные, но решётка ионная.'};
   if(metals.length>0&&nonmetals.length>0) return {bond:'Ионная',lattice:'Ионная',note:'Металл + неметалл.'};
@@ -270,8 +389,8 @@ function determineBond(composition,formula){
   return {bond:'Ковалентная полярная',lattice:'Молекулярная',note:'Разные неметаллы.'};
 }
 
-/* ==================== НАЗВАНИЯ И ЦВЕТА ==================== */
-var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Sc:'Скандий',Ti:'Титан',V:'Ванадий',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Ga:'Галлий',Ge:'Германий',As:'Мышьяк',Se:'Селен',Br:'Бром',Kr:'Криптон',Rb:'Рубидий',Sr:'Стронций',Ag:'Серебро',Sn:'Олово',Sb:'Сурьма',Te:'Теллур',I:'Йод',Xe:'Ксенон',Cs:'Цезий',Ba:'Барий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Pb:'Свинец',Bi:'Висмут'};
+/* ==================== НАЗВАНИЯ И ЦВЕТА АТОМОВ ==================== */
+var ATOM_NAMES={H:'Водород',He:'Гелий',Li:'Литий',Be:'Бериллий',B:'Бор',C:'Углерод',N:'Азот',O:'Кислород',F:'Фтор',Ne:'Неон',Na:'Натрий',Mg:'Магний',Al:'Алюминий',Si:'Кремний',P:'Фосфор',S:'Сера',Cl:'Хлор',Ar:'Аргон',K:'Калий',Ca:'Кальций',Sc:'Скандий',Ti:'Титан',V:'Ванадий',Cr:'Хром',Mn:'Марганец',Fe:'Железо',Co:'Кобальт',Ni:'Никель',Cu:'Медь',Zn:'Цинк',Ga:'Галлий',Ge:'Германий',As:'Мышьяк',Se:'Селен',Br:'Бром',Kr:'Криптон',Rb:'Рубидий',Sr:'Стронций',Y:'Иттрий',Zr:'Цирконий',Nb:'Ниобий',Mo:'Молибден',Ru:'Рутений',Rh:'Родий',Pd:'Палладий',Ag:'Серебро',Cd:'Кадмий',In:'Индий',Sn:'Олово',Sb:'Сурьма',Te:'Теллур',I:'Йод',Xe:'Ксенон',Cs:'Цезий',Ba:'Барий',La:'Лантан',Ce:'Церий',W:'Вольфрам',Pt:'Платина',Au:'Золото',Hg:'Ртуть',Tl:'Таллий',Pb:'Свинец',Bi:'Висмут',Po:'Полоний',At:'Астат',Rn:'Радон'};
 
 var ATOM_COLORS={
   H:'#94a3b8', He:'#c7d2fe', Li:'#a78bfa', Be:'#6ee7b7', B:'#fbbf24',
@@ -279,7 +398,7 @@ var ATOM_COLORS={
   Na:'#a78bfa', Mg:'#84cc16', Al:'#94a3b8', Si:'#d4a373', P:'#f97316',
   S:'#eab308', Cl:'#22c55e', Ar:'#a5b4fc', K:'#8b5cf6', Ca:'#a3e635',
   Sc:'#facc15', Ti:'#a1a1aa', V:'#7c3aed', Cr:'#0891b2', Mn:'#a855f7',
-  Fe:'#71717a', Co:'#2563eb', Ni:'#15803d', Cu:'#ea580c', Zn:'#71717a',
+  Fe:'#b45309', Co:'#2563eb', Ni:'#15803d', Cu:'#ea580c', Zn:'#71717a',
   Ga:'#84cc16', Ge:'#94a3b8', As:'#f97316', Se:'#eab308', Br:'#92400e',
   Rb:'#8b5cf6', Sr:'#a3e635', Ag:'#9ca3af', Sn:'#6b7280', Sb:'#a855f7',
   Te:'#eab308', I:'#7c3aed', Cs:'#f59e0b', Ba:'#65a30d', W:'#334155',
@@ -299,7 +418,7 @@ function runAnalyzer(){
   }
   var s=findSubstance(q);
   if(!s){
-    box.innerHTML='<div class="card"><div class="not-found">Не нашёл вещество: «'+q+'»</div></div>';
+    box.innerHTML='<div class="card"><div class="not-found">Не нашёл вещество: «'+q+'». Попробуй другое название или формулу.</div></div>';
     return;
   }
 
@@ -441,14 +560,11 @@ function nullSpace(matrix, nCols){
 }
 
 /* ==================== УРАВНИВАТЕЛЬ 2.0 ==================== */
-
-/* Форматирование формулы с индексами: H2O -> H<sub>2</sub>O */
 function formatFormulaHtml(str){
   if(!str) return '';
   return str.replace(/([A-Za-z\)\]])(\d+)/g, '$1<sub>$2</sub>');
 }
 
-/* Форматирование стороны уравнения: "2H2 + O2" -> "2H<sub>2</sub> + O<sub>2</sub>" */
 function formatSideHtml(side){
   if(!side) return '';
   var parts = side.split('+');
@@ -466,7 +582,6 @@ function formatSideHtml(side){
   }).join(' <span style="color:#f59e0b;font-weight:700">+</span> ');
 }
 
-/* Живое превью — обновляется при вводе */
 function updateBalancePreview(){
   var input = document.getElementById('balanceInput');
   var preview = document.getElementById('balancePreview');
@@ -489,7 +604,6 @@ function updateBalancePreview(){
   }
 }
 
-/* Кнопки ввода */
 function attachBalanceChips(){
   document.querySelectorAll('.bal-chip').forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -517,7 +631,6 @@ function attachBalanceChips(){
   });
 }
 
-/* Основная функция — уравнять */
 function runBalancer(){
   var input = document.getElementById('balanceInput');
   var text = input.value.trim();
@@ -584,7 +697,7 @@ function quickBalance(eq){
   runBalancer();
 }
 
-/* ==================== РЕШЁТКИ ==================== */
+/* ==================== РЕШЁТКИ (20+) ==================== */
 var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
 var LATTICE_SCALE = 2.5;
 
@@ -637,6 +750,41 @@ var LATTICE_DB = {
     showBonds: false,
     ions:[{el:'Fe',charge:'',color:0x71717a,radius:0.26,pos:'bcc'}]
   },
+  'Al':{
+    name:'Алюминий (Al)',
+    type:'Металлическая', system:'Кубическая гранецентрированная',
+    desc:'Металлическая решётка. Лёгкий, пластичный, покрыт оксидной плёнкой.',
+    showBonds: false,
+    ions:[{el:'Al',charge:'',color:0x94a3b8,radius:0.24,pos:'fcc'}]
+  },
+  'Mg':{
+    name:'Магний (Mg)',
+    type:'Металлическая', system:'Гексагональная',
+    desc:'Металлическая решётка. Лёгкий, горит ярким пламенем.',
+    showBonds: false,
+    ions:[{el:'Mg',charge:'',color:0x84cc16,radius:0.24,pos:'fcc'}]
+  },
+  'Zn':{
+    name:'Цинк (Zn)',
+    type:'Металлическая', system:'Гексагональная',
+    desc:'Металлическая решётка. Используется для защиты железа от коррозии.',
+    showBonds: false,
+    ions:[{el:'Zn',charge:'',color:0x71717a,radius:0.24,pos:'fcc'}]
+  },
+  'Ag':{
+    name:'Серебро (Ag)',
+    type:'Металлическая', system:'Кубическая гранецентрированная',
+    desc:'Металлическая решётка. Лучший проводник тока и тепла.',
+    showBonds: false,
+    ions:[{el:'Ag',charge:'',color:0x9ca3af,radius:0.25,pos:'fcc'}]
+  },
+  'Au':{
+    name:'Золото (Au)',
+    type:'Металлическая', system:'Кубическая гранецентрированная',
+    desc:'Металлическая решётка. Инертный, мягкий, ковкий благородный металл.',
+    showBonds: false,
+    ions:[{el:'Au',charge:'',color:0xfbbf24,radius:0.25,pos:'fcc'}]
+  },
   'SiO2':{
     name:'Оксид кремния (SiO2)',
     type:'Атомная', system:'Тетраэдрическая',
@@ -647,12 +795,80 @@ var LATTICE_DB = {
       {el:'O', charge:'',color:0xef4444,radius:0.11,pos:'silica-o'}
     ]
   },
+  'SiC':{
+    name:'Карбид кремния (SiC)',
+    type:'Атомная', system:'Тетраэдрическая',
+    desc:'Атомная решётка. Карборунд — очень твёрдый, используется как абразив.',
+    showBonds: true, bondPairs:[['Si','C']], bondDist:0.5,
+    ions:[
+      {el:'Si',charge:'',color:0xd4a373,radius:0.16,pos:'silica-si'},
+      {el:'C', charge:'',color:0x334155,radius:0.13,pos:'silica-o'}
+    ]
+  },
+  'TiO2':{
+    name:'Оксид титана (TiO2)',
+    type:'Ионная', system:'Тетрагональная',
+    desc:'Ионная решётка. Диоксид титана — белый пигмент, фотокатализатор.',
+    showBonds: false,
+    ions:[
+      {el:'Ti',charge:'4+',color:0xa1a1aa,radius:0.22,pos:'fcc'},
+      {el:'O', charge:'2-',color:0xef4444,radius:0.18,pos:'octa'}
+    ]
+  },
+  'CaF2':{
+    name:'Фторид кальция (CaF2)',
+    type:'Ионная', system:'Кубическая',
+    desc:'Ионная решётка. Флюорит. Каждый Ca²⁺ окружён 8 F⁻.',
+    showBonds: false,
+    ions:[
+      {el:'Ca',charge:'2+',color:0xa3e635,radius:0.24,pos:'fcc'},
+      {el:'F', charge:'-', color:0x22d3ee,radius:0.18,pos:'octa'}
+    ]
+  },
+  'ZnS':{
+    name:'Сульфид цинка (ZnS)',
+    type:'Ионная', system:'Кубическая (сфалерит)',
+    desc:'Ионная решётка. Минерал сфалерит. Используется как люминофор.',
+    showBonds: false,
+    ions:[
+      {el:'Zn',charge:'2+',color:0x71717a,radius:0.22,pos:'fcc'},
+      {el:'S', charge:'2-',color:0xeab308,radius:0.24,pos:'octa'}
+    ]
+  },
+  'CaCO3':{
+    name:'Карбонат кальция (CaCO3)',
+    type:'Ионная', system:'Тригональная',
+    desc:'Ионная решётка. Мел, мрамор, известняк, кальцит.',
+    showBonds: false,
+    ions:[
+      {el:'Ca',charge:'2+',color:0xa3e635,radius:0.25,pos:'corners'},
+      {el:'C', charge:'',  color:0x334155,radius:0.15,pos:[[0.5,0.5,0.5]]},
+      {el:'O', charge:'',  color:0xef4444,radius:0.12,pos:'octa'}
+    ]
+  },
+  'K2O':{
+    name:'Оксид калия (K2O)',
+    type:'Ионная', system:'Кубическая (антифлюорит)',
+    desc:'Ионная решётка. Основный оксид, реагирует с водой с образованием щёлочи.',
+    showBonds: false,
+    ions:[
+      {el:'K', charge:'+',color:0x8b5cf6,radius:0.28,pos:'octa'},
+      {el:'O', charge:'2-',color:0xef4444,radius:0.24,pos:'fcc'}
+    ]
+  },
   'CO2':{
     name:'Углекислый газ (CO2)',
     type:'Молекулярная', system:'Кубическая молекулярная',
     desc:'Молекулярная решётка. Слабые межмолекулярные силы, легко плавится и испаряется.',
     showBonds: false,
     ions:[{el:'CO₂',charge:'',color:0x64748b,radius:0.20,pos:'simple'}]
+  },
+  'I2':{
+    name:'Йод (I2)',
+    type:'Молекулярная', system:'Ромбическая',
+    desc:'Молекулярная решётка. Тёмно-фиолетовые кристаллы, легко сублимируется.',
+    showBonds: false,
+    ions:[{el:'I₂',charge:'',color:0x7c3aed,radius:0.22,pos:'simple'}]
   }
 };
 
@@ -740,14 +956,26 @@ function findLattice(query){
   if(q.indexOf('графит')!==-1) return LATTICE_DB['graphite'];
   if(q.indexOf('медь')!==-1 || q === 'cu') return LATTICE_DB['Cu'];
   if(q.indexOf('желез')!==-1 || q === 'fe') return LATTICE_DB['Fe'];
+  if(q.indexOf('алюмин')!==-1 || q === 'al') return LATTICE_DB['Al'];
+  if(q.indexOf('магни')!==-1 || q === 'mg') return LATTICE_DB['Mg'];
+  if(q.indexOf('цинк')!==-1 || q === 'zn') return LATTICE_DB['Zn'];
+  if(q.indexOf('серебр')!==-1 || q === 'ag') return LATTICE_DB['Ag'];
+  if(q.indexOf('золот')!==-1 || q === 'au') return LATTICE_DB['Au'];
   if(q.indexOf('кварц')!==-1 || q.indexOf('кремнез')!==-1 || q === 'sio2') return LATTICE_DB['SiO2'];
+  if(q.indexOf('карборунд')!==-1 || q === 'sic') return LATTICE_DB['SiC'];
+  if(q === 'tio2' || q.indexOf('титан')!==-1) return LATTICE_DB['TiO2'];
+  if(q === 'caf2' || q.indexOf('флюорит')!==-1) return LATTICE_DB['CaF2'];
+  if(q === 'zns' || q.indexOf('сфалерит')!==-1) return LATTICE_DB['ZnS'];
+  if(q === 'caco3' || q.indexOf('мел')!==-1 || q.indexOf('мрамор')!==-1 || q.indexOf('известняк')!==-1) return LATTICE_DB['CaCO3'];
+  if(q === 'k2o') return LATTICE_DB['K2O'];
   if(q === 'co2' || q.indexOf('углекисл')!==-1) return LATTICE_DB['CO2'];
+  if(q === 'i2' || q.indexOf('йод')!==-1 || q.indexOf('иод')!==-1) return LATTICE_DB['I2'];
   return null;
 }
 
 function buildLattice(containerId, substance){
   var data = findLattice(substance);
-  if(!data) return {error:'Не нашёл решётку для «'+substance+'». Доступно: NaCl, CsCl, алмаз, графит, Cu, Fe, SiO2, CO2'};
+  if(!data) return {error:'Не нашёл решётку для «'+substance+'». Доступно: NaCl, CsCl, алмаз, графит, Cu, Fe, Al, Mg, Zn, Ag, Au, SiO2, SiC, TiO2, CaF2, ZnS, CaCO3, K2O, CO2, I2'};
   var container = document.getElementById(containerId);
   if(!container) return {error:'Не найден контейнер '+containerId};
 
@@ -841,9 +1069,7 @@ function buildLattice(containerId, substance){
 
           var cylGeo = new THREE.CylinderGeometry(stickRadius, stickRadius, length, 12);
           var cylMat = new THREE.MeshStandardMaterial({
-            color: stickColor,
-            roughness: 0.5,
-            metalness: 0.2
+            color: stickColor, roughness: 0.5, metalness: 0.2
           });
           var cyl = new THREE.Mesh(cylGeo, cylMat);
           cyl.position.copy(mid);
@@ -900,7 +1126,7 @@ function destroyLattice(){
   _latticeScene = null; _latticeCamera = null; _latticeControls = null;
 }
 
-/* ==================== ПОМОЩНИК 1: КРИСТАЛЛЫ ==================== */
+/* ==================== ПОМОЩНИК КРИСТАЛЛЫ ==================== */
 function runCrystalAssistant(){
   var input = document.getElementById('crystalInput');
   var text = input.value.trim();
