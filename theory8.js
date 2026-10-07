@@ -3199,3 +3199,4 @@ var PAGES_8 = {
       <a href="https://rutube.ru/plst/1266533/" target="_blank" class="video-btn">🎬 Видеоурок по теме</a>
     `
   }
+};
