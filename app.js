@@ -433,9 +433,9 @@ function nullSpace(matrix, nCols){
   return x;
 }
 
-/* ==================== РЕШЁТКИ (ИСПРАВЛЕНО) ==================== */
+/* ==================== РЕШЁТКИ ==================== */
 var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
-var LATTICE_SCALE = 2.5; // визуальный масштаб ячейки
+var LATTICE_SCALE = 2.5;
 
 var LATTICE_DB = {
   'NaCl':{
@@ -469,8 +469,8 @@ var LATTICE_DB = {
     name:'Графит (C)',
     type:'Атомная (слоистая)', system:'Гексагональная слоистая',
     desc:'Слоистая структура. Внутри слоя — прочные ковалентные связи, между слоями — слабые силы. Мягкий, проводит ток.',
-    showBonds: true, bondPairs:[['C','C']], bondDist:0.45,
-    ions:[{el:'C',charge:'',color:0x475569,radius:0.11,pos:'graphite'}]
+    showBonds: true, bondPairs:[['C','C']], bondDist:0.5,
+    ions:[{el:'C',charge:'',color:0x475569,radius:0.10,pos:'graphite'}]
   },
   'Cu':{
     name:'Медь (Cu)',
@@ -522,7 +522,6 @@ function posCorners(){
   return p;
 }
 function posBCC(){var p=posCorners();p.push([0.5,0.5,0.5]);return p;}
-
 function posDiamond(){
   var p = posFCC();
   p.push([0.25,0.25,0.25]);
@@ -614,7 +613,6 @@ function buildLattice(containerId, substance){
   _latticeScene.background = new THREE.Color(0xf8fafc);
 
   _latticeCamera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000);
-  _latticeCamera.position.set(4, 3.2, 5);
 
   _latticeRenderer = new THREE.WebGLRenderer({antialias:true});
   _latticeRenderer.setSize(w, h);
@@ -635,7 +633,6 @@ function buildLattice(containerId, substance){
   d2.position.set(-5,-3,-5);
   _latticeScene.add(d2);
 
-  // Собираем все атомы с их координатами (в исходных единицах 0..1 и подобных)
   var atomsAll = [];
   data.ions.forEach(function(ion){
     var positions = Array.isArray(ion.pos) ? ion.pos : getLatticePositions(ion.pos);
@@ -644,7 +641,6 @@ function buildLattice(containerId, substance){
     });
   });
 
-  // Центр по bounding box
   var minP=[Infinity,Infinity,Infinity], maxP=[-Infinity,-Infinity,-Infinity];
   atomsAll.forEach(function(a){
     if(a.x<minP[0])minP[0]=a.x; if(a.x>maxP[0])maxP[0]=a.x;
@@ -653,7 +649,6 @@ function buildLattice(containerId, substance){
   });
   var cx=(minP[0]+maxP[0])/2, cy=(minP[1]+maxP[1])/2, cz=(minP[2]+maxP[2])/2;
 
-  // Рисуем атомы
   atomsAll.forEach(function(a){
     var pos = new THREE.Vector3((a.x-cx)*LATTICE_SCALE, (a.y-cy)*LATTICE_SCALE, (a.z-cz)*LATTICE_SCALE);
     var geo = new THREE.SphereGeometry(a.radius*LATTICE_SCALE, 32, 32);
@@ -668,7 +663,7 @@ function buildLattice(containerId, substance){
     a._pos = pos;
   });
 
-  // Связи
+  // Связи — толстые палки (цилиндры)
   if(data.showBonds){
     var bondDist = (data.bondDist || 0.45) * LATTICE_SCALE;
     var pairs = data.bondPairs || [['C','C']];
@@ -679,16 +674,41 @@ function buildLattice(containerId, substance){
       }
       return false;
     }
-    var lineMat = new THREE.LineBasicMaterial({color:0x64748b, transparent:true, opacity:0.75});
+
+    var stickColor = 0x475569;
+    var stickRadius = 0.10 * LATTICE_SCALE;
+
     for(var i=0;i<atomsAll.length;i++){
       for(var j=i+1;j<atomsAll.length;j++){
         if(!isBondPair(atomsAll[i].el, atomsAll[j].el)) continue;
-        var dist = atomsAll[i]._pos.distanceTo(atomsAll[j]._pos);
+        var p1 = atomsAll[i]._pos;
+        var p2 = atomsAll[j]._pos;
+        var dist = p1.distanceTo(p2);
         if(dist < bondDist && dist > 0.05){
-          var g = new THREE.BufferGeometry().setFromPoints([atomsAll[i]._pos, atomsAll[j]._pos]);
-          var line = new THREE.Line(g, lineMat);
-          _latticeScene.add(line);
-          _latticeMeshes.push(line);
+          var mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+          var dir = new THREE.Vector3().subVectors(p2, p1);
+          var length = dir.length();
+
+          var cylGeo = new THREE.CylinderGeometry(stickRadius, stickRadius, length, 12);
+          var cylMat = new THREE.MeshStandardMaterial({
+            color: stickColor,
+            roughness: 0.5,
+            metalness: 0.2
+          });
+          var cyl = new THREE.Mesh(cylGeo, cylMat);
+          cyl.position.copy(mid);
+
+          var up = new THREE.Vector3(0, 1, 0);
+          var dirNorm = dir.clone().normalize();
+          var axis = new THREE.Vector3().crossVectors(up, dirNorm);
+          var angle = Math.acos(Math.max(-1, Math.min(1, up.dot(dirNorm))));
+          if(axis.length() > 0.001){
+            axis.normalize();
+            cyl.quaternion.setFromAxisAngle(axis, angle);
+          }
+
+          _latticeScene.add(cyl);
+          _latticeMeshes.push(cyl);
         }
       }
     }
@@ -698,17 +718,15 @@ function buildLattice(containerId, substance){
   var bw = (maxP[0]-minP[0])*LATTICE_SCALE;
   var bh = (maxP[1]-minP[1])*LATTICE_SCALE;
   var bd = (maxP[2]-minP[2])*LATTICE_SCALE;
-  var boxGeo = new THREE.BoxGeometry(bw, bh, bd);
-  var edges = new THREE.EdgesGeometry(boxGeo);
-  var boxLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.3}));
-  boxLine.position.set((minP[0]+maxP[0])/2*LATTICE_SCALE - cx*LATTICE_SCALE,
-                       (minP[1]+maxP[1])/2*LATTICE_SCALE - cy*LATTICE_SCALE,
-                       (minP[2]+maxP[2])/2*LATTICE_SCALE - cz*LATTICE_SCALE);
-  _latticeScene.add(boxLine);
-  _latticeMeshes.push(boxLine);
+  if(bw > 0 && bh > 0 && bd > 0){
+    var boxGeo = new THREE.BoxGeometry(bw, bh, bd);
+    var edges = new THREE.EdgesGeometry(boxGeo);
+    var boxLine = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color:0x94a3b8, transparent:true, opacity:0.3}));
+    _latticeScene.add(boxLine);
+    _latticeMeshes.push(boxLine);
+  }
 
-  // Регулируем камеру по размеру объекта
-  var maxSize = Math.max(bw, bh, bd);
+  var maxSize = Math.max(bw, bh, bd) || 5;
   _latticeCamera.position.set(maxSize*1.6, maxSize*1.3, maxSize*2.0);
   _latticeControls.target.set(0,0,0);
   _latticeControls.update();
