@@ -52,8 +52,6 @@ body{background:var(--bg);color:var(--dark);font-family:'Segoe UI',system-ui,-ap
 .task-box{background:#fef3c7;border:1px solid #fcd34d;border-left:3px solid var(--warning);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0;font-size:14.5px}
 .task-box .lbl{font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
 
-.formula-show{display:inline-block;background:#fff;border:1px solid var(--border);padding:2px 8px;border-radius:5px;font-weight:600;color:var(--primary)}
-
 .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin:12px 0}
 table{width:100%;border-collapse:collapse;background:#fff;min-width:400px}
 th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);font-size:14px}
@@ -85,23 +83,30 @@ tr:last-child td{border-bottom:none}
 
 .composition{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
 .atom-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 6px;text-align:center}
-.atom-symbol{font-size:22px;font-weight:800;color:var(--primary)}
+.atom-symbol{font-size:22px;font-weight:800}
 .atom-name{font-size:11px;color:var(--muted);margin:3px 0}
 .atom-count{font-size:14px;color:var(--accent);font-weight:700}
 
 .not-found{text-align:center;padding:16px;color:var(--danger);font-size:15px;font-weight:600}
 
-#molecule3D{width:100%;height:420px;border-radius:12px;background:radial-gradient(circle at 50% 40%,#f8fafc,#dbe4f5);border:1px solid var(--border);display:block;cursor:grab;touch-action:none;margin-top:14px}
-
-.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
-.legend-dot{width:14px;height:14px;border-radius:50%;box-shadow:inset -2px -2px 4px rgba(0,0,0,.15)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;padding:8px 4px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.legend-dot{width:16px;height:16px;border-radius:50%;box-shadow:inset -2px -2px 4px rgba(0,0,0,.15)}
 
 .back-btn{padding:8px 16px;background:#f1f5f9;color:var(--muted);border:none;border-radius:9px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;margin-bottom:14px;transition:.18s}
 .back-btn:hover{background:var(--border);color:var(--dark)}
 
 .para-title{font-size:clamp(20px,3.5vw,26px);font-weight:800;color:var(--dark);margin-bottom:6px;letter-spacing:-.3px}
 .para-sub{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+
+.eq-output{background:#0f172a;color:#a5f3fc;padding:20px;border-radius:12px;font-family:'Consolas','Monaco',monospace;font-size:20px;text-align:center;font-weight:700;letter-spacing:1px;margin:14px 0;word-break:break-word;line-height:1.8}
+.eq-output .arrow{color:#f59e0b}
+.eq-info{background:#f0f9ff;border:1px solid #7dd3fc;border-radius:10px;padding:14px 18px;margin-top:14px;font-size:14.5px}
+.eq-info .lbl{font-weight:700;color:#0369a1;text-transform:uppercase;font-size:12px;letter-spacing:.4px;margin-bottom:6px}
+
+.quick-buttons{display:flex;gap:6px;padding:8px 16px;background:#0f172a;flex-wrap:wrap}
+.quick-buttons button{padding:5px 10px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-size:0.78rem;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.quick-buttons button:hover{border-color:#38bdf8;color:#38bdf8}
 
 .video-btn{display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#e11d48,#be123c);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;transition:.18s}
 .video-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(225,29,72,.35)}
@@ -113,5 +118,6 @@ tr:last-child td{border-bottom:none}
   .go-btn{width:100%}
   .paragraph{font-size:14.5px}
   th,td{padding:8px 10px;font-size:13px}
-  #molecule3D{height:300px}
+  .eq-output{font-size:16px;padding:14px}
+  #crystalCanvas{height:340px !important}
 }
