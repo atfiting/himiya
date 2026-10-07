@@ -13,12 +13,19 @@ document.addEventListener('DOMContentLoaded', function(){
   });
   renderContents('contents8List', CHAPTERS8);
   renderContents('contents9List', CHAPTERS9);
+
   var ai = document.getElementById('analyzerInput');
   if (ai) ai.addEventListener('keydown', function(e){ if(e.key === 'Enter') runAnalyzer(); });
+
   var ci = document.getElementById('crystalInput');
   if (ci) ci.addEventListener('keydown', function(e){ if(e.key === 'Enter') runCrystalAssistant(); });
+
+  attachBalanceChips();
   var bi = document.getElementById('balanceInput');
-  if (bi) bi.addEventListener('keydown', function(e){ if(e.key === 'Enter') runBalancer(); });
+  if (bi){
+    bi.addEventListener('input', updateBalancePreview);
+    bi.addEventListener('keydown', function(e){ if(e.key === 'Enter') runBalancer(); });
+  }
 });
 
 /* ==================== БАЗА ВЕЩЕСТВ ==================== */
@@ -433,6 +440,150 @@ function nullSpace(matrix, nCols){
   return x;
 }
 
+/* ==================== УРАВНИВАТЕЛЬ 2.0 ==================== */
+
+/* Форматирование формулы с индексами: H2O -> H<sub>2</sub>O */
+function formatFormulaHtml(str){
+  if(!str) return '';
+  return str.replace(/([A-Za-z\)\]])(\d+)/g, '$1<sub>$2</sub>');
+}
+
+/* Форматирование стороны уравнения: "2H2 + O2" -> "2H<sub>2</sub> + O<sub>2</sub>" */
+function formatSideHtml(side){
+  if(!side) return '';
+  var parts = side.split('+');
+  return parts.map(function(part){
+    var p = part.trim();
+    if(!p) return '';
+    var m = p.match(/^(\d+)(.*)$/);
+    var coefHtml = '';
+    var formula = p;
+    if(m){
+      coefHtml = '<span class="coef">' + m[1] + '</span>';
+      formula = m[2];
+    }
+    return coefHtml + formatFormulaHtml(formula);
+  }).join(' <span style="color:#f59e0b;font-weight:700">+</span> ');
+}
+
+/* Живое превью — обновляется при вводе */
+function updateBalancePreview(){
+  var input = document.getElementById('balanceInput');
+  var preview = document.getElementById('balancePreview');
+  if(!input || !preview) return;
+
+  var raw = input.value.trim();
+  if(!raw){
+    preview.innerHTML = '<span class="bal-preview-hint">Здесь появится уравнение с индексами</span>';
+    return;
+  }
+
+  var norm = raw.replace(/[→➔➜➝]|->|=>/g, '=');
+  var parts = norm.split('=');
+  if(parts.length === 2){
+    preview.innerHTML = formatSideHtml(parts[0]) +
+      ' <span class="bal-arrow">→</span> ' +
+      formatSideHtml(parts[1]);
+  } else {
+    preview.innerHTML = formatSideHtml(norm);
+  }
+}
+
+/* Кнопки ввода */
+function attachBalanceChips(){
+  document.querySelectorAll('.bal-chip').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById('balanceInput');
+      if(!input) return;
+
+      if(btn.dataset.clear){
+        input.value = '';
+        input.focus();
+        updateBalancePreview();
+        return;
+      }
+
+      var insert = btn.dataset.insert || '';
+      var start = input.selectionStart || 0;
+      var end = input.selectionEnd || 0;
+      var val = input.value;
+      input.value = val.substring(0, start) + insert + val.substring(end);
+
+      var newPos = start + insert.length;
+      input.setSelectionRange(newPos, newPos);
+      input.focus();
+      updateBalancePreview();
+    });
+  });
+}
+
+/* Основная функция — уравнять */
+function runBalancer(){
+  var input = document.getElementById('balanceInput');
+  var text = input.value.trim();
+  var box = document.getElementById('balanceResult');
+  if(!text){
+    box.innerHTML = '<div class="card"><div class="not-found">Введи уравнение</div></div>';
+    return;
+  }
+
+  var r = balanceEquation(text);
+  if(r.error){
+    box.innerHTML = '<div class="card"><div class="not-found">'+r.error+'</div></div>';
+    return;
+  }
+
+  var leftHtml = formatSideHtml(r.left);
+  var rightHtml = formatSideHtml(r.right);
+
+  var eq = text.replace(/[→➔➜➝]|->|=>/g,'=').replace(/\s+/g,' ').trim();
+  var sides = eq.split('=');
+  var L = sides[0].split('+').map(function(s){return s.trim();}).filter(Boolean);
+  var R = sides[1].split('+').map(function(s){return s.trim();}).filter(Boolean);
+  var reactionType = '';
+  if(L.length === 1 && R.length > 1) reactionType = 'Разложение';
+  else if(L.length > 1 && R.length === 1) reactionType = 'Соединение';
+  else if(L.length === 2 && R.length === 2) reactionType = 'Обмен / Замещение';
+
+  function isSimple(formula){
+    var clean = formula.replace(/^\d+/, '').replace(/[()]/g,'');
+    var els = [];
+    var arr = clean.match(/[A-Z][a-z]?/g) || [];
+    for(var i=0;i<arr.length;i++) if(els.indexOf(arr[i])===-1) els.push(arr[i]);
+    return els.length === 1;
+  }
+  var hasSimpleLeft = L.some(isSimple);
+  var hasSimpleRight = R.some(isSimple);
+  var isRedox = hasSimpleLeft || hasSimpleRight;
+
+  box.innerHTML =
+    '<div class="card">'+
+      '<div class="card-title"><span class="num">⚖️</span> Уравненное уравнение</div>'+
+      '<div class="eq-output">' + leftHtml + ' <span class="arrow">→</span> ' + rightHtml + '</div>'+
+
+      '<div style="text-align:center;margin-top:14px">'+
+        (reactionType ? '<span class="bal-badge blue">Тип: '+reactionType+'</span>' : '')+
+        (isRedox ? '<span class="bal-badge orange">ОВР</span>' : '<span class="bal-badge green">Не ОВР</span>')+
+        '<span class="bal-badge">Коэффициенты: '+r.coefs.join(' : ')+'</span>'+
+      '</div>'+
+
+      '<div class="bal-steps">'+
+        '<div class="step-title">Как это получилось</div>'+
+        '<div><span class="step-num">1</span>Разбираем уравнение на вещества в левой и правой частях.</div>'+
+        '<div><span class="step-num">2</span>Считаем атомы каждого элемента слева и справа.</div>'+
+        '<div><span class="step-num">3</span>Составляем систему уравнений (закон сохранения массы).</div>'+
+        '<div><span class="step-num">4</span>Решаем методом Гаусса и находим наименьшие целые коэффициенты.</div>'+
+        '<div><span class="step-num">5</span>Проверяем: число атомов каждого элемента слева равно числу справа.</div>'+
+      '</div>'+
+    '</div>';
+}
+
+function quickBalance(eq){
+  document.getElementById('balanceInput').value = eq;
+  updateBalancePreview();
+  runBalancer();
+}
+
 /* ==================== РЕШЁТКИ ==================== */
 var _latticeScene=null,_latticeCamera=null,_latticeRenderer=null,_latticeControls=null,_latticeAnimId=null,_latticeMeshes=[];
 var LATTICE_SCALE = 2.5;
@@ -663,7 +814,6 @@ function buildLattice(containerId, substance){
     a._pos = pos;
   });
 
-  // Связи — толстые палки (цилиндры)
   if(data.showBonds){
     var bondDist = (data.bondDist || 0.45) * LATTICE_SCALE;
     var pairs = data.bondPairs || [['C','C']];
@@ -714,7 +864,6 @@ function buildLattice(containerId, substance){
     }
   }
 
-  // Рамка ячейки
   var bw = (maxP[0]-minP[0])*LATTICE_SCALE;
   var bh = (maxP[1]-minP[1])*LATTICE_SCALE;
   var bd = (maxP[2]-minP[2])*LATTICE_SCALE;
@@ -792,33 +941,6 @@ function runCrystalAssistant(){
 function quickCrystal(name){
   document.getElementById('crystalInput').value = name;
   runCrystalAssistant();
-}
-
-/* ==================== ПОМОЩНИК 2: УРАВНИВАНИЕ ==================== */
-function runBalancer(){
-  var input = document.getElementById('balanceInput');
-  var text = input.value.trim();
-  var box = document.getElementById('balanceResult');
-  if(!text){
-    box.innerHTML = '<div class="card"><div class="not-found">Введи уравнение</div></div>';
-    return;
-  }
-  var r = balanceEquation(text);
-  if(r.error){
-    box.innerHTML = '<div class="card"><div class="not-found">'+r.error+'</div></div>';
-    return;
-  }
-  box.innerHTML =
-    '<div class="card">' +
-      '<div class="card-title"><span class="num">⚖️</span> Уравненное уравнение</div>' +
-      '<div class="eq-output">' + r.left + ' <span class="arrow">→</span> ' + r.right + '</div>' +
-      '<div class="eq-info"><div class="lbl">Коэффициенты</div>' + r.coefs.join(' : ') + '</div>' +
-    '</div>';
-}
-
-function quickBalance(eq){
-  document.getElementById('balanceInput').value = eq;
-  runBalancer();
 }
 
 /* ==================== ОГЛАВЛЕНИЯ ==================== */
