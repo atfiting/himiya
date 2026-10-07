@@ -147,30 +147,122 @@
 <section class="page" id="page-balancer">
   <div class="wrap">
     <div class="page-head">
-      <h1>⚖️ Помощник по уравнениям</h1>
-      <p>Введи уравнение реакции — я расставлю коэффициенты</p>
+      <h1>⚖️ Уравниватель реакций</h1>
+      <p>Введи уравнение — я расставлю коэффициенты и покажу шаги</p>
       <div class="accent-line"></div>
     </div>
+
     <div class="card">
-      <div class="card-title"><span class="num">⚖️</span> Уравнение</div>
-      <div class="input-group">
-        <input type="text" id="balanceInput" placeholder="Например: Al + O2 = Al2O3">
-        <button class="go-btn" onclick="runBalancer()">Уравнять</button>
+      <div class="card-title"><span class="num">1</span> Введи уравнение</div>
+
+      <div class="bal-input-wrap">
+        <input type="text" id="balanceInput" class="bal-input"
+               placeholder="Например: Al + O2 = Al2O3"
+               autocomplete="off" spellcheck="false">
+        <div class="bal-preview" id="balancePreview">
+          <span class="bal-preview-hint">Здесь появится уравнение с индексами</span>
+        </div>
       </div>
-      <div class="hint">Знак равенства: «=», «→», «->», «=>». Можно не расставлять коэффициенты — я сам</div>
+
+      <div class="hint">
+        Пиши коэффициенты цифрой перед формулой (например, <b>2H2O</b>),
+        индексы — цифрой после элемента (например, <b>H2O</b>).
+        Знак равенства: <b>=</b>, <b>→</b>, <b>-&gt;</b>, <b>=&gt;</b>.
+      </div>
     </div>
+
     <div class="card">
-      <div class="quick-buttons" style="padding:0;background:transparent;border:none;justify-content:center">
-        <button onclick="quickBalance('H2 + O2 = H2O')">H₂ + O₂</button>
-        <button onclick="quickBalance('Al + O2 = Al2O3')">Al + O₂</button>
-        <button onclick="quickBalance('Fe + O2 = Fe2O3')">Fe + O₂</button>
-        <button onclick="quickBalance('KMnO4 = K2MnO4 + MnO2 + O2')">KMnO₄</button>
-        <button onclick="quickBalance('CaCO3 = CaO + CO2')">CaCO₃</button>
-        <button onclick="quickBalance('NaOH + HCl = NaCl + H2O')">NaOH + HCl</button>
-        <button onclick="quickBalance('Ca(OH)2 + H3PO4 = Ca3(PO4)2 + H2O')">Ca(OH)₂ + H₃PO₄</button>
-        <button onclick="quickBalance('Fe + CuSO4 = FeSO4 + Cu')">Fe + CuSO₄</button>
+      <div class="card-title"><span class="num">🧪</span> Быстрый ввод</div>
+
+      <div class="bal-palette-group">
+        <div class="bal-palette-label">Элементы</div>
+        <div class="bal-palette">
+          <button class="bal-chip" data-insert="H">H</button>
+          <button class="bal-chip" data-insert="O">O</button>
+          <button class="bal-chip" data-insert="C">C</button>
+          <button class="bal-chip" data-insert="N">N</button>
+          <button class="bal-chip" data-insert="S">S</button>
+          <button class="bal-chip" data-insert="P">P</button>
+          <button class="bal-chip" data-insert="F">F</button>
+          <button class="bal-chip" data-insert="Cl">Cl</button>
+          <button class="bal-chip" data-insert="Br">Br</button>
+          <button class="bal-chip" data-insert="I">I</button>
+          <button class="bal-chip" data-insert="Na">Na</button>
+          <button class="bal-chip" data-insert="K">K</button>
+          <button class="bal-chip" data-insert="Li">Li</button>
+          <button class="bal-chip" data-insert="Ca">Ca</button>
+          <button class="bal-chip" data-insert="Mg">Mg</button>
+          <button class="bal-chip" data-insert="Ba">Ba</button>
+          <button class="bal-chip" data-insert="Al">Al</button>
+          <button class="bal-chip" data-insert="Fe">Fe</button>
+          <button class="bal-chip" data-insert="Cu">Cu</button>
+          <button class="bal-chip" data-insert="Zn">Zn</button>
+          <button class="bal-chip" data-insert="Ag">Ag</button>
+          <button class="bal-chip" data-insert="Mn">Mn</button>
+        </div>
+      </div>
+
+      <div class="bal-palette-group">
+        <div class="bal-palette-label">Символы</div>
+        <div class="bal-palette">
+          <button class="bal-chip sym" data-insert=" + ">+</button>
+          <button class="bal-chip sym" data-insert=" = ">=</button>
+          <button class="bal-chip sym" data-insert="(">(</button>
+          <button class="bal-chip sym" data-insert=")">)</button>
+          <button class="bal-chip sym" data-insert="2">2</button>
+          <button class="bal-chip sym" data-insert="3">3</button>
+          <button class="bal-chip sym" data-insert="4">4</button>
+          <button class="bal-chip clear" data-clear="1">✕ Очистить</button>
+        </div>
+      </div>
+
+      <div class="bal-palette-group">
+        <div class="bal-palette-label">Частые вещества</div>
+        <div class="bal-palette">
+          <button class="bal-chip frag" data-insert="H2O">H₂O</button>
+          <button class="bal-chip frag" data-insert="O2">O₂</button>
+          <button class="bal-chip frag" data-insert="H2">H₂</button>
+          <button class="bal-chip frag" data-insert="CO2">CO₂</button>
+          <button class="bal-chip frag" data-insert="CO">CO</button>
+          <button class="bal-chip frag" data-insert="NaCl">NaCl</button>
+          <button class="bal-chip frag" data-insert="HCl">HCl</button>
+          <button class="bal-chip frag" data-insert="NaOH">NaOH</button>
+          <button class="bal-chip frag" data-insert="H2SO4">H₂SO₄</button>
+          <button class="bal-chip frag" data-insert="HNO3">HNO₃</button>
+          <button class="bal-chip frag" data-insert="H3PO4">H₃PO₄</button>
+          <button class="bal-chip frag" data-insert="CaCO3">CaCO₃</button>
+          <button class="bal-chip frag" data-insert="CaO">CaO</button>
+          <button class="bal-chip frag" data-insert="Ca(OH)2">Ca(OH)₂</button>
+          <button class="bal-chip frag" data-insert="KMnO4">KMnO₄</button>
+          <button class="bal-chip frag" data-insert="CuSO4">CuSO₄</button>
+          <button class="bal-chip frag" data-insert="Fe2O3">Fe₂O₃</button>
+          <button class="bal-chip frag" data-insert="Al2O3">Al₂O₃</button>
+          <button class="bal-chip frag" data-insert="Al(OH)3">Al(OH)₃</button>
+          <button class="bal-chip frag" data-insert="KOH">KOH</button>
+        </div>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">2</span> Готовые примеры</div>
+      <div class="bal-palette">
+        <button class="bal-chip ex" onclick="quickBalance('H2 + O2 = H2O')">H₂ + O₂ → H₂O</button>
+        <button class="bal-chip ex" onclick="quickBalance('Al + O2 = Al2O3')">Al + O₂ → Al₂O₃</button>
+        <button class="bal-chip ex" onclick="quickBalance('Fe + O2 = Fe2O3')">Fe + O₂ → Fe₂O₃</button>
+        <button class="bal-chip ex" onclick="quickBalance('KMnO4 = K2MnO4 + MnO2 + O2')">KMnO₄ → …</button>
+        <button class="bal-chip ex" onclick="quickBalance('CaCO3 = CaO + CO2')">CaCO₃ → CaO + CO₂</button>
+        <button class="bal-chip ex" onclick="quickBalance('NaOH + HCl = NaCl + H2O')">NaOH + HCl → …</button>
+        <button class="bal-chip ex" onclick="quickBalance('Ca(OH)2 + H3PO4 = Ca3(PO4)2 + H2O')">Ca(OH)₂ + H₃PO₄ → …</button>
+        <button class="bal-chip ex" onclick="quickBalance('Fe + CuSO4 = FeSO4 + Cu')">Fe + CuSO₄ → …</button>
+        <button class="bal-chip ex" onclick="quickBalance('C3H8 + O2 = CO2 + H2O')">C₃H₈ + O₂ → …</button>
+        <button class="bal-chip ex" onclick="quickBalance('Cu + HNO3 = Cu(NO3)2 + NO + H2O')">Cu + HNO₃ → …</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:20px 0">
+      <button class="go-btn" style="padding:14px 40px;font-size:16px" onclick="runBalancer()">⚖️ Уравнять</button>
+    </div>
+
     <div id="balanceResult"></div>
   </div>
 </section>
