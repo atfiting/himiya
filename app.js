@@ -1576,4 +1576,127 @@ var CHAPTERS8 = [
     {id:'ch8-1-10', num:'10', title:'Химические реакции'},
     {id:'ch8-1-11', num:'11', title:'Химические уравнения'},
     {id:'ch8-1-12', num:'12', title:'Типы химических реакций'}]},
-  {
+  {num:2, title:'Кислород. Водород. Вода. Растворы', paragraphs:[
+    {id:'ch8-2-1', num:'1', title:'Воздух и его состав'},
+    {id:'ch8-2-2', num:'2', title:'Кислород'},
+    {id:'ch8-2-3', num:'3', title:'Оксиды'},
+    {id:'ch8-2-4', num:'4', title:'Водород'},
+    {id:'ch8-2-5', num:'5', title:'Кислоты'},
+    {id:'ch8-2-6', num:'6', title:'Соли'},
+    {id:'ch8-2-7', num:'7', title:'Количество вещества. Молярная масса'},
+    {id:'ch8-2-8', num:'8', title:'Молярный объём газов'},
+    {id:'ch8-2-9', num:'9', title:'Расчёты по химическим уравнениям'},
+    {id:'ch8-2-10', num:'10', title:'Вода. Основания'},
+    {id:'ch8-2-11', num:'11', title:'Растворы. Массовая доля'}]},
+  {num:3, title:'Классы неорганических соединений', paragraphs:[
+    {id:'ch8-3-1', num:'1', title:'Оксиды: классификация и свойства'},
+    {id:'ch8-3-2', num:'2', title:'Основания: классификация и свойства'},
+    {id:'ch8-3-3', num:'3', title:'Кислоты: классификация и свойства'},
+    {id:'ch8-3-4', num:'4', title:'Соли: классификация и свойства'},
+    {id:'ch8-3-5', num:'5', title:'Генетическая связь'}]},
+  {num:4, title:'Периодический закон и строение атома', paragraphs:[
+    {id:'ch8-4-1', num:'1', title:'Естественные семейства. Амфотерность'},
+    {id:'ch8-4-2', num:'2', title:'Открытие периодического закона'},
+    {id:'ch8-4-3', num:'3', title:'Строение атома'},
+    {id:'ch8-4-4', num:'4', title:'Строение электронных оболочек'},
+    {id:'ch8-4-5', num:'5', title:'Характеристика элемента'}]},
+  {num:5, title:'Химическая связь. ОВР', paragraphs:[
+    {id:'ch8-5-1', num:'1', title:'Ионная связь'},
+    {id:'ch8-5-2', num:'2', title:'Ковалентная связь'},
+    {id:'ch8-5-3', num:'3', title:'Неполярная и полярная связь'},
+    {id:'ch8-5-4', num:'4', title:'Металлическая связь'},
+    {id:'ch8-5-5', num:'5', title:'Степень окисления'},
+    {id:'ch8-5-6', num:'6', title:'Окислительно-восстановительные реакции'}]}
+];
+
+var CHAPTERS9 = [
+  {num:1, title:'Обобщение знаний. Химические реакции', paragraphs:[
+    {id:'ch9-1-1', num:'1', title:'Классификация неорганических соединений'},
+    {id:'ch9-1-2', num:'2', title:'Классификация химических реакций'},
+    {id:'ch9-1-3', num:'3', title:'Скорость реакций. Катализ'}]},
+  {num:2, title:'Химические реакции в растворах', paragraphs:[
+    {id:'ch9-2-1', num:'1', title:'Электролитическая диссоциация'},
+    {id:'ch9-2-2', num:'2', title:'Положения теории ЭД'},
+    {id:'ch9-2-3', num:'3', title:'Свойства кислот как электролитов'},
+    {id:'ch9-2-4', num:'4', title:'Свойства оснований как электролитов'},
+    {id:'ch9-2-5', num:'5', title:'Свойства солей как электролитов'},
+    {id:'ch9-2-6', num:'6', title:'Гидролиз солей'}]},
+  {num:3, title:'Неметаллы и их соединения', paragraphs:[
+    {id:'ch9-3-1', num:'1', title:'Общая характеристика неметаллов'},
+    {id:'ch9-3-2', num:'2', title:'Галогены'},
+    {id:'ch9-3-3', num:'3', title:'Соединения галогенов'},
+    {id:'ch9-3-4', num:'4', title:'Свойства соляной кислоты'},
+    {id:'ch9-3-5', num:'5', title:'Халькогены'},
+    {id:'ch9-3-6', num:'6', title:'Сера, сероводород, сульфиды'},
+    {id:'ch9-3-7', num:'7', title:'Кислородные соединения серы'},
+    {id:'ch9-3-8', num:'8', title:'Свойства серной кислоты'},
+    {id:'ch9-3-9', num:'9', title:'Азот'},
+    {id:'ch9-3-10', num:'10', title:'Аммиак. Соли аммония'},
+    {id:'ch9-3-11', num:'11', title:'Получение аммиака'},
+    {id:'ch9-3-12', num:'12', title:'Кислородные соединения азота'},
+    {id:'ch9-3-13', num:'13', title:'Фосфор и его соединения'},
+    {id:'ch9-3-14', num:'14', title:'Углерод'},
+    {id:'ch9-3-15', num:'15', title:'Кислородные соединения углерода'},
+    {id:'ch9-3-16', num:'16', title:'Получение CO2'},
+    {id:'ch9-3-17', num:'17', title:'Углеводороды'},
+    {id:'ch9-3-18', num:'18', title:'Кислородсодержащие органические'},
+    {id:'ch9-3-19', num:'19', title:'Кремний и его соединения'},
+    {id:'ch9-3-20', num:'20', title:'Получение неметаллов'},
+    {id:'ch9-3-21', num:'21', title:'Важнейшие соединения неметаллов'}]},
+  {num:4, title:'Металлы', paragraphs:[
+    {id:'ch9-4-1', num:'1', title:'Общая характеристика металлов'},
+    {id:'ch9-4-2', num:'2', title:'Химические свойства металлов'},
+    {id:'ch9-4-3', num:'3', title:'Щелочные металлы'},
+    {id:'ch9-4-4', num:'4', title:'Щёлочноземельные металлы'},
+    {id:'ch9-4-5', num:'5', title:'Жёсткость воды'},
+    {id:'ch9-4-6', num:'6', title:'Алюминий и его соединения'},
+    {id:'ch9-4-7', num:'7', title:'Железо и его соединения'},
+    {id:'ch9-4-8', num:'8', title:'Коррозия металлов'},
+    {id:'ch9-4-9', num:'9', title:'Металлы в природе. Металлургия'}]},
+  {num:5, title:'Химия и окружающая среда', paragraphs:[
+    {id:'ch9-5-1', num:'1', title:'Химический состав планеты Земля'},
+    {id:'ch9-5-2', num:'2', title:'Охрана окружающей среды'}]},
+  {num:6, title:'Обобщение знаний. Подготовка к ОГЭ', paragraphs:[
+    {id:'ch9-6-1', num:'1', title:'Вещества'},
+    {id:'ch9-6-2', num:'2', title:'Химические реакции'},
+    {id:'ch9-6-3', num:'3', title:'Основы неорганической химии'},
+    {id:'ch9-6-4', num:'4', title:'Качественные реакции'}]}
+];
+
+function renderContents(containerId, chapters){
+  var html = '';
+  chapters.forEach(function(ch){
+    html += '<div class="chapter-block"><h2><span>Глава ' + ch.num + '.</span> ' + ch.title + '</h2><div class="grid-paragraphs">';
+    ch.paragraphs.forEach(function(p){
+      html += '<button class="para-btn" onclick="openPage(\'' + p.id + '\')"><span class="num">§' + p.num + '</span>' + p.title + '</button>';
+    });
+    html += '</div></div>';
+  });
+  document.getElementById(containerId).innerHTML = html;
+}
+
+/* ==================== ПРОСМОТР ПАРАГРАФА ==================== */
+var lastContentsPage = 'contents8';
+function backFromViewer(){ showPage(lastContentsPage); }
+
+function openPage(id){
+  var allPages = {};
+  if (typeof PAGES_8 !== 'undefined') for(var k in PAGES_8) allPages[k] = PAGES_8[k];
+  if (typeof PAGES_9 !== 'undefined') for(var k2 in PAGES_9) allPages[k2] = PAGES_9[k2];
+
+  var page = allPages[id];
+  if(!page){
+    document.getElementById('viewerContainer').innerHTML =
+      '<div class="para-title">Параграф</div>' +
+      '<div class="para-sub">Теория для этого параграфа ещё не добавлена</div>' +
+      '<div class="note">Попроси дополнить сайт.</div>';
+    lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
+    showPage('viewer');
+    return;
+  }
+  document.getElementById('viewerContainer').innerHTML =
+    '<div class="para-title">' + page.title + '</div>' +
+    (page.sub ? '<div class="para-sub">' + page.sub + '</div>' : '') + page.html;
+  lastContentsPage = (id.indexOf('ch8-') === 0) ? 'contents8' : 'contents9';
+  showPage('viewer');
+}
